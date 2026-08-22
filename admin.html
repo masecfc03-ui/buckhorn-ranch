@@ -16,6 +16,8 @@
       --brass: #A07840;
       --brass-dark: #7A5C2E;
       --danger: #8B2020;
+      --tim: #1C3A5E;
+      --tim-bg: #EAF0F8;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -42,7 +44,6 @@
       font-weight: 400;
       letter-spacing: 0.06em;
       margin-bottom: 8px;
-      color: var(--ink);
     }
     .login-sub {
       font-variant: small-caps;
@@ -128,7 +129,7 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       opacity: 0.5;
-      margin-left: 16px;
+      margin-left: 12px;
     }
     .btn-logout {
       background: transparent;
@@ -158,7 +159,6 @@
       font-size: 22px;
       font-weight: 400;
       margin-bottom: 4px;
-      color: var(--ink);
     }
     .admin-section-rule {
       display: block;
@@ -168,9 +168,7 @@
       margin-bottom: 28px;
     }
 
-    .field-group {
-      margin-bottom: 22px;
-    }
+    .field-group { margin-bottom: 22px; }
     .field-group label {
       display: block;
       font-size: 11px;
@@ -203,7 +201,6 @@
       color: var(--ink-muted);
       margin-top: 5px;
     }
-
     .field-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -211,7 +208,257 @@
     }
     @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
 
-    /* pricing table editor */
+    /* ── TIM CHAT ── */
+    .tim-chat {
+      border: 1px solid #D8D0C4;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .tim-chat-header {
+      background: var(--tim);
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tim-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .tim-chat-header-text strong {
+      font-size: 14px;
+      display: block;
+      letter-spacing: 0.03em;
+    }
+    .tim-chat-header-text span {
+      font-size: 11px;
+      opacity: 0.65;
+      letter-spacing: 0.04em;
+    }
+    .tim-messages {
+      height: 320px;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .msg {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .msg-sender {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 0 4px;
+    }
+    .msg-bubble {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 88%;
+      white-space: pre-wrap;
+    }
+    .msg.from-john { align-items: flex-end; }
+    .msg.from-john .msg-bubble {
+      background: var(--brass);
+      color: #fff;
+      border-bottom-right-radius: 3px;
+    }
+    .msg.from-tim { align-items: flex-start; }
+    .msg.from-tim .msg-bubble {
+      background: var(--tim-bg);
+      color: var(--ink);
+      border-bottom-left-radius: 3px;
+    }
+    .msg.from-tim .msg-bubble a {
+      color: var(--tim);
+      text-decoration: underline;
+    }
+    .msg-typing .msg-bubble {
+      background: var(--tim-bg);
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+    .tim-apply-bar {
+      display: none;
+      padding: 10px 16px;
+      background: #EAF4EA;
+      border-top: 1px solid #C4DCC4;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .tim-apply-bar.visible { display: flex; }
+    .tim-apply-bar span {
+      font-size: 13px;
+      color: #2A5A2A;
+    }
+    .btn-apply {
+      padding: 8px 18px;
+      background: #2A7A2A;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-apply:hover { background: #1E5A1E; }
+    .btn-discard {
+      padding: 8px 14px;
+      background: transparent;
+      color: #5A3A3A;
+      border: 1px solid #C4A0A0;
+      border-radius: 3px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .tim-input-row {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid #E8E0D4;
+    }
+    .tim-input-row textarea {
+      flex: 1;
+      padding: 12px 14px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      font-family: system-ui, -apple-system, sans-serif;
+      resize: none;
+      height: 56px;
+      line-height: 1.5;
+      background: #fff;
+      color: var(--ink);
+    }
+    .tim-send-btn {
+      padding: 12px 20px;
+      background: var(--brass);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 200ms;
+      flex-shrink: 0;
+    }
+    .tim-send-btn:hover { background: var(--brass-dark); }
+    .tim-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── PHOTO UPLOAD ── */
+    .photo-drop {
+      border: 2px dashed #C8C0B4;
+      border-radius: 6px;
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 200ms, background 200ms;
+      background: #fff;
+      position: relative;
+    }
+    .photo-drop:hover, .photo-drop.dragover {
+      border-color: var(--brass);
+      background: rgba(160,120,64,0.04);
+    }
+    .photo-drop input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .photo-drop-icon { font-size: 32px; margin-bottom: 8px; }
+    .photo-drop-label {
+      font-size: 14px;
+      color: var(--ink-muted);
+    }
+    .photo-drop-label strong { color: var(--brass); }
+    .photo-previews {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .photo-preview-item {
+      position: relative;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid #D8D0C4;
+    }
+    .photo-preview-item img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-preview-item .photo-name {
+      font-size: 10px;
+      color: var(--ink-muted);
+      padding: 4px 6px;
+      background: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .photo-preview-item .photo-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .photo-upload-status {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-top: 10px;
+      min-height: 18px;
+    }
+    .photo-upload-status.success { color: #2A7A2A; }
+    .photo-upload-status.error { color: var(--danger); }
+    .btn-upload-photos {
+      margin-top: 12px;
+      padding: 10px 20px;
+      background: var(--brass);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .btn-upload-photos:hover { background: var(--brass-dark); }
+    .btn-upload-photos:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── PRICING EDITORS ── */
     .pricing-editor {
       border: 1px solid #D8D0C4;
       border-radius: 4px;
@@ -247,66 +494,13 @@
       outline: none;
     }
     .pe-row input:focus { border-color: var(--brass); }
-    .pe-row .row-label {
-      font-size: 13px;
-      color: var(--ink-muted);
-    }
-    /* whitetail: label | fee */
+    .pe-row .row-label { font-size: 13px; color: var(--ink-muted); }
     .pe-whitetail { grid-template-columns: 1fr 130px; }
-    /* exotics: label | fee | note */
-    .pe-exotic { grid-template-columns: 1fr 110px 1fr; }
-    /* wingshooting: label | fee | note */
-    .pe-wing { grid-template-columns: 1fr 110px 1fr; }
-    .pe-null-badge {
-      display: inline-block;
-      padding: 3px 8px;
-      background: var(--parchment);
-      border-radius: 2px;
-      font-size: 11px;
-      color: var(--ink-muted);
-      letter-spacing: 0.08em;
-    }
+    .pe-exotic     { grid-template-columns: 1fr 110px 1fr; }
+    .pe-wing       { grid-template-columns: 1fr 110px 1fr; }
 
-    /* ── SAVE BAR ── */
-    .save-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--ink);
-      padding: 16px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      z-index: 200;
-    }
-    .save-bar-msg {
-      font-size: 13px;
-      color: rgba(245,240,232,0.6);
-      flex: 1;
-    }
-    .save-bar-msg.success { color: #7EC87E; }
-    .save-bar-msg.error { color: #E07070; }
-    .btn-save {
-      padding: 12px 32px;
-      background: var(--brass);
-      color: #fff;
-      border: none;
-      border-radius: 3px;
-      font-size: 13px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 200ms, opacity 200ms;
-      white-space: nowrap;
-    }
-    .btn-save:hover { background: var(--brass-dark); }
-    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .token-wrap {
-      margin-top: 10px;
-    }
+    /* ── SETTINGS / TOKEN ── */
+    .token-wrap { margin-top: 10px; }
     .token-wrap label {
       display: block;
       font-size: 11px;
@@ -350,11 +544,48 @@
       color: var(--ink-muted);
       margin-top: 6px;
     }
+
+    /* ── SAVE BAR ── */
+    .save-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--ink);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 200;
+    }
+    .save-bar-msg {
+      font-size: 13px;
+      color: rgba(245,240,232,0.6);
+      flex: 1;
+    }
+    .save-bar-msg.success { color: #7EC87E; }
+    .save-bar-msg.error   { color: #E07070; }
+    .btn-save {
+      padding: 12px 32px;
+      background: var(--brass);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 200ms, opacity 200ms;
+      white-space: nowrap;
+    }
+    .btn-save:hover { background: var(--brass-dark); }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
-  <!-- ── LOGIN SCREEN ── -->
+  <!-- ── LOGIN ── -->
   <div id="login-screen">
     <div class="login-logo">Buckhorn Ranch</div>
     <div class="login-sub">Admin Portal</div>
@@ -369,7 +600,7 @@
   <!-- ── ADMIN PANEL ── -->
   <div id="admin-panel">
     <div class="admin-header">
-      <div style="display:flex;align-items:baseline;gap:0">
+      <div style="display:flex;align-items:baseline">
         <span class="admin-header-title">Buckhorn Ranch</span>
         <span class="admin-header-sub">&nbsp;/ Admin</span>
       </div>
@@ -378,14 +609,66 @@
 
     <div class="admin-body">
 
-      <!-- CONTACT -->
+      <!-- ── TIM CHAT ── -->
       <div class="admin-section">
-        <div class="admin-section-title">Contact & Details</div>
+        <div class="admin-section-title">Tell Tim What to Change</div>
+        <span class="admin-section-rule"></span>
+        <p class="field-hint" style="margin-bottom:16px">
+          Describe any update in plain English — pricing changes, new copy, season dates. Tim will apply the changes to the form below. Review them, then hit Save & Publish.
+        </p>
+        <div class="tim-chat">
+          <div class="tim-chat-header">
+            <div class="tim-avatar">⚙️</div>
+            <div class="tim-chat-header-text">
+              <strong>Tim</strong>
+              <span>AI site editor · online</span>
+            </div>
+          </div>
+          <div class="tim-messages" id="tim-messages">
+            <div class="msg from-tim">
+              <div class="msg-sender">Tim</div>
+              <div class="msg-bubble">Hey John — what do you want to update on the site? Tell me in plain English. Pricing, copy, season year, anything. I'll apply the changes and you review before publishing.</div>
+            </div>
+          </div>
+          <div class="tim-apply-bar" id="tim-apply-bar">
+            <span id="tim-apply-summary">Tim has suggested changes.</span>
+            <div style="display:flex;gap:8px">
+              <button class="btn-discard" id="tim-discard-btn">Discard</button>
+              <button class="btn-apply" id="tim-apply-btn">Apply Changes</button>
+            </div>
+          </div>
+          <div class="tim-input-row">
+            <textarea id="tim-input" placeholder="e.g. Raise the 280-300 whitetail to $22,000. Add an elk bull at $9,500. Change season year to 2027." rows="2"></textarea>
+            <button class="tim-send-btn" id="tim-send-btn" title="Send">&#9658;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PHOTO UPLOAD ── -->
+      <div class="admin-section">
+        <div class="admin-section-title">Add Photos</div>
+        <span class="admin-section-rule"></span>
+        <p class="field-hint" style="margin-bottom:16px">
+          Drop photos here to add them to the site's image library. After uploading, tell Tim which image slot to use them in (e.g. "swap lodge photo 3 with the new one").
+        </p>
+        <div class="photo-drop" id="photo-drop">
+          <input type="file" id="photo-input" multiple accept="image/*" />
+          <div class="photo-drop-icon">📷</div>
+          <div class="photo-drop-label">Drop photos here or <strong>click to browse</strong></div>
+        </div>
+        <div class="photo-previews" id="photo-previews"></div>
+        <div id="photo-upload-status" class="photo-upload-status"></div>
+        <button class="btn-upload-photos" id="btn-upload-photos" style="display:none">Upload to Site</button>
+      </div>
+
+      <!-- ── CONTACT & DETAILS ── -->
+      <div class="admin-section">
+        <div class="admin-section-title">Contact &amp; Details</div>
         <span class="admin-section-rule"></span>
         <div class="field-row">
           <div class="field-group">
             <label>Phone Number</label>
-            <input type="tel" id="f-phone" placeholder="(214) 558-7987" />
+            <input type="tel" id="f-phone" />
           </div>
           <div class="field-group">
             <label>Email Address</label>
@@ -395,123 +678,130 @@
         <div class="field-row">
           <div class="field-group">
             <label>Season Year</label>
-            <input type="text" id="f-season" placeholder="2026" />
+            <input type="text" id="f-season" />
           </div>
           <div class="field-group">
             <label>Acreage</label>
-            <input type="text" id="f-acreage" placeholder="1,750" />
+            <input type="text" id="f-acreage" />
           </div>
         </div>
         <div class="field-row">
           <div class="field-group">
             <label>Fence Type</label>
-            <input type="text" id="f-fence" placeholder="High Fence" />
+            <input type="text" id="f-fence" />
           </div>
           <div class="field-group">
             <label>Location</label>
-            <input type="text" id="f-location" placeholder="Sulphur, Oklahoma" />
+            <input type="text" id="f-location" />
           </div>
         </div>
       </div>
 
-      <!-- LODGING -->
+      <!-- ── LODGING ── -->
       <div class="admin-section">
-        <div class="admin-section-title">Lodging & Day Rates</div>
+        <div class="admin-section-title">Lodging &amp; Day Rates</div>
         <span class="admin-section-rule"></span>
         <div class="field-row">
           <div class="field-group">
             <label>Per Hunter / Night ($)</label>
-            <input type="number" id="f-lodge-hunter" placeholder="1500" />
+            <input type="number" id="f-lodge-hunter" />
           </div>
           <div class="field-group">
             <label>Non-Hunting Guest / Night ($)</label>
-            <input type="number" id="f-lodge-guest" placeholder="400" />
+            <input type="number" id="f-lodge-guest" />
           </div>
         </div>
         <div class="field-row">
           <div class="field-group">
             <label>Lodging Included at Hunt Fee ($)</label>
-            <input type="number" id="f-lodge-incl" placeholder="6000" />
+            <input type="number" id="f-lodge-incl" />
             <p class="field-hint">Hunts at or above this fee include lodging.</p>
           </div>
           <div class="field-group">
-            <label>Standard Package</label>
             <div class="field-row" style="margin-top:0">
               <div class="field-group" style="margin-bottom:0">
                 <label>Nights</label>
-                <input type="number" id="f-lodge-nights" placeholder="2" />
+                <input type="number" id="f-lodge-nights" />
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label>Days</label>
-                <input type="number" id="f-lodge-days" placeholder="3" />
+                <input type="number" id="f-lodge-days" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- WHITETAIL -->
+      <!-- ── WHITETAIL ── -->
       <div class="admin-section">
         <div class="admin-section-title">Whitetail Pricing</div>
         <span class="admin-section-rule"></span>
-        <p class="field-hint" style="margin-bottom:18px">Edit harvest fees by Boone & Crockett score tier.</p>
         <div class="pricing-editor" id="pe-whitetail">
           <div class="pricing-editor-header pe-whitetail">
-            <span>B&amp;C Score</span>
-            <span>Harvest Fee ($)</span>
+            <span>B&amp;C Score</span><span>Fee ($)</span>
           </div>
         </div>
       </div>
 
-      <!-- EXOTICS -->
+      <!-- ── EXOTICS ── -->
       <div class="admin-section">
         <div class="admin-section-title">Exotic Pricing</div>
         <span class="admin-section-rule"></span>
         <p class="field-hint" style="margin-bottom:18px">Leave Fee blank to show "Call for pricing".</p>
         <div class="pricing-editor" id="pe-exotics">
           <div class="pricing-editor-header pe-exotic">
-            <span>Animal</span>
-            <span>Fee ($)</span>
-            <span>Note</span>
+            <span>Animal</span><span>Fee ($)</span><span>Note</span>
           </div>
         </div>
       </div>
 
-      <!-- WINGSHOOTING -->
+      <!-- ── WINGSHOOTING ── -->
       <div class="admin-section">
         <div class="admin-section-title">Wingshooting / Turkey</div>
         <span class="admin-section-rule"></span>
         <div class="pricing-editor" id="pe-wing">
           <div class="pricing-editor-header pe-wing">
-            <span>Hunt</span>
-            <span>Fee ($)</span>
-            <span>Note</span>
+            <span>Hunt</span><span>Fee ($)</span><span>Note</span>
           </div>
         </div>
       </div>
 
-      <!-- GITHUB TOKEN -->
+      <!-- ── PUBLISH SETTINGS ── -->
       <div class="admin-section">
         <div class="admin-section-title">Publish Settings</div>
         <span class="admin-section-rule"></span>
         <p class="field-hint" style="margin-bottom:18px">
-          "Save &amp; Publish" updates the live site via GitHub. Paste your GitHub token once — it's saved in this browser only.
-          Create a token at <strong>github.com → Settings → Developer settings → Personal access tokens → Fine-grained</strong>.
-          Grant <strong>Contents: Read &amp; Write</strong> on the <code>masecfc03-ui/buckhorn-ranch</code> repo.
+          Two tokens saved in this browser only — never sent anywhere except the services listed.
         </p>
-        <div class="token-wrap">
-          <label>GitHub Personal Access Token</label>
+
+        <div class="token-wrap" style="margin-bottom:24px">
+          <label>GitHub Token (for Save &amp; Publish)</label>
           <div class="token-input-row">
             <input type="password" id="gh-token-input" placeholder="github_pat_…" autocomplete="off" />
-            <button class="token-save-btn" id="gh-token-save">Save Token</button>
+            <button class="token-save-btn" id="gh-token-save">Save</button>
           </div>
           <p class="token-note" id="gh-token-status"></p>
+          <p class="token-note" style="margin-top:4px">
+            Create at: github.com → Settings → Developer settings → Personal access tokens → Fine-grained → Contents read/write on <code>masecfc03-ui/buckhorn-ranch</code>
+          </p>
+        </div>
+
+        <div class="token-wrap">
+          <label>Anthropic API Key (for Tim chat)</label>
+          <div class="token-input-row">
+            <input type="password" id="ai-token-input" placeholder="sk-ant-…" autocomplete="off" />
+            <button class="token-save-btn" id="ai-token-save">Save</button>
+          </div>
+          <p class="token-note" id="ai-token-status"></p>
+          <p class="token-note" style="margin-top:4px">
+            Create at: console.anthropic.com → API Keys. Free tier available. Tim uses the cheapest model — typical update costs &lt;$0.01.
+          </p>
         </div>
       </div>
 
-    </div><!-- /admin-body -->
+    </div>
 
-    <!-- SAVE BAR -->
+    <!-- ── SAVE BAR ── -->
     <div class="save-bar">
       <div class="save-bar-msg" id="save-msg">Changes will publish to the live site in ~60 seconds.</div>
       <button class="btn-save" id="save-btn">Save &amp; Publish</button>
@@ -519,15 +809,16 @@
   </div>
 
   <script>
-    /* ── CONFIG ──────────────────────────────────────────── */
+    /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
     const GH_REPO    = 'buckhorn-ranch';
     const GH_BRANCH  = 'main';
     const GH_FILE    = 'index.html';
     const TOKEN_KEY  = 'bhr_gh_token';
+    const AI_KEY     = 'bhr_ai_key';
 
-    /* ── LOGIN ─────────────────────────────────────────────── */
+    /* ── LOGIN ──────────────────────────────────────────── */
     const loginScreen = document.getElementById('login-screen');
     const adminPanel  = document.getElementById('admin-panel');
     const pwInput     = document.getElementById('pw-input');
@@ -550,61 +841,46 @@
         pwInput.focus();
       }
     });
-    pwInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') loginBtn.click();
-    });
-
+    pwInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
     document.getElementById('logout-btn').addEventListener('click', function() {
-      adminPanel.style.display  = 'none';
+      adminPanel.style.display = 'none';
       loginScreen.style.display = 'flex';
       pwInput.value = '';
     });
 
-    /* ── CURRENT RANCH STATE (pulled from live index.html) ── */
-    /* Fetched from GitHub at load so the form always reflects  */
-    /* what's actually published, not just last edit.           */
-
+    /* ── GITHUB FILE FETCH ──────────────────────────────── */
     let currentHTML = '';
     let currentSHA  = '';
+    let ranch = null;
 
     async function fetchCurrentFile() {
-      const token = localStorage.getItem(TOKEN_KEY);
-      const headers = { 'Accept': 'application/vnd.github+json' };
+      var token = localStorage.getItem(TOKEN_KEY);
+      var headers = { 'Accept': 'application/vnd.github+json' };
       if (token) headers['Authorization'] = 'Bearer ' + token;
-
-      const url = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO +
-                  '/contents/' + GH_FILE + '?ref=' + GH_BRANCH;
-      const res = await fetch(url, { headers });
+      var res = await fetch(
+        'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO +
+        '/contents/' + GH_FILE + '?ref=' + GH_BRANCH, { headers }
+      );
       if (!res.ok) throw new Error('GitHub fetch failed: ' + res.status);
-      const data = await res.json();
+      var data = await res.json();
       currentSHA  = data.sha;
       currentHTML = atob(data.content.replace(/\n/g, ''));
       return currentHTML;
     }
 
     function extractRanchConfig(html) {
-      const m = html.match(/const RANCH\s*=\s*(\{[\s\S]*?\});\s*\/\* ── HERO/);
+      var m = html.match(/const RANCH\s*=\s*(\{[\s\S]*?\});\s*\/\* ── HERO/);
       if (!m) return null;
-      try {
-        // eslint-disable-next-line no-new-func
-        return Function('"use strict"; return (' + m[1] + ')')();
-      } catch(e) { return null; }
+      try { return Function('"use strict"; return (' + m[1] + ')')(); }
+      catch(e) { return null; }
     }
-
-    /* ── FORM BUILD ─────────────────────────────────────────── */
-    let ranch = null;
 
     function loadForm() {
       fetchCurrentFile().then(function(html) {
         ranch = extractRanchConfig(html);
-        if (!ranch) {
-          alert('Could not parse current config from index.html. Edit manually.');
-          return;
-        }
+        if (!ranch) { alert('Could not parse config.'); return; }
         populateFields();
-      }).catch(function(err) {
-        // fallback: use hardcoded defaults so user can still edit
-        console.warn('Could not fetch live file:', err);
+      }).catch(function() {
         ranch = getDefaultRanch();
         populateFields();
       });
@@ -612,248 +888,179 @@
 
     function getDefaultRanch() {
       return {
-        name: 'Buckhorn Ranch',
-        tagline: 'Whitetail. Exotics. Waterfowl.',
-        phone: '(214) 558-7987',
-        email: '',
-        location: 'Sulphur, Oklahoma',
-        mountains: 'Arbuckle Mountains',
-        seasonYear: '2026',
-        acreage: '1,750',
-        fenceType: 'High Fence',
+        name: 'Buckhorn Ranch', tagline: 'Whitetail. Exotics. Waterfowl.',
+        phone: '(214) 558-7987', email: '',
+        location: 'Sulphur, Oklahoma', mountains: 'Arbuckle Mountains',
+        seasonYear: '2026', acreage: '1,750', fenceType: 'High Fence',
         lodgingRates: { perHunter: 1500, nonHunting: 400, lodgingIncludedAt: 6000, nights: 2, days: 3 },
         whitetailPricing: [
-          { label: 'Up to 129', fee: 3000 },
-          { label: '130–139',   fee: 4000 },
-          { label: '140–149',   fee: 5000 },
-          { label: '150–159',   fee: 6000 },
-          { label: '160–169',   fee: 7000 },
-          { label: '170–179',   fee: 8500 },
-          { label: '180–189',   fee: 9500 },
-          { label: '190–199',   fee: 12000 },
-          { label: '200–219',   fee: 14000 },
-          { label: '220–239',   fee: 16000 },
-          { label: '240–279',   fee: 18000 },
-          { label: '280–300+',  fee: 20000, highlight: true },
+          { label: 'Up to 129', fee: 3000 }, { label: '130–139', fee: 4000 },
+          { label: '140–149', fee: 5000 },   { label: '150–159', fee: 6000 },
+          { label: '160–169', fee: 7000 },   { label: '170–179', fee: 8500 },
+          { label: '180–189', fee: 9500 },   { label: '190–199', fee: 12000 },
+          { label: '200–219', fee: 14000 },  { label: '220–239', fee: 16000 },
+          { label: '240–279', fee: 18000 },  { label: '280–300+', fee: 20000, highlight: true },
         ],
         exoticPricing: [
-          { label: 'Bison Bull',            fee: null },
-          { label: 'Gemsbok',               fee: 8000 },
-          { label: 'Fallow Deer',           fee: 7000 },
-          { label: 'Red Stag 250–299 SCI',  fee: 7000 },
-          { label: 'Red Stag 300–349 SCI',  fee: 10000 },
-          { label: 'Red Stag 350+ SCI',     fee: 15000 },
-          { label: 'Scimitar Oryx',         fee: 6000 },
-          { label: 'Zebra',                 fee: 6000 },
-          { label: 'Red Deer Cow',          fee: 1500, note: 'Best-tasting meat on the ranch.' },
+          { label: 'Bison Bull', fee: null },
+          { label: 'Gemsbok', fee: 8000 },
+          { label: 'Fallow Deer', fee: 7000 },
+          { label: 'Red Stag 250–299 SCI', fee: 7000 },
+          { label: 'Red Stag 300–349 SCI', fee: 10000 },
+          { label: 'Red Stag 350+ SCI', fee: 15000 },
+          { label: 'Scimitar Oryx', fee: 6000 },
+          { label: 'Zebra', fee: 6000 },
+          { label: 'Red Deer Cow', fee: 1500, note: 'Best-tasting meat on the ranch.' },
         ],
         wingshootingPricing: [
           { label: 'Spring Turkey (April–May, shotgun only)', fee: 1500, unit: '/hunter', note: 'Family and group specials available.' },
-          { label: 'Quail (January–mid March)',               fee: 1500, unit: '/gun',    note: 'Released birds, dogs and handler included.' },
+          { label: 'Quail (January–mid March)', fee: 1500, unit: '/gun', note: 'Released birds, dogs and handler included.' },
         ],
       };
     }
 
     function populateFields() {
-      document.getElementById('f-phone').value   = ranch.phone       || '';
-      document.getElementById('f-email').value   = ranch.email       || '';
-      document.getElementById('f-season').value  = ranch.seasonYear  || '';
-      document.getElementById('f-acreage').value = ranch.acreage     || '';
-      document.getElementById('f-fence').value   = ranch.fenceType   || '';
-      document.getElementById('f-location').value= ranch.location    || '';
-
+      document.getElementById('f-phone').value    = ranch.phone       || '';
+      document.getElementById('f-email').value    = ranch.email       || '';
+      document.getElementById('f-season').value   = ranch.seasonYear  || '';
+      document.getElementById('f-acreage').value  = ranch.acreage     || '';
+      document.getElementById('f-fence').value    = ranch.fenceType   || '';
+      document.getElementById('f-location').value = ranch.location    || '';
       var lr = ranch.lodgingRates || {};
-      document.getElementById('f-lodge-hunter').value = lr.perHunter          || '';
-      document.getElementById('f-lodge-guest').value  = lr.nonHunting         || '';
-      document.getElementById('f-lodge-incl').value   = lr.lodgingIncludedAt  || '';
-      document.getElementById('f-lodge-nights').value = lr.nights             || '';
-      document.getElementById('f-lodge-days').value   = lr.days               || '';
-
+      document.getElementById('f-lodge-hunter').value = lr.perHunter         || '';
+      document.getElementById('f-lodge-guest').value  = lr.nonHunting        || '';
+      document.getElementById('f-lodge-incl').value   = lr.lodgingIncludedAt || '';
+      document.getElementById('f-lodge-nights').value = lr.nights            || '';
+      document.getElementById('f-lodge-days').value   = lr.days              || '';
       buildWhitetailEditor(ranch.whitetailPricing  || []);
       buildExoticEditor(ranch.exoticPricing        || []);
       buildWingEditor(ranch.wingshootingPricing    || []);
-
-      // token status
-      var tok = localStorage.getItem(TOKEN_KEY);
-      document.getElementById('gh-token-status').textContent =
-        tok ? '✓ Token saved in browser.' : 'No token saved yet.';
+      var ghTok = localStorage.getItem(TOKEN_KEY);
+      var aiTok = localStorage.getItem(AI_KEY);
+      document.getElementById('gh-token-status').textContent = ghTok ? '✓ Saved.' : 'Not set.';
+      document.getElementById('ai-token-status').textContent = aiTok ? '✓ Saved.' : 'Not set — Tim chat won\'t work without this.';
     }
 
-    /* ── PRICING TABLE EDITORS ────────────────────────────── */
-    function buildWhitetailEditor(rows) {
-      var container = document.getElementById('pe-whitetail');
-      // remove old rows (keep header)
-      while (container.children.length > 1) container.removeChild(container.lastChild);
-      rows.forEach(function(row, i) {
-        var div = document.createElement('div');
-        div.className = 'pe-row pe-whitetail';
-        div.dataset.idx = i;
-        div.innerHTML =
-          '<span class="row-label">' + esc(row.label) + '</span>' +
-          '<input type="number" class="wt-fee" value="' + (row.fee || '') + '" min="0" step="100" />';
-        container.appendChild(div);
-      });
-    }
-
-    function buildExoticEditor(rows) {
-      var container = document.getElementById('pe-exotics');
-      while (container.children.length > 1) container.removeChild(container.lastChild);
-      rows.forEach(function(row, i) {
-        var div = document.createElement('div');
-        div.className = 'pe-row pe-exotic';
-        div.dataset.idx = i;
-        div.innerHTML =
-          '<span class="row-label">' + esc(row.label) + '</span>' +
-          '<input type="number" class="ex-fee" value="' + (row.fee != null ? row.fee : '') + '" min="0" step="100" placeholder="Call" />' +
-          '<input type="text" class="ex-note" value="' + esc(row.note || '') + '" placeholder="Optional note" />';
-        container.appendChild(div);
-      });
-    }
-
-    function buildWingEditor(rows) {
-      var container = document.getElementById('pe-wing');
-      while (container.children.length > 1) container.removeChild(container.lastChild);
-      rows.forEach(function(row, i) {
-        var div = document.createElement('div');
-        div.className = 'pe-row pe-wing';
-        div.dataset.idx = i;
-        div.innerHTML =
-          '<span class="row-label">' + esc(row.label) + '</span>' +
-          '<input type="number" class="wi-fee" value="' + (row.fee || '') + '" min="0" step="100" />' +
-          '<input type="text" class="wi-note" value="' + esc(row.note || '') + '" placeholder="Optional note" />';
-        container.appendChild(div);
-      });
-    }
-
+    /* ── PRICING EDITORS ────────────────────────────────── */
     function esc(s) {
-      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function buildWhitetailEditor(rows) {
+      var c = document.getElementById('pe-whitetail');
+      while (c.children.length > 1) c.removeChild(c.lastChild);
+      rows.forEach(function(row, i) {
+        var d = document.createElement('div');
+        d.className = 'pe-row pe-whitetail'; d.dataset.idx = i;
+        d.innerHTML = '<span class="row-label">' + esc(row.label) + '</span><input type="number" class="wt-fee" value="' + (row.fee||'') + '" min="0" step="100" />';
+        c.appendChild(d);
+      });
+    }
+    function buildExoticEditor(rows) {
+      var c = document.getElementById('pe-exotics');
+      while (c.children.length > 1) c.removeChild(c.lastChild);
+      rows.forEach(function(row, i) {
+        var d = document.createElement('div');
+        d.className = 'pe-row pe-exotic'; d.dataset.idx = i;
+        d.innerHTML = '<span class="row-label">' + esc(row.label) + '</span><input type="number" class="ex-fee" value="' + (row.fee!=null?row.fee:'') + '" min="0" step="100" placeholder="Call" /><input type="text" class="ex-note" value="' + esc(row.note||'') + '" placeholder="Note" />';
+        c.appendChild(d);
+      });
+    }
+    function buildWingEditor(rows) {
+      var c = document.getElementById('pe-wing');
+      while (c.children.length > 1) c.removeChild(c.lastChild);
+      rows.forEach(function(row, i) {
+        var d = document.createElement('div');
+        d.className = 'pe-row pe-wing'; d.dataset.idx = i;
+        d.innerHTML = '<span class="row-label">' + esc(row.label) + '</span><input type="number" class="wi-fee" value="' + (row.fee||'') + '" min="0" step="100" /><input type="text" class="wi-note" value="' + esc(row.note||'') + '" placeholder="Note" />';
+        c.appendChild(d);
+      });
     }
 
-    /* ── COLLECT FORM VALUES ─────────────────────────────── */
+    /* ── COLLECT FORM VALUES ────────────────────────────── */
     function collectRanch() {
-      var r = JSON.parse(JSON.stringify(ranch)); // clone
-
+      var r = JSON.parse(JSON.stringify(ranch));
       r.phone      = document.getElementById('f-phone').value.trim();
       r.email      = document.getElementById('f-email').value.trim();
       r.seasonYear = document.getElementById('f-season').value.trim();
       r.acreage    = document.getElementById('f-acreage').value.trim();
       r.fenceType  = document.getElementById('f-fence').value.trim();
       r.location   = document.getElementById('f-location').value.trim();
-
       r.lodgingRates = {
-        perHunter:         parseInt(document.getElementById('f-lodge-hunter').value) || 0,
-        nonHunting:        parseInt(document.getElementById('f-lodge-guest').value)  || 0,
-        lodgingIncludedAt: parseInt(document.getElementById('f-lodge-incl').value)   || 0,
-        nights:            parseInt(document.getElementById('f-lodge-nights').value) || 0,
-        days:              parseInt(document.getElementById('f-lodge-days').value)   || 0,
+        perHunter:         parseInt(document.getElementById('f-lodge-hunter').value)||0,
+        nonHunting:        parseInt(document.getElementById('f-lodge-guest').value) ||0,
+        lodgingIncludedAt: parseInt(document.getElementById('f-lodge-incl').value)  ||0,
+        nights:            parseInt(document.getElementById('f-lodge-nights').value)||0,
+        days:              parseInt(document.getElementById('f-lodge-days').value)  ||0,
       };
-
-      // whitetail
-      var wtRows = document.querySelectorAll('#pe-whitetail .pe-row');
-      wtRows.forEach(function(row) {
+      document.querySelectorAll('#pe-whitetail .pe-row').forEach(function(row) {
         var idx = parseInt(row.dataset.idx);
-        var fee = parseFloat(row.querySelector('.wt-fee').value);
-        r.whitetailPricing[idx].fee = isNaN(fee) ? 0 : fee;
+        r.whitetailPricing[idx].fee = parseFloat(row.querySelector('.wt-fee').value)||0;
       });
-
-      // exotics
-      var exRows = document.querySelectorAll('#pe-exotics .pe-row');
-      exRows.forEach(function(row) {
+      document.querySelectorAll('#pe-exotics .pe-row').forEach(function(row) {
         var idx = parseInt(row.dataset.idx);
-        var feeStr = row.querySelector('.ex-fee').value;
-        r.exoticPricing[idx].fee  = feeStr === '' ? null : (parseFloat(feeStr) || 0);
+        var v = row.querySelector('.ex-fee').value;
+        r.exoticPricing[idx].fee  = v === '' ? null : (parseFloat(v)||0);
         r.exoticPricing[idx].note = row.querySelector('.ex-note').value.trim() || undefined;
       });
-
-      // wingshooting
-      var wiRows = document.querySelectorAll('#pe-wing .pe-row');
-      wiRows.forEach(function(row) {
+      document.querySelectorAll('#pe-wing .pe-row').forEach(function(row) {
         var idx = parseInt(row.dataset.idx);
-        r.wingshootingPricing[idx].fee  = parseFloat(row.querySelector('.wi-fee').value) || 0;
+        r.wingshootingPricing[idx].fee  = parseFloat(row.querySelector('.wi-fee').value)||0;
         r.wingshootingPricing[idx].note = row.querySelector('.wi-note').value.trim() || undefined;
       });
-
       return r;
     }
 
-    /* ── SERIALIZE RANCH CONFIG ──────────────────────────── */
+    /* ── SERIALIZE ──────────────────────────────────────── */
     function serializeRanch(r) {
-      function fmtArr(arr, extraIndent) {
-        var pad = extraIndent || '        ';
+      function fmtArr(arr) {
         return '[\n' + arr.map(function(item) {
           var parts = [];
           Object.keys(item).forEach(function(k) {
             var v = item[k];
             if (v === undefined) return;
-            if (typeof v === 'string') parts.push(k + ': ' + JSON.stringify(v));
-            else if (v === null) parts.push(k + ': null');
-            else parts.push(k + ': ' + v);
+            parts.push(k + ': ' + (typeof v === 'string' ? JSON.stringify(v) : v === null ? 'null' : v));
           });
-          return pad + '  { ' + parts.join(', ') + ' }';
-        }).join(',\n') + ',\n' + pad + ']';
+          return '        { ' + parts.join(', ') + ' }';
+        }).join(',\n') + ',\n        ]';
       }
-
       return [
-        "      name: " + JSON.stringify(r.name) + ",",
-        "      tagline: " + JSON.stringify(r.tagline) + ",",
-        "      phone: " + JSON.stringify(r.phone) + ", /* PHONE */",
-        "      email: " + JSON.stringify(r.email) + ", /* EMAIL */",
-        "      location: " + JSON.stringify(r.location) + ",",
-        "      mountains: " + JSON.stringify(r.mountains) + ",",
-        "      seasonYear: " + JSON.stringify(r.seasonYear) + ",",
-        "      acreage: " + JSON.stringify(r.acreage) + ",",
-        "      fenceType: " + JSON.stringify(r.fenceType) + ",",
-        "      lodgingRates: {",
-        "        perHunter: " + r.lodgingRates.perHunter + ",",
-        "        nonHunting: " + r.lodgingRates.nonHunting + ",",
-        "        lodgingIncludedAt: " + r.lodgingRates.lodgingIncludedAt + ",",
-        "        nights: " + r.lodgingRates.nights + ",",
-        "        days: " + r.lodgingRates.days + ",",
-        "      },",
-        "      whitetailPricing: " + fmtArr(r.whitetailPricing) + ",",
-        "      exoticPricing: " + fmtArr(r.exoticPricing) + ",",
-        "      wingshootingPricing: " + fmtArr(r.wingshootingPricing) + ",",
+        '      name: ' + JSON.stringify(r.name) + ',',
+        '      tagline: ' + JSON.stringify(r.tagline) + ',',
+        '      phone: ' + JSON.stringify(r.phone) + ', /* PHONE */',
+        '      email: ' + JSON.stringify(r.email) + ', /* EMAIL */',
+        '      location: ' + JSON.stringify(r.location) + ',',
+        '      mountains: ' + JSON.stringify(r.mountains) + ',',
+        '      seasonYear: ' + JSON.stringify(r.seasonYear) + ',',
+        '      acreage: ' + JSON.stringify(r.acreage) + ',',
+        '      fenceType: ' + JSON.stringify(r.fenceType) + ',',
+        '      lodgingRates: {',
+        '        perHunter: ' + r.lodgingRates.perHunter + ',',
+        '        nonHunting: ' + r.lodgingRates.nonHunting + ',',
+        '        lodgingIncludedAt: ' + r.lodgingRates.lodgingIncludedAt + ',',
+        '        nights: ' + r.lodgingRates.nights + ',',
+        '        days: ' + r.lodgingRates.days + ',',
+        '      },',
+        '      whitetailPricing: ' + fmtArr(r.whitetailPricing) + ',',
+        '      exoticPricing: ' + fmtArr(r.exoticPricing) + ',',
+        '      wingshootingPricing: ' + fmtArr(r.wingshootingPricing) + ',',
       ].join('\n');
     }
 
-    /* ── INJECT INTO HTML ────────────────────────────────── */
     function buildNewHTML(html, r) {
-      // Replace RANCH config block
       var newConfig = 'const RANCH = {\n' + serializeRanch(r) + '\n    };';
       var updated = html.replace(/const RANCH\s*=\s*\{[\s\S]*?\};/, newConfig);
-
-      // Update phone in contact section
-      var phoneHref = 'tel:+1' + r.phone.replace(/\D/g, '').replace(/^1/, '');
-      updated = updated.replace(
-        /<a href="tel:[^"]*">[^<]*<\/a>/,
-        '<a href="' + phoneHref + '">' + r.phone + '</a>'
-      );
-
-      // Update email if present
+      var phoneHref = 'tel:+1' + r.phone.replace(/\D/g,'').replace(/^1/,'');
+      updated = updated.replace(/<a href="tel:[^"]*">[^<]*<\/a>/, '<a href="' + phoneHref + '">' + r.phone + '</a>');
       if (r.email) {
-        updated = updated.replace(
-          /<a href="mailto:[^"]*">[^<]*<\/a>/,
-          '<a href="mailto:' + r.email + '">' + r.email + '</a>'
-        );
+        updated = updated.replace(/<a href="mailto:[^"]*">[^<]*<\/a>/, '<a href="mailto:' + r.email + '">' + r.email + '</a>');
       }
-
       return updated;
     }
 
-    /* ── GITHUB PUBLISH ──────────────────────────────────── */
+    /* ── GITHUB PUBLISH ─────────────────────────────────── */
     async function publishToGitHub(newHTML) {
       var token = localStorage.getItem(TOKEN_KEY);
-      if (!token) {
-        throw new Error('No GitHub token. Save your token in Publish Settings first.');
-      }
-
-      var body = JSON.stringify({
-        message: 'Admin update: pricing & content',
-        content: btoa(unescape(encodeURIComponent(newHTML))),
-        sha: currentSHA,
-        branch: GH_BRANCH,
-      });
-
+      if (!token) throw new Error('No GitHub token. Save it in Publish Settings.');
       var res = await fetch(
         'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE,
         {
@@ -863,36 +1070,38 @@
             'Accept': 'application/vnd.github+json',
             'Content-Type': 'application/json',
           },
-          body: body,
+          body: JSON.stringify({
+            message: 'Admin update: pricing & content',
+            content: btoa(unescape(encodeURIComponent(newHTML))),
+            sha: currentSHA,
+            branch: GH_BRANCH,
+          }),
         }
       );
-
       if (!res.ok) {
-        var err = await res.json().catch(function() { return {}; });
-        throw new Error(err.message || 'GitHub API error ' + res.status);
+        var err = await res.json().catch(function(){ return {}; });
+        throw new Error(err.message || 'GitHub error ' + res.status);
       }
       var data = await res.json();
       currentSHA = data.content.sha;
     }
 
-    /* ── SAVE BUTTON ─────────────────────────────────────── */
+    /* ── SAVE BUTTON ────────────────────────────────────── */
     var saveBtn = document.getElementById('save-btn');
     var saveMsg = document.getElementById('save-msg');
-
     saveBtn.addEventListener('click', async function() {
       saveBtn.disabled = true;
       saveBtn.textContent = 'Publishing…';
       saveMsg.className = 'save-bar-msg';
       saveMsg.textContent = 'Uploading to GitHub…';
-
       try {
-        var r       = collectRanch();
+        var r = collectRanch();
         var newHTML = buildNewHTML(currentHTML, r);
         await publishToGitHub(newHTML);
         currentHTML = newHTML;
         ranch = r;
         saveMsg.className = 'save-bar-msg success';
-        saveMsg.textContent = '✓ Published! Site updates in ~60 seconds.';
+        saveMsg.textContent = '✓ Published! Live in ~60 seconds.';
         saveBtn.textContent = 'Save & Publish';
         saveBtn.disabled = false;
       } catch(err) {
@@ -903,13 +1112,270 @@
       }
     });
 
-    /* ── TOKEN SAVE ──────────────────────────────────────── */
+    /* ── TOKEN SAVES ────────────────────────────────────── */
     document.getElementById('gh-token-save').addEventListener('click', function() {
       var tok = document.getElementById('gh-token-input').value.trim();
-      if (!tok) { document.getElementById('gh-token-status').textContent = 'Enter a token first.'; return; }
+      if (!tok) return;
       localStorage.setItem(TOKEN_KEY, tok);
       document.getElementById('gh-token-input').value = '';
-      document.getElementById('gh-token-status').textContent = '✓ Token saved in browser.';
+      document.getElementById('gh-token-status').textContent = '✓ Saved.';
+    });
+    document.getElementById('ai-token-save').addEventListener('click', function() {
+      var tok = document.getElementById('ai-token-input').value.trim();
+      if (!tok) return;
+      localStorage.setItem(AI_KEY, tok);
+      document.getElementById('ai-token-input').value = '';
+      document.getElementById('ai-token-status').textContent = '✓ Saved.';
+    });
+
+    /* ── TIM CHAT ───────────────────────────────────────── */
+    var timMessages  = document.getElementById('tim-messages');
+    var timInput     = document.getElementById('tim-input');
+    var timSendBtn   = document.getElementById('tim-send-btn');
+    var timApplyBar  = document.getElementById('tim-apply-bar');
+    var timApplyBtn  = document.getElementById('tim-apply-btn');
+    var timDiscardBtn= document.getElementById('tim-discard-btn');
+    var pendingChanges = null;
+
+    function appendMsg(role, text) {
+      var div = document.createElement('div');
+      div.className = 'msg from-' + role;
+      div.innerHTML = '<div class="msg-sender">' + (role === 'tim' ? 'Tim' : 'You') + '</div><div class="msg-bubble">' + text.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</div>';
+      timMessages.appendChild(div);
+      timMessages.scrollTop = timMessages.scrollHeight;
+      return div;
+    }
+
+    function appendTyping() {
+      var div = document.createElement('div');
+      div.className = 'msg from-tim msg-typing';
+      div.innerHTML = '<div class="msg-sender">Tim</div><div class="msg-bubble">Thinking…</div>';
+      timMessages.appendChild(div);
+      timMessages.scrollTop = timMessages.scrollHeight;
+      return div;
+    }
+
+    timSendBtn.addEventListener('click', sendToTim);
+    timInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendToTim(); }
+    });
+
+    async function sendToTim() {
+      var msg = timInput.value.trim();
+      if (!msg) return;
+      var apiKey = localStorage.getItem(AI_KEY);
+      if (!apiKey) {
+        appendMsg('tim', 'I need an Anthropic API key to work. Scroll down to Publish Settings and save your key — it only takes a minute. Create one free at console.anthropic.com.');
+        return;
+      }
+      timInput.value = '';
+      timSendBtn.disabled = true;
+      appendMsg('john', msg);
+      var typing = appendTyping();
+      try {
+        var currentConfig = collectRanch();
+        var response = await callClaude(apiKey, msg, currentConfig);
+        timMessages.removeChild(typing);
+        var parsed = parseTimResponse(response);
+        appendMsg('tim', parsed.summary);
+        if (parsed.changes) {
+          pendingChanges = parsed.changes;
+          document.getElementById('tim-apply-summary').textContent =
+            'Tim has changes ready. Review the fields below, then apply or discard.';
+          timApplyBar.classList.add('visible');
+        }
+      } catch(err) {
+        timMessages.removeChild(typing);
+        appendMsg('tim', 'Something went wrong: ' + err.message + '\n\nCheck that your Anthropic API key is correct in Publish Settings.');
+      }
+      timSendBtn.disabled = false;
+    }
+
+    async function callClaude(apiKey, userMessage, currentConfig) {
+      var systemPrompt =
+        'You are Tim, an AI assistant helping manage the Buckhorn Ranch hunting website. ' +
+        'The ranch owner John will describe changes he wants. Your job: interpret plainly and respond.\n\n' +
+        'Current site config (JSON):\n' + JSON.stringify(currentConfig, null, 2) + '\n\n' +
+        'Rules:\n' +
+        '- Respond in 1-3 sentences confirming what you\'re changing, in a direct friendly tone.\n' +
+        '- If any values need to change, include a JSON block at the end wrapped in ```json and ```. Include ONLY changed fields.\n' +
+        '- Changeable top-level fields: phone, email, seasonYear, acreage, fenceType, location\n' +
+        '- lodgingRates: object with perHunter, nonHunting, lodgingIncludedAt, nights, days\n' +
+        '- whitetailPricing: full array of {label, fee, highlight?}\n' +
+        '- exoticPricing: full array of {label, fee, note?}. fee can be null for "call for pricing"\n' +
+        '- wingshootingPricing: full array of {label, fee, unit, note?}\n' +
+        '- If John uploads a photo and says where to use it, tell him what filename to use and confirm where it\'ll appear.\n' +
+        '- If the request is unclear, ask one focused question.\n' +
+        '- If no values change (informational question), just reply — no JSON block needed.';
+
+      var res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 1024,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: userMessage }],
+        }),
+      });
+
+      if (!res.ok) {
+        var err = await res.json().catch(function(){ return {}; });
+        throw new Error(err.error?.message || 'Anthropic API error ' + res.status);
+      }
+      var data = await res.json();
+      return data.content[0].text;
+    }
+
+    function parseTimResponse(text) {
+      var jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
+      var summary = text.replace(/```json[\s\S]*?```/g, '').trim();
+      var changes = null;
+      if (jsonMatch) {
+        try { changes = JSON.parse(jsonMatch[1]); }
+        catch(e) { /* ignore parse error, just show summary */ }
+      }
+      return { summary, changes };
+    }
+
+    timApplyBtn.addEventListener('click', function() {
+      if (!pendingChanges) return;
+      applyTimChanges(pendingChanges);
+      pendingChanges = null;
+      timApplyBar.classList.remove('visible');
+      appendMsg('tim', 'Applied. Review the fields above, then hit Save & Publish when you\'re ready.');
+    });
+
+    timDiscardBtn.addEventListener('click', function() {
+      pendingChanges = null;
+      timApplyBar.classList.remove('visible');
+      appendMsg('tim', 'Discarded. Let me know if you want to try something different.');
+    });
+
+    function applyTimChanges(changes) {
+      if (!ranch) return;
+      var merged = JSON.parse(JSON.stringify(ranch));
+      Object.keys(changes).forEach(function(key) {
+        merged[key] = changes[key];
+      });
+      ranch = merged;
+      populateFields();
+    }
+
+    /* ── PHOTO UPLOAD ───────────────────────────────────── */
+    var photoDrop     = document.getElementById('photo-drop');
+    var photoInput    = document.getElementById('photo-input');
+    var photoPreviews = document.getElementById('photo-previews');
+    var photoStatus   = document.getElementById('photo-upload-status');
+    var uploadBtn     = document.getElementById('btn-upload-photos');
+    var pendingPhotos = []; // {file, dataUrl, name}
+
+    photoInput.addEventListener('change', function() {
+      addPhotoFiles(Array.from(photoInput.files));
+      photoInput.value = '';
+    });
+    photoDrop.addEventListener('dragover', function(e) { e.preventDefault(); photoDrop.classList.add('dragover'); });
+    photoDrop.addEventListener('dragleave', function() { photoDrop.classList.remove('dragover'); });
+    photoDrop.addEventListener('drop', function(e) {
+      e.preventDefault();
+      photoDrop.classList.remove('dragover');
+      addPhotoFiles(Array.from(e.dataTransfer.files).filter(function(f) { return f.type.startsWith('image/'); }));
+    });
+
+    function addPhotoFiles(files) {
+      files.forEach(function(file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var entry = { file: file, dataUrl: e.target.result, name: file.name };
+          pendingPhotos.push(entry);
+          renderPhotoPreviews();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderPhotoPreviews() {
+      photoPreviews.innerHTML = '';
+      pendingPhotos.forEach(function(entry, i) {
+        var div = document.createElement('div');
+        div.className = 'photo-preview-item';
+        div.innerHTML =
+          '<img src="' + entry.dataUrl + '" alt="' + esc(entry.name) + '" />' +
+          '<div class="photo-name">' + esc(entry.name) + '</div>' +
+          '<button class="photo-remove" data-idx="' + i + '" title="Remove">&times;</button>';
+        photoPreviews.appendChild(div);
+      });
+      uploadBtn.style.display = pendingPhotos.length ? 'inline-block' : 'none';
+      photoPreviews.querySelectorAll('.photo-remove').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          pendingPhotos.splice(parseInt(btn.dataset.idx), 1);
+          renderPhotoPreviews();
+        });
+      });
+    }
+
+    uploadBtn.addEventListener('click', async function() {
+      var token = localStorage.getItem(TOKEN_KEY);
+      if (!token) {
+        photoStatus.textContent = '✗ No GitHub token. Save it in Publish Settings first.';
+        photoStatus.className = 'photo-upload-status error';
+        return;
+      }
+      uploadBtn.disabled = true;
+      photoStatus.className = 'photo-upload-status';
+      photoStatus.textContent = 'Uploading…';
+      var uploaded = [];
+      var errors   = [];
+      for (var i = 0; i < pendingPhotos.length; i++) {
+        var entry = pendingPhotos[i];
+        try {
+          var b64 = entry.dataUrl.split(',')[1];
+          var filename = 'img/' + entry.name.replace(/[^a-zA-Z0-9._-]/g, '-');
+          var checkRes = await fetch(
+            'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + filename,
+            { headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' } }
+          );
+          var body = { message: 'Upload photo: ' + entry.name, content: b64, branch: GH_BRANCH };
+          if (checkRes.ok) { var existing = await checkRes.json(); body.sha = existing.sha; }
+          var putRes = await fetch(
+            'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + filename,
+            {
+              method: 'PUT',
+              headers: {
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(body),
+            }
+          );
+          if (!putRes.ok) throw new Error('Upload failed');
+          uploaded.push(filename);
+        } catch(err) {
+          errors.push(entry.name);
+        }
+      }
+      if (uploaded.length) {
+        photoStatus.className = 'photo-upload-status success';
+        photoStatus.textContent = '✓ Uploaded: ' + uploaded.join(', ') + '. Tell Tim which slot to use them in.';
+        var aiKey = localStorage.getItem(AI_KEY);
+        if (aiKey) {
+          var uploadedNames = uploaded.join(', ');
+          appendMsg('tim', 'Got it — uploaded ' + uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' to the repo: ' + uploadedNames + '. Tell me where you want them used and I\'ll note it for the next publish.');
+        }
+        pendingPhotos = [];
+        renderPhotoPreviews();
+      }
+      if (errors.length) {
+        photoStatus.textContent += (uploaded.length ? ' Errors: ' : '✗ Failed: ') + errors.join(', ');
+        photoStatus.className = 'photo-upload-status error';
+      }
+      uploadBtn.disabled = false;
     });
 
   </script>
