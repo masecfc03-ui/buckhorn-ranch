@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buckhorn Ranch — Sulphur, Oklahoma</title>
+  <meta name="description" content="Free range and managed hunting in the Arbuckle Mountains. Whitetail, exotics, and waterfowl on the same property." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bone: #F5F0E8;
+      --parchment: #EDE5D8;
+      --ink: #1C1410;
+      --ink-muted: #4A3F35;
+      --brass: #A07840;
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bone);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 17px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    }
+
+    p { color: var(--ink-muted); max-width: 62ch; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 160px 0;
+    }
+
+    .section-label {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 13px;
+      letter-spacing: 0.20em;
+      font-variant: small-caps;
+      color: var(--ink-muted);
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .section-heading {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      line-height: 1.2;
+      margin-bottom: 28px;
+    }
+
+    .section-heading::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: var(--brass);
+      margin-top: 20px;
+    }
+
+    /* Hero */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('img/hero.jpg');
+      background-size: cover;
+      background-position: center;
+      will-change: transform;
+      animation: heroZoom 20s var(--ease) forwards;
+    }
+
+    @keyframes heroZoom {
+      from { transform: scale(1.0); }
+      to   { transform: scale(1.06); }
+    }
+
+    #hero-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(20,10,5,0.18) 0%, rgba(20,10,5,0.30) 60%, rgba(20,10,5,0.22) 100%);
+    }
+
+    #hero-text {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    #hero-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      font-size: clamp(3rem, 10vw, 7.5rem);
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--bone);
+      line-height: 1;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: heroFadeUp 900ms var(--ease) 200ms forwards;
+    }
+
+    #hero-sub {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.80);
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: heroFadeUp 900ms var(--ease) 1100ms forwards;
+    }
+
+    @keyframes heroFadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Ranch */
+    #ranch { background: var(--bone); }
+
+    #ranch .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* Gallery */
+    #gallery { background: var(--parchment); }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+    }
+
+    .gallery-item { cursor: pointer; overflow: hidden; }
+
+    .gallery-item img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      transition: transform 500ms var(--ease);
+    }
+
+    .gallery-item figcaption {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 14px;
+      letter-spacing: 0.10em;
+      color: var(--ink-muted);
+      margin-top: 10px;
+      font-variant: small-caps;
+    }
+
+    @media (hover: hover) {
+      .gallery-item:hover img {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(28,20,16,0.22);
+      }
+      .lodge-item:hover img {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(28,20,16,0.18);
+      }
+    }
+
+    /* Lightbox */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(20,14,10,0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms var(--ease);
+    }
+
+    #lightbox.active { opacity: 1; pointer-events: all; }
+
+    #lightbox-img {
+      max-width: 92vw;
+      max-height: 90vh;
+      object-fit: contain;
+      transform: scale(0.96);
+      transition: transform 300ms var(--ease);
+    }
+
+    #lightbox.active #lightbox-img { transform: scale(1.0); }
+
+    .lightbox-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 24px 20px;
+      color: var(--brass);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      line-height: 1;
+      opacity: 0.80;
+      transition: opacity 300ms var(--ease);
+    }
+
+    .lightbox-arrow:hover { opacity: 1; }
+    #lightbox-prev { left: 24px; }
+    #lightbox-next { right: 24px; }
+
+    #lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--bone);
+      font-size: 1.6rem;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      opacity: 0.70;
+      transition: opacity 300ms var(--ease);
+    }
+
+    #lightbox-close:hover { opacity: 1; }
+
+    #lightbox-caption {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 14px;
+      letter-spacing: 0.14em;
+      color: rgba(245,240,232,0.70);
+      font-variant: small-caps;
+      white-space: nowrap;
+    }
+
+    /* Lodge */
+    #lodge { background: var(--bone); }
+
+    .lodge-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 64px;
+    }
+
+    .lodge-grid .full-width { grid-column: 1 / -1; }
+
+    .lodge-item { overflow: hidden; }
+
+    .lodge-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      min-height: 280px;
+      transition: transform 500ms var(--ease);
+    }
+
+    .lodge-caption-strip {
+      margin-top: 32px;
+      padding: 28px 0;
+      border-top: 1px solid rgba(74,63,53,0.18);
+      border-bottom: 1px solid rgba(74,63,53,0.18);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 16px;
+      letter-spacing: 0.10em;
+      color: var(--ink-muted);
+      font-variant: small-caps;
+    }
+
+    /* Corporate */
+    #corporate { background: var(--parchment); }
+
+    #corporate .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .detail-list { list-style: none; margin-top: 32px; }
+
+    .detail-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(74,63,53,0.15);
+      color: var(--ink-muted);
+      font-size: 15px;
+    }
+
+    .detail-list li::before {
+      content: '—';
+      margin-right: 12px;
+      color: var(--brass);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    /* Pricing */
+    #pricing { background: var(--bone); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px 100px;
+      margin-top: 64px;
+    }
+
+    .pricing-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .price-table-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 13px;
+      letter-spacing: 0.20em;
+      font-variant: small-caps;
+      color: var(--ink-muted);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 240px;
+    }
+
+    .price-table tr {
+      border-bottom: 1px solid rgba(74,63,53,0.12);
+      opacity: 0;
+      transition: opacity 400ms var(--ease);
+    }
+
+    .price-table tr.visible { opacity: 1; }
+
+    .price-table td {
+      padding: 11px 0;
+      font-size: 15px;
+      color: var(--ink-muted);
+    }
+
+    .price-table td:last-child {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--ink);
+      white-space: nowrap;
+      padding-left: 32px;
+    }
+
+    .price-note {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-top: 16px;
+      font-style: italic;
+      max-width: 42ch;
+    }
+
+    /* Terms */
+    #terms { background: var(--parchment); padding: 80px 0; }
+
+    #terms .terms-inner { max-width: 680px; }
+
+    .terms-block { margin-bottom: 28px; }
+
+    .terms-block-label {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      font-variant: small-caps;
+      color: var(--brass);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    #terms p {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-bottom: 0;
+    }
+
+    /* Contact */
+    #contact { background: var(--ink); padding: 140px 0; }
+
+    #contact .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    #contact .logo { width: 120px; margin-bottom: 56px; opacity: 0.92; }
+
+    .contact-line {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      color: var(--bone);
+      margin-bottom: 12px;
+    }
+
+    .contact-line a {
+      color: var(--bone);
+      border-bottom: 1px solid rgba(160,120,64,0.40);
+      transition: border-color 400ms var(--ease);
+    }
+
+    .contact-line a:hover { border-color: var(--brass); }
+
+    .contact-location {
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      color: rgba(245,240,232,0.45);
+      margin-top: 36px;
+      font-variant: small-caps;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      max-width: none;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--ink);
+      border-top: 1px solid rgba(245,240,232,0.08);
+      padding: 28px 48px;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      color: rgba(245,240,232,0.30);
+      font-variant: small-caps;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      max-width: none;
+    }
+
+    /* Reveal animations */
+    .reveal-img {
+      opacity: 0;
+      transform: scale(1.02);
+      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+    }
+
+    .reveal-img.visible { opacity: 1; transform: scale(1.0); }
+
+    .reveal-text {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+    }
+
+    .reveal-text.visible { opacity: 1; transform: translateY(0); }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      section { padding: 100px 0; }
+      #ranch .content { grid-template-columns: 1fr; gap: 40px; }
+      .gallery-grid { grid-template-columns: 1fr; gap: 32px; }
+      .lodge-grid { grid-template-columns: 1fr; }
+      .lodge-grid .full-width { grid-column: 1; }
+      #corporate .content { grid-template-columns: 1fr; gap: 48px; }
+      .pricing-grid { grid-template-columns: 1fr; gap: 60px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Hero -->
+  <section id="hero" role="banner">
+    <div id="hero-bg" aria-hidden="true"></div>
+    <div id="hero-scrim" aria-hidden="true"></div>
+    <div id="hero-text">
+      <h1 id="hero-title">Buckhorn Ranch</h1>
+      <p id="hero-sub">Sulphur, Oklahoma</p>
+    </div>
+  </section>
+
+  <!-- The Ranch -->
+  <section id="ranch">
+    <div class="container">
+      <div class="content">
+        <div>
+          <span class="section-label reveal-text">The Property</span>
+          <h2 class="section-heading reveal-text">Free Range.<br>Managed Ground.</h2>
+        </div>
+        <div>
+          <p class="reveal-text" id="ranch-p1"></p>
+          <p class="reveal-text" style="margin-top:20px" id="ranch-p2"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trophy Gallery -->
+  <section id="gallery">
+    <div class="container">
+      <span class="section-label reveal-text">Trophy Gallery</span>
+      <h2 class="section-heading reveal-text">2025 Season</h2>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button id="lightbox-close" aria-label="Close">&#215;</button>
+    <button class="lightbox-arrow" id="lightbox-prev" aria-label="Previous">&#8592;</button>
+    <img id="lightbox-img" src="" alt="" />
+    <button class="lightbox-arrow" id="lightbox-next" aria-label="Next">&#8594;</button>
+    <div id="lightbox-caption"></div>
+  </div>
+
+  <!-- The Lodge -->
+  <section id="lodge">
+    <div class="container">
+      <span class="section-label reveal-text">Accommodations</span>
+      <h2 class="section-heading reveal-text">The Lodge</h2>
+      <div class="lodge-grid" id="lodge-grid"></div>
+      <div class="lodge-caption-strip reveal-text" id="lodge-caption"></div>
+    </div>
+  </section>
+
+  <!-- Corporate & Group -->
+  <section id="corporate">
+    <div class="container">
+      <div class="content">
+        <div>
+          <span class="section-label reveal-text">Groups &amp; Corporate</span>
+          <h2 class="section-heading reveal-text">Full Ranch<br>Buyout</h2>
+          <p class="reveal-text" id="corporate-prose"></p>
+        </div>
+        <div>
+          <ul class="detail-list" id="corporate-list"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <div class="container">
+      <span class="section-label reveal-text">Rates &amp; Fees</span>
+      <h2 class="section-heading reveal-text" id="pricing-heading"></h2>
+      <div class="pricing-grid" id="pricing-grid"></div>
+    </div>
+  </section>
+
+  <!-- Terms -->
+  <section id="terms">
+    <div class="container">
+      <div class="terms-inner" id="terms-inner"></div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <img src="img/logo.jpg" alt="Buckhorn Ranch" class="logo reveal-img" />
+      <div class="contact-line reveal-text">
+        <!-- PHONE: replace href and text with real number -->
+        <a href="tel:+1-xxx-xxx-xxxx" id="contact-phone"></a>
+      </div>
+      <div class="contact-line reveal-text" style="margin-top:8px">
+        <!-- EMAIL: replace href and text with real email -->
+        <a href="mailto:info@buckhornranch.com" id="contact-email"></a>
+      </div>
+      <p class="contact-location reveal-text" id="contact-location"></p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p id="footer-text"></p>
+  </footer>
+
+  <script>
+    /* =====================================================
+       CONFIG BLOCK — edit everything here.
+       One change here updates the entire page.
+    ===================================================== */
+    const RANCH = {
+      name: 'Buckhorn Ranch',
+      tagline: 'Sulphur, Oklahoma',
+
+      contact: {
+        phone: '(xxx) xxx-xxxx',              // TODO: replace with real phone
+        phoneHref: 'tel:+1-xxx-xxx-xxxx',     // TODO: replace with real tel: href
+        email: 'info@buckhornranch.com',      // TODO: replace with real email
+        emailHref: 'mailto:info@buckhornranch.com',
+        location: 'Sulphur, Oklahoma · Arbuckle Mountains',
+      },
+
+      ranchCopy: [
+        'Buckhorn Ranch runs roughly 2,000 acres of free range and managed ground in the Arbuckle Mountains. Whitetail, exotics, and waterfowl on the same property.',
+        'Once you arrive, everything is handled — guides, meals, skinning, and field prep for any trophy leaving the ranch.',
+      ],
+
+      gallery: [
+        { src: 'img/trophy-01.jpg', caption: 'Canada Goose · 2025' },
+        { src: 'img/trophy-02.jpg', caption: 'Mallard Drake · 2025' },
+        { src: 'img/trophy-03.jpg', caption: 'Waterfowl Hunt · 2025' },
+        { src: 'img/trophy-04.jpg', caption: 'Night Hunt · 2025' },
+        { src: 'img/trophy-05.jpg', caption: 'Evening on the Lake · 2025' },
+        { src: 'img/trophy-06.jpg', caption: 'Sunset · 2025' },
+      ],
+
+      lodge: {
+        images: [
+          { src: 'img/lodge-01.jpg', alt: 'Lodge interior' },
+          { src: 'img/lodge-02.jpg', alt: 'Sunrise over the lake from the dock' },
+          { src: 'img/lodge-03.jpg', alt: 'Morning mist on the lake' },
+          { src: 'img/lodge-04.jpg', alt: 'Stone bell gate entrance' },
+          { src: 'img/lodge-05.jpg', alt: 'Ranch in winter' },
+          { src: 'img/lodge-06.jpg', alt: 'On-site shooting range' },
+          { src: 'img/lodge-07.jpg', alt: 'Snow sunrise over ranch buildings' },
+        ],
+        caption: 'Sleeps 10 · Chef-prepared meals · Covered porch · Skinning shed · Walk-in cooler · Shooting range on site',
+      },
+
+      corporate: {
+        prose: 'Full ranch buyout available for groups. Multi-gun pricing quoted directly. Non-hunting guests welcome at $400. Invoicing and W9 on request. Two hours from Dallas, ninety minutes from Oklahoma City.',
+        details: [
+          'Full ranch buyout available',
+          'Chef-prepared meals and open common space',
+          'Cell service and wifi at the lodge',
+          'Non-hunting guests: $400',
+          'Invoicing and W9 available',
+          'Group and multi-gun pricing quoted directly',
+        ],
+      },
+
+      pricing: {
+        seasonYear: '2025–2026',
+
+        lodging: {
+          title: 'Lodging & Meals',
+          rows: [
+            { label: 'Per hunter — 2 nights / 3 days', value: '$1,500' },
+            { label: 'Non-hunting guests', value: '$400' },
+          ],
+          note: 'Lodging included when trophy fees reach $6,000 or greater.',
+        },
+
+        whitetail: {
+          title: 'Whitetail Trophy Fee (SCI Score)',
+          rows: [
+            { label: 'Up to 129', value: '$3,000' },
+            { label: '130–139', value: '$4,000' },
+            { label: '140–149', value: '$5,000' },
+            { label: '150–159', value: '$6,000' },
+            { label: '160–169', value: '$7,000' },
+            { label: '170–179', value: '$8,500' },
+            { label: '180–189', value: '$9,500' },
+            { label: '190–199', value: '$12,000' },
+            { label: '200–219', value: '$14,000' },
+            { label: '220–239', value: '$16,000' },
+            { label: '240–279', value: '$18,000' },
+            { label: '280–300+', value: '$20,000' },
+          ],
+          note: null,
+        },
+
+        exotics: {
+          title: 'Exotic Trophy Fee',
+          rows: [
+            { label: 'Bison Bull', value: 'On request' },
+            { label: 'Gemsbok', value: '$8,000' },
+            { label: 'Fallow Deer', value: '$7,000' },
+            { label: 'Red Stag 250–299 SCI', value: '$7,000' },
+            { label: 'Red Stag 300–349 SCI', value: '$10,000' },
+            { label: 'Red Stag 350+ SCI', value: '$15,000' },
+            { label: 'Scimitar Oryx', value: '$6,000' },
+            { label: 'Zebra', value: '$6,000' },
+            { label: 'Red Deer Cow', value: '$1,500' },
+          ],
+          note: 'Red Deer Cow: best-tasting meat on the ranch.',
+        },
+
+        wingshooting: {
+          title: 'Wingshooting',
+          rows: [
+            { label: 'Spring Turkey — shotgun only, April–May', value: '$1,500 / hunter' },
+            { label: 'Quail — January through mid-March', value: '$1,500 / gun' },
+          ],
+          note: 'Quail: released birds, dogs and handler included. Turkey and quail work well for larger groups. Family and group specials available.',
+        },
+      },
+
+      terms: {
+        included: 'Field preparation of any trophy for shipment, lodging, accommodations, food and beverages.',
+        notIncluded: 'Oklahoma license and tag fees, transportation to the lodge, gratuity.',
+        wounded: 'A wounded animal is charged the same as a kill. We will do our best to recover it.',
+        seasons: 'Whitetail season: October through December, subject to availability. Exotics available year round. Deposits lock in price.',
+      },
+    };
+
+    /* ===================================================
+       Render
+    =================================================== */
+    function make(tag, cls) {
+      const el = document.createElement(tag);
+      if (cls) el.className = cls;
+      return el;
+    }
+
+    // Ranch copy
+    document.getElementById('ranch-p1').textContent = RANCH.ranchCopy[0];
+    document.getElementById('ranch-p2').textContent = RANCH.ranchCopy[1];
+
+    // Gallery
+    const gGrid = document.getElementById('gallery-grid');
+    RANCH.gallery.forEach((item, i) => {
+      const fig = make('figure', 'gallery-item reveal-img');
+      fig.dataset.index = i;
+      const img = make('img');
+      img.src = item.src;
+      img.alt = item.caption;
+      img.loading = 'lazy';
+      img.width = 800;
+      img.height = 600;
+      const cap = make('figcaption');
+      cap.textContent = item.caption;
+      fig.appendChild(img);
+      fig.appendChild(cap);
+      gGrid.appendChild(fig);
+    });
+
+    // Lodge grid
+    const lGrid = document.getElementById('lodge-grid');
+    RANCH.lodge.images.forEach((item, i) => {
+      const div = make('div', i === 0 ? 'lodge-item full-width reveal-img' : 'lodge-item reveal-img');
+      const img = make('img');
+      img.src = item.src;
+      img.alt = item.alt;
+      img.loading = 'lazy';
+      if (i === 0) img.style.minHeight = '520px';
+      div.appendChild(img);
+      lGrid.appendChild(div);
+    });
+    document.getElementById('lodge-caption').textContent = RANCH.lodge.caption;
+
+    // Corporate
+    document.getElementById('corporate-prose').textContent = RANCH.corporate.prose;
+    const cList = document.getElementById('corporate-list');
+    RANCH.corporate.details.forEach(item => {
+      const li = make('li', 'reveal-text');
+      li.textContent = item;
+      cList.appendChild(li);
+    });
+
+    // Pricing heading
+    document.getElementById('pricing-heading').textContent = RANCH.pricing.seasonYear + ' Season';
+
+    // Build a pricing table
+    function buildTable(data) {
+      const wrap = make('div', 'pricing-table-wrap reveal-text');
+      const title = make('span', 'price-table-title');
+      title.textContent = data.title;
+      wrap.appendChild(title);
+
+      const table = make('table', 'price-table');
+      table.setAttribute('role', 'table');
+      const tbody = make('tbody');
+      data.rows.forEach(row => {
+        const tr = make('tr');
+        const td1 = make('td');
+        td1.textContent = row.label;
+        const td2 = make('td');
+        td2.textContent = row.value;
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+
+      if (data.note) {
+        const note = make('p', 'price-note');
+        note.textContent = data.note;
+        wrap.appendChild(note);
+      }
+      return wrap;
+    }
+
+    const pGrid = document.getElementById('pricing-grid');
+    const pr = RANCH.pricing;
+    pGrid.appendChild(buildTable(pr.lodging));
+    pGrid.appendChild(buildTable(pr.wingshooting));
+    pGrid.appendChild(buildTable(pr.whitetail));
+    pGrid.appendChild(buildTable(pr.exotics));
+
+    // Terms
+    const termsEl = document.getElementById('terms-inner');
+    [
+      { label: 'Included', text: RANCH.terms.included },
+      { label: 'Not included', text: RANCH.terms.notIncluded },
+      { label: 'Wounded game', text: RANCH.terms.wounded },
+      { label: 'Seasons', text: RANCH.terms.seasons },
+    ].forEach(t => {
+      const block = make('div', 'terms-block reveal-text');
+      const lbl = make('span', 'terms-block-label');
+      lbl.textContent = t.label;
+      const p = make('p');
+      p.textContent = t.text;
+      block.appendChild(lbl);
+      block.appendChild(p);
+      termsEl.appendChild(block);
+    });
+
+    // Contact
+    const phoneA = document.getElementById('contact-phone');
+    phoneA.textContent = RANCH.contact.phone;
+    phoneA.href = RANCH.contact.phoneHref;
+
+    const emailA = document.getElementById('contact-email');
+    emailA.textContent = RANCH.contact.email;
+    emailA.href = RANCH.contact.emailHref;
+
+    document.getElementById('contact-location').textContent = RANCH.contact.location;
+
+    // Footer
+    document.getElementById('footer-text').textContent =
+      RANCH.name + ' · ' + new Date().getFullYear();
+
+    /* ===================================================
+       Lightbox
+    =================================================== */
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    const lbCap = document.getElementById('lightbox-caption');
+    let idx = 0;
+    let touchX = 0;
+
+    function lbOpen(i) {
+      idx = i;
+      lbShow();
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function lbClose() {
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function lbShow() {
+      const item = RANCH.gallery[idx];
+      lbImg.src = item.src;
+      lbImg.alt = item.caption;
+      lbCap.textContent = item.caption;
+    }
+
+    function lbPrev() { idx = (idx - 1 + RANCH.gallery.length) % RANCH.gallery.length; lbShow(); }
+    function lbNext() { idx = (idx + 1) % RANCH.gallery.length; lbShow(); }
+
+    gGrid.addEventListener('click', e => {
+      const fig = e.target.closest('.gallery-item');
+      if (fig) lbOpen(parseInt(fig.dataset.index, 10));
+    });
+
+    document.getElementById('lightbox-close').addEventListener('click', lbClose);
+    document.getElementById('lightbox-prev').addEventListener('click', lbPrev);
+    document.getElementById('lightbox-next').addEventListener('click', lbNext);
+    lb.addEventListener('click', e => { if (e.target === lb) lbClose(); });
+
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('active')) return;
+      if (e.key === 'Escape') lbClose();
+      if (e.key === 'ArrowLeft') lbPrev();
+      if (e.key === 'ArrowRight') lbNext();
+    });
+
+    lb.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 48) dx < 0 ? lbNext() : lbPrev();
+    }, { passive: true });
+
+    /* ===================================================
+       Scroll reveal (IntersectionObserver)
+    =================================================== */
+    const ioOpts = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
+
+    const imgIO = new IntersectionObserver((entries, obs) => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('visible');
+        obs.unobserve(en.target);
+      });
+    }, ioOpts);
+
+    const txtIO = new IntersectionObserver((entries, obs) => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        const siblings = Array.from(en.target.parentElement.querySelectorAll('.reveal-text'));
+        const i = siblings.indexOf(en.target);
+        en.target.style.transitionDelay = (i * 80) + 'ms';
+        en.target.classList.add('visible');
+        obs.unobserve(en.target);
+      });
+    }, ioOpts);
+
+    document.querySelectorAll('.reveal-img').forEach(el => imgIO.observe(el));
+    document.querySelectorAll('.reveal-text').forEach(el => txtIO.observe(el));
+
+    // Pricing row stagger
+    const tableIO = new IntersectionObserver((entries, obs) => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        en.target.querySelectorAll('tr').forEach((row, i) => {
+          setTimeout(() => row.classList.add('visible'), i * 40);
+        });
+        obs.unobserve(en.target);
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.price-table').forEach(t => tableIO.observe(t));
+  </script>
+</body>
+</html>
