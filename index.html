@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Buckhorn Ranch — Sulphur, Oklahoma</title>
-  <meta name="description" content="Free range and managed hunting in the Arbuckle Mountains. Whitetail, exotics, and waterfowl on the same property." />
+  <meta name="description" content="1,750 acres of high-fence hunting in the Arbuckle Mountains. Whitetail, exotics, and waterfowl. Guided hunts, lodge, chef-prepared meals." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
   <style>
+    /* ── DESIGN TOKENS ─────────────────────────────────── */
     :root {
       --bone: #F5F0E8;
       --parchment: #EDE5D8;
@@ -17,6 +18,7 @@
       --ink-muted: #4A3F35;
       --brass: #A07840;
       --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --section-pad: clamp(80px, 12vw, 160px);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -28,16 +30,14 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; }
-
+    /* ── BODY & GRAIN ────────────────────────────────────── */
     body {
-      background-color: var(--bone);
+      background: var(--bone);
       color: var(--ink);
       font-family: system-ui, -apple-system, sans-serif;
       font-size: 17px;
       line-height: 1.75;
-      -webkit-font-smoothing: antialiased;
-      position: relative;
+      overflow-x: hidden;
     }
 
     body::before {
@@ -45,938 +45,1015 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 0;
+      z-index: 1000;
       opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
     }
 
-    p { color: var(--ink-muted); max-width: 62ch; }
-    a { color: inherit; text-decoration: none; }
-    img { display: block; max-width: 100%; }
-
-    .container {
-      width: 100%;
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 48px;
-    }
-
-    section {
-      position: relative;
-      z-index: 1;
-      padding: 160px 0;
+    /* ── TYPOGRAPHY ─────────────────────────────────────── */
+    h1, h2, h3, .garamond {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
     }
 
     .section-label {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 13px;
-      letter-spacing: 0.20em;
       font-variant: small-caps;
+      letter-spacing: 0.18em;
+      font-size: 12px;
       color: var(--ink-muted);
+      text-align: center;
       display: block;
       margin-bottom: 20px;
+      text-transform: lowercase;
     }
 
-    .section-heading {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(2rem, 5vw, 3.25rem);
-      font-weight: 300;
-      letter-spacing: 0.12em;
-      line-height: 1.2;
-      margin-bottom: 28px;
-    }
-
-    .section-heading::after {
-      content: '';
+    .brass-rule {
       display: block;
       width: 60px;
       height: 2px;
       background: var(--brass);
-      margin-top: 20px;
+      margin: 24px auto 48px;
     }
 
-    /* Hero */
+    /* ── SECTIONS ────────────────────────────────────────── */
+    section {
+      padding: var(--section-pad) 24px;
+      text-align: center;
+    }
+
+    .inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* ── SCROLL ANIMATIONS ───────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+    }
+    .fade-in {
+      opacity: 0;
+      transform: scale(1.03);
+      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+    }
+    .heading-reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+    }
+    .rule-reveal {
+      width: 0 !important;
+      transition: width 600ms var(--ease) 200ms;
+    }
+    .is-visible {
+      opacity: 1 !important;
+      transform: none !important;
+      width: 60px !important;
+    }
+
+    /* ── 1. HERO ─────────────────────────────────────────── */
     #hero {
       position: relative;
-      height: 100vh;
+      height: 100svh;
       min-height: 600px;
-      overflow: hidden;
-      padding: 0;
+      background: url('/img/hero.jpg') center/cover no-repeat;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-end;
+      padding: 0;
+      overflow: hidden;
     }
 
-    #hero-bg {
+    #hero::after {
+      content: '';
       position: absolute;
       inset: 0;
-      background-image: url('img/hero.jpg');
-      background-size: cover;
-      background-position: center;
-      will-change: transform;
-      animation: heroZoom 20s var(--ease) forwards;
+      background: linear-gradient(to bottom, rgba(20,14,10,0.2) 0%, rgba(20,14,10,0.6) 100%);
     }
 
-    @keyframes heroZoom {
+    @keyframes heroScale {
       from { transform: scale(1.0); }
       to   { transform: scale(1.06); }
     }
 
-    #hero-scrim {
+    #hero-bg-scale {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(20,10,5,0.18) 0%, rgba(20,10,5,0.30) 60%, rgba(20,10,5,0.22) 100%);
+      background: url('/img/hero.jpg') center/cover no-repeat;
+      animation: heroScale 20s ease-out forwards;
+      will-change: transform;
     }
 
-    #hero-text {
+    #hero .hero-content {
       position: relative;
       z-index: 2;
       text-align: center;
+      width: 100%;
+      padding: 0 24px clamp(60px, 8vw, 100px);
     }
 
-    #hero-title {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-weight: 300;
-      font-size: clamp(3rem, 10vw, 7.5rem);
-      letter-spacing: 0.20em;
-      text-transform: uppercase;
-      color: var(--bone);
-      line-height: 1;
+    #hero h1 {
+      font-size: clamp(42px, 7vw, 80px);
+      letter-spacing: 0.2em;
+      color: #F5F0E8;
+      line-height: 1.0;
       opacity: 0;
       transform: translateY(12px);
-      animation: heroFadeUp 900ms var(--ease) 200ms forwards;
+      transition: opacity 900ms var(--ease) 200ms, transform 900ms var(--ease) 200ms;
     }
 
-    #hero-sub {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-weight: 300;
-      font-size: clamp(1rem, 2.5vw, 1.4rem);
-      letter-spacing: 0.20em;
-      text-transform: uppercase;
-      color: rgba(245,240,232,0.80);
-      margin-top: 20px;
+    #hero .hero-loc {
+      font-size: 16px;
+      letter-spacing: 0.15em;
+      color: var(--brass);
+      margin-top: 12px;
       opacity: 0;
       transform: translateY(12px);
-      animation: heroFadeUp 900ms var(--ease) 1100ms forwards;
+      transition: opacity 900ms var(--ease) 1100ms, transform 900ms var(--ease) 1100ms;
     }
 
-    @keyframes heroFadeUp {
-      to { opacity: 1; transform: translateY(0); }
+    #hero .hero-tag {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 24px;
+      color: #EDE5D8;
+      margin-top: 16px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 900ms var(--ease) 1300ms, transform 900ms var(--ease) 1300ms;
     }
 
-    /* Ranch */
-    #ranch { background: var(--bone); }
-
-    #ranch .content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
+    #hero.loaded h1,
+    #hero.loaded .hero-loc,
+    #hero.loaded .hero-tag {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* Gallery */
-    #gallery { background: var(--parchment); }
+    /* ── 2. THE RANCH ────────────────────────────────────── */
+    #ranch h2 {
+      font-size: clamp(36px, 5vw, 52px);
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
 
-    .gallery-grid {
+    #ranch p {
+      color: var(--ink-muted);
+      margin-bottom: 20px;
+    }
+    #ranch p:last-child { margin-bottom: 0; }
+
+    /* ── 3. TROPHY / TABS ────────────────────────────────── */
+    #trophy h2 {
+      font-size: clamp(36px, 5vw, 52px);
+      margin-bottom: 32px;
+    }
+
+    .tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-variant: small-caps;
+      letter-spacing: 0.12em;
+      font-size: 14px;
+      color: var(--ink-muted);
+      opacity: 0.6;
+      padding-bottom: 8px;
+      transition: color 300ms var(--ease), opacity 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .tab-btn.active {
+      border-color: var(--brass);
+      opacity: 1;
+      color: var(--ink);
+    }
+
+    @media (hover: hover) {
+      .tab-btn:hover {
+        color: var(--brass);
+        opacity: 1;
+      }
+    }
+
+    .tab-panel {
+      opacity: 0;
+      transition: opacity 300ms var(--ease);
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+      left: 0;
+    }
+
+    .tab-panel.active {
+      opacity: 1;
+      pointer-events: auto;
+      position: relative;
+    }
+
+    .tab-panels-wrap {
+      position: relative;
+      min-height: 200px;
+    }
+
+    /* Trophy gallery */
+    .trophy-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
-      margin-top: 64px;
+      text-align: center;
     }
 
-    .gallery-item { cursor: pointer; overflow: hidden; }
+    @media (max-width: 768px) {
+      .trophy-grid { grid-template-columns: 1fr; }
+    }
 
-    .gallery-item img {
+    .trophy-item {
+      cursor: pointer;
+    }
+
+    .trophy-item img {
       width: 100%;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 4/3;
       object-fit: cover;
-      transition: transform 500ms var(--ease);
+      display: block;
+      transition: transform 500ms var(--ease), box-shadow 500ms var(--ease);
     }
 
-    .gallery-item figcaption {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 14px;
-      letter-spacing: 0.10em;
+    @media (hover: hover) {
+      .trophy-item img:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(28,20,16,0.22);
+      }
+    }
+
+    .trophy-caption {
+      font-size: 13px;
       color: var(--ink-muted);
+      letter-spacing: 0.06em;
       margin-top: 10px;
       font-variant: small-caps;
     }
 
-    @media (hover: hover) {
-      .gallery-item:hover img {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(28,20,16,0.22);
-      }
-      .lodge-item:hover img {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(28,20,16,0.18);
-      }
+    /* Ranch history tab */
+    .history-text {
+      max-width: 620px;
+      margin: 0 auto;
+      text-align: left;
+      color: var(--ink-muted);
     }
+    .history-text p {
+      margin-bottom: 24px;
+    }
+    .history-text p:last-child { margin-bottom: 0; }
 
-    /* Lightbox */
+    /* ── LIGHTBOX ────────────────────────────────────────── */
     #lightbox {
       position: fixed;
       inset: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       background: rgba(20,14,10,0.92);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 300ms var(--ease);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
     }
 
-    #lightbox.active { opacity: 1; pointer-events: all; }
+    #lightbox.open {
+      display: flex;
+    }
 
-    #lightbox-img {
-      max-width: 92vw;
-      max-height: 90vh;
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 88vh;
       object-fit: contain;
+      opacity: 0;
       transform: scale(0.96);
-      transition: transform 300ms var(--ease);
+      transition: opacity 300ms var(--ease), transform 300ms var(--ease);
     }
 
-    #lightbox.active #lightbox-img { transform: scale(1.0); }
+    #lightbox img.lb-visible {
+      opacity: 1;
+      transform: scale(1.0);
+    }
 
-    .lightbox-arrow {
+    #lb-prev, #lb-next {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
-      cursor: pointer;
-      padding: 24px 20px;
       color: var(--brass);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 2.2rem;
-      font-weight: 300;
+      font-size: 32px;
+      cursor: pointer;
+      padding: 16px;
       line-height: 1;
-      opacity: 0.80;
-      transition: opacity 300ms var(--ease);
+      user-select: none;
     }
+    #lb-prev { left: 16px; }
+    #lb-next { right: 16px; }
 
-    .lightbox-arrow:hover { opacity: 1; }
-    #lightbox-prev { left: 24px; }
-    #lightbox-next { right: 24px; }
-
-    #lightbox-close {
+    #lb-close {
       position: absolute;
-      top: 24px;
-      right: 28px;
+      top: 20px;
+      right: 24px;
       background: none;
       border: none;
+      color: var(--parchment);
+      font-size: 24px;
       cursor: pointer;
-      color: var(--bone);
-      font-size: 1.6rem;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-weight: 300;
-      opacity: 0.70;
-      transition: opacity 300ms var(--ease);
+      opacity: 0.7;
+      line-height: 1;
     }
 
-    #lightbox-close:hover { opacity: 1; }
-
-    #lightbox-caption {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 14px;
-      letter-spacing: 0.14em;
-      color: rgba(245,240,232,0.70);
-      font-variant: small-caps;
-      white-space: nowrap;
+    /* ── 4. THE LODGE ────────────────────────────────────── */
+    #lodge h2 {
+      font-size: clamp(36px, 5vw, 52px);
+      margin-bottom: 8px;
     }
-
-    /* Lodge */
-    #lodge { background: var(--bone); }
 
     .lodge-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 64px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 48px 0 48px;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .lodge-grid .full-width { grid-column: 1 / -1; }
+    @media (max-width: 768px) {
+      .lodge-grid { grid-template-columns: 1fr; }
+    }
 
-    .lodge-item { overflow: hidden; }
-
-    .lodge-item img {
+    .lodge-grid img {
       width: 100%;
-      height: 100%;
+      height: 400px;
       object-fit: cover;
-      min-height: 280px;
-      transition: transform 500ms var(--ease);
+      display: block;
+      transition: transform 500ms var(--ease), box-shadow 500ms var(--ease);
     }
 
-    .lodge-caption-strip {
-      margin-top: 32px;
-      padding: 28px 0;
-      border-top: 1px solid rgba(74,63,53,0.18);
-      border-bottom: 1px solid rgba(74,63,53,0.18);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 16px;
-      letter-spacing: 0.10em;
-      color: var(--ink-muted);
+    @media (max-width: 768px) {
+      .lodge-grid img { height: 260px; }
+    }
+
+    @media (hover: hover) {
+      .lodge-grid img:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(28,20,16,0.22);
+      }
+    }
+
+    .feature-strip {
       font-variant: small-caps;
+      letter-spacing: 0.15em;
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-top: 40px;
     }
 
-    /* Corporate */
-    #corporate { background: var(--parchment); }
-
-    #corporate .content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
+    /* ── 5. CORPORATE ────────────────────────────────────── */
+    #corporate h2 {
+      font-size: clamp(36px, 5vw, 52px);
+      margin-bottom: 8px;
     }
 
-    .detail-list { list-style: none; margin-top: 32px; }
+    #corporate p {
+      color: var(--ink-muted);
+      margin-bottom: 32px;
+    }
+
+    .detail-list {
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+      margin: 0 auto;
+    }
 
     .detail-list li {
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(74,63,53,0.15);
-      color: var(--ink-muted);
       font-size: 15px;
+      color: var(--ink-muted);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(28,20,16,0.1);
     }
+
+    .detail-list li:last-child { border-bottom: none; }
 
     .detail-list li::before {
-      content: '—';
-      margin-right: 12px;
+      content: '— ';
       color: var(--brass);
-      font-family: 'Cormorant Garamond', Georgia, serif;
     }
 
-    /* Pricing */
-    #pricing { background: var(--bone); }
+    /* ── 6. PRICING ──────────────────────────────────────── */
+    #pricing h2 {
+      font-size: clamp(36px, 5vw, 52px);
+      margin-bottom: 8px;
+    }
 
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px 100px;
-      margin-top: 64px;
+    .pricing-block {
+      max-width: 680px;
+      margin: 0 auto 64px;
+      text-align: left;
+    }
+
+    .pricing-block:last-child { margin-bottom: 0; }
+
+    .pricing-block h3 {
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      margin-bottom: 20px;
+      color: var(--ink);
+      text-align: center;
     }
 
     .pricing-table-wrap {
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
     }
 
-    .price-table-title {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 13px;
-      letter-spacing: 0.20em;
-      font-variant: small-caps;
-      color: var(--ink-muted);
-      margin-bottom: 20px;
-      display: block;
-    }
-
-    .price-table {
+    .pricing-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 240px;
-    }
-
-    .price-table tr {
-      border-bottom: 1px solid rgba(74,63,53,0.12);
-      opacity: 0;
-      transition: opacity 400ms var(--ease);
-    }
-
-    .price-table tr.visible { opacity: 1; }
-
-    .price-table td {
-      padding: 11px 0;
       font-size: 15px;
-      color: var(--ink-muted);
+      min-width: 320px;
     }
 
-    .price-table td:last-child {
+    .pricing-table td {
+      padding: 11px 4px;
+      border-bottom: 1px solid rgba(28,20,16,0.15);
+      vertical-align: middle;
+    }
+
+    .pricing-table td:last-child {
       text-align: right;
       font-variant-numeric: tabular-nums;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 17px;
-      font-weight: 400;
-      color: var(--ink);
-      white-space: nowrap;
-      padding-left: 32px;
+      letter-spacing: 0.02em;
     }
 
-    .price-note {
+    .pricing-table .highlight-row td {
+      background: rgba(160,120,64,0.08);
+    }
+
+    .pricing-table .highlight-row td:first-child {
+      padding-left: 8px;
+    }
+
+    .table-note {
       font-size: 13px;
       color: var(--ink-muted);
-      margin-top: 16px;
       font-style: italic;
-      max-width: 42ch;
-    }
-
-    /* Terms */
-    #terms { background: var(--parchment); padding: 80px 0; }
-
-    #terms .terms-inner { max-width: 680px; }
-
-    .terms-block { margin-bottom: 28px; }
-
-    .terms-block-label {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      font-variant: small-caps;
-      color: var(--brass);
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    #terms p {
-      font-size: 14px;
-      color: var(--ink-muted);
-      margin-bottom: 0;
-    }
-
-    /* Contact */
-    #contact { background: var(--ink); padding: 140px 0; }
-
-    #contact .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin-top: 14px;
       text-align: center;
     }
 
-    #contact .logo { width: 120px; margin-bottom: 56px; opacity: 0.92; }
-
-    .contact-line {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(1.4rem, 3.5vw, 2rem);
-      font-weight: 300;
-      letter-spacing: 0.12em;
-      color: var(--bone);
-      margin-bottom: 12px;
+    /* ── 7. TERMS ────────────────────────────────────────── */
+    #terms {
+      background: var(--parchment);
     }
 
-    .contact-line a {
-      color: var(--bone);
-      border-bottom: 1px solid rgba(160,120,64,0.40);
-      transition: border-color 400ms var(--ease);
+    #terms h2 {
+      font-size: clamp(28px, 4vw, 38px);
+      margin-bottom: 8px;
     }
 
-    .contact-line a:hover { border-color: var(--brass); }
+    .terms-body {
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 14px;
+      color: var(--ink-muted);
+    }
+
+    .terms-body p {
+      margin-bottom: 16px;
+    }
+    .terms-body p:last-child { margin-bottom: 0; }
+
+    /* ── 8. CONTACT ──────────────────────────────────────── */
+    #contact h2 {
+      font-size: clamp(36px, 5vw, 48px);
+      margin-bottom: 8px;
+    }
+
+    .contact-logo {
+      width: 120px;
+      display: block;
+      margin: 0 auto 32px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .contact-links a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 18px;
+      letter-spacing: 0.04em;
+      transition: color 300ms var(--ease);
+    }
+
+    @media (hover: hover) {
+      .contact-links a:hover { color: var(--brass); }
+    }
 
     .contact-location {
       font-size: 14px;
-      letter-spacing: 0.18em;
-      color: rgba(245,240,232,0.45);
-      margin-top: 36px;
+      color: var(--ink-muted);
+      letter-spacing: 0.08em;
+      margin-top: 20px;
       font-variant: small-caps;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      max-width: none;
     }
 
-    /* Footer */
+    /* ── 9. FOOTER ───────────────────────────────────────── */
     footer {
-      background: var(--ink);
-      border-top: 1px solid rgba(245,240,232,0.08);
-      padding: 28px 48px;
       text-align: center;
+      padding: 32px 24px;
+      font-size: 13px;
+      color: var(--ink-muted);
+      border-top: 1px solid rgba(28,20,16,0.12);
     }
 
-    footer p {
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      color: rgba(245,240,232,0.30);
-      font-variant: small-caps;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      max-width: none;
-    }
-
-    /* Reveal animations */
-    .reveal-img {
-      opacity: 0;
-      transform: scale(1.02);
-      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
-    }
-
-    .reveal-img.visible { opacity: 1; transform: scale(1.0); }
-
-    .reveal-text {
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 600ms var(--ease), transform 600ms var(--ease);
-    }
-
-    .reveal-text.visible { opacity: 1; transform: translateY(0); }
-
-    /* Mobile */
+    /* ── MOBILE OVERRIDES ────────────────────────────────── */
     @media (max-width: 768px) {
-      .container { padding: 0 24px; }
-      section { padding: 100px 0; }
-      #ranch .content { grid-template-columns: 1fr; gap: 40px; }
-      .gallery-grid { grid-template-columns: 1fr; gap: 32px; }
-      .lodge-grid { grid-template-columns: 1fr; }
-      .lodge-grid .full-width { grid-column: 1; }
-      #corporate .content { grid-template-columns: 1fr; gap: 48px; }
-      .pricing-grid { grid-template-columns: 1fr; gap: 60px; }
+      section { padding: 80px 24px; }
+      .pricing-table-wrap { overflow-x: auto; }
+      .pricing-table { min-width: 420px; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- Hero -->
-  <section id="hero" role="banner">
-    <div id="hero-bg" aria-hidden="true"></div>
-    <div id="hero-scrim" aria-hidden="true"></div>
-    <div id="hero-text">
-      <h1 id="hero-title">Buckhorn Ranch</h1>
-      <p id="hero-sub">Sulphur, Oklahoma</p>
+  <!-- ── 1. HERO ──────────────────────────────────────────── -->
+  <section id="hero">
+    <div id="hero-bg-scale"></div>
+    <div class="hero-content">
+      <h1 id="hero-title">BUCKHORN RANCH</h1>
+      <p class="hero-loc" id="hero-loc">Sulphur, Oklahoma &middot; 1,750 Acres &middot; High Fence</p>
+      <p class="hero-tag" id="hero-tag">Whitetail. Exotics. Waterfowl.</p>
     </div>
   </section>
 
-  <!-- The Ranch -->
+  <!-- ── 2. THE RANCH ─────────────────────────────────────── -->
   <section id="ranch">
-    <div class="container">
-      <div class="content">
-        <div>
-          <span class="section-label reveal-text">The Property</span>
-          <h2 class="section-heading reveal-text">Free Range.<br>Managed Ground.</h2>
+    <div class="inner">
+      <span class="section-label fade-up">The Ranch</span>
+      <h2 class="heading-reveal">1,750 Acres. One Property.</h2>
+      <span class="brass-rule rule-reveal"></span>
+      <p class="fade-up">
+        Buckhorn Ranch sits on 1,750 high-fenced acres in the Arbuckle Mountains outside Sulphur, Oklahoma. The country is rugged cedar and hardwood draws, open meadows, and rocky ridgelines — the kind of terrain that produces big-bodied deer. Whitetail and exotics share the same ground. One license, multiple opportunities.
+      </p>
+      <p class="fade-up">
+        Guided hunts only. From the moment you arrive, the ranch handles everything — morning calls, field prep, meals cooked on site, and trophies scored and packaged for shipment. Bucks scoring above 280 SCI have come off this property. The program reflects it.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 3. TROPHY ────────────────────────────────────────── -->
+  <section id="trophy" style="background: var(--parchment);">
+    <span class="section-label fade-up">Gallery</span>
+    <h2 class="garamond heading-reveal">Trophy</h2>
+    <span class="brass-rule rule-reveal"></span>
+
+    <div class="tab-bar fade-up">
+      <button class="tab-btn active" data-tab="animals">Trophy Animals</button>
+      <button class="tab-btn" data-tab="history">Ranch History</button>
+    </div>
+
+    <div class="tab-panels-wrap">
+      <!-- Tab 1: Trophy Animals -->
+      <div class="tab-panel active" id="tab-animals">
+        <div class="trophy-grid" id="trophy-grid">
+          <div class="trophy-item stagger fade-up" data-index="0">
+            <img src="/img/trophy-01.jpg" alt="Canada Goose" loading="lazy" />
+            <p class="trophy-caption">Canada Goose &middot; 2025</p>
+          </div>
+          <div class="trophy-item stagger fade-up" data-index="1">
+            <img src="/img/trophy-02.jpg" alt="Mallard Drake" loading="lazy" />
+            <p class="trophy-caption">Mallard Drake &middot; 2025</p>
+          </div>
+          <div class="trophy-item stagger fade-up" data-index="2">
+            <img src="/img/trophy-03.jpg" alt="Waterfowl Hunt" loading="lazy" />
+            <p class="trophy-caption">Waterfowl Hunt &middot; 2025</p>
+          </div>
+          <div class="trophy-item stagger fade-up" data-index="3">
+            <img src="/img/trophy-04.jpg" alt="Night Hunt" loading="lazy" />
+            <p class="trophy-caption">Night Hunt &middot; 2025</p>
+          </div>
+          <div class="trophy-item stagger fade-up" data-index="4">
+            <img src="/img/trophy-05.jpg" alt="Evening on the Lake" loading="lazy" />
+            <p class="trophy-caption">Evening on the Lake &middot; 2025</p>
+          </div>
+          <div class="trophy-item stagger fade-up" data-index="5">
+            <img src="/img/trophy-06.jpg" alt="Sunset" loading="lazy" />
+            <p class="trophy-caption">Sunset &middot; 2025</p>
+          </div>
         </div>
-        <div>
-          <p class="reveal-text" id="ranch-p1"></p>
-          <p class="reveal-text" style="margin-top:20px" id="ranch-p2"></p>
+      </div>
+
+      <!-- Tab 2: Ranch History -->
+      <div class="tab-panel" id="tab-history">
+        <div class="history-text fade-up">
+          <p>
+            The land has been in the family for decades. The Arbuckle Mountains aren't flashy country — cedar thickets, limestone bluffs, and creek drainages that hold deer when everything else is pushed out. The ranch has been managed for hunting since the early 2000s, with the high-fence system going in after years of watching deer walk off the property during gun season.
+          </p>
+          <p>
+            The lodge came next. It was built to handle serious hunting parties, not weekend guests — walk-in cooler, skinning shed, rifle range on site, room for ten hunters and their gear. The kitchen has always been a priority. If you're up at 4:30 and back by noon, you eat well.
+          </p>
+          <p>
+            The exotic program started with a handful of animals and grew from there. Gemsbok, red stag, fallow deer, zebra, scimitar oryx — the herd is managed year-round. Whitetail season runs October through December. Exotics are available any time. The ranch hasn't had to advertise much. Most bookings come from people who have been here before, or from someone they brought.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Trophy Gallery -->
-  <section id="gallery">
-    <div class="container">
-      <span class="section-label reveal-text">Trophy Gallery</span>
-      <h2 class="section-heading reveal-text">2025 Season</h2>
-      <div class="gallery-grid" id="gallery-grid"></div>
-    </div>
-  </section>
-
-  <!-- Lightbox -->
-  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
-    <button id="lightbox-close" aria-label="Close">&#215;</button>
-    <button class="lightbox-arrow" id="lightbox-prev" aria-label="Previous">&#8592;</button>
-    <img id="lightbox-img" src="" alt="" />
-    <button class="lightbox-arrow" id="lightbox-next" aria-label="Next">&#8594;</button>
-    <div id="lightbox-caption"></div>
-  </div>
-
-  <!-- The Lodge -->
+  <!-- ── 4. THE LODGE ─────────────────────────────────────── -->
   <section id="lodge">
-    <div class="container">
-      <span class="section-label reveal-text">Accommodations</span>
-      <h2 class="section-heading reveal-text">The Lodge</h2>
-      <div class="lodge-grid" id="lodge-grid"></div>
-      <div class="lodge-caption-strip reveal-text" id="lodge-caption"></div>
+    <span class="section-label fade-up">Accommodations</span>
+    <h2 class="garamond heading-reveal">The Lodge</h2>
+    <span class="brass-rule rule-reveal"></span>
+
+    <div class="lodge-grid">
+      <img src="/img/lodge-01.jpg" alt="Lodge interior — pool table and Texas flags" loading="lazy" class="fade-in" />
+      <img src="/img/lodge-02.jpg" alt="Sunrise over the lake from the dock" loading="lazy" class="fade-in" />
+      <img src="/img/lodge-03.jpg" alt="Misty morning on the lake" loading="lazy" class="fade-in" />
+      <img src="/img/lodge-04.jpg" alt="Stone bell gate entrance at dawn" loading="lazy" class="fade-in" />
+      <img src="/img/lodge-05.jpg" alt="Snow-covered ranch buildings in winter" loading="lazy" class="fade-in" />
+      <img src="/img/lodge-06.jpg" alt="Outdoor shooting range with rifle rack" loading="lazy" class="fade-in" />
+      <img src="/img/lodge-07.jpg" alt="Snow sunrise over ranch, orange horizon" loading="lazy" class="fade-in" />
+    </div>
+
+    <p class="feature-strip fade-up">
+      Sleeps 10 &middot; Chef-Prepared Meals &middot; Covered Porch &middot; Skinning Shed &middot; Walk-In Cooler &middot; Shooting Range On Site
+    </p>
+  </section>
+
+  <!-- ── 5. CORPORATE & GROUP HUNTS ───────────────────────── -->
+  <section id="corporate" style="background: var(--parchment);">
+    <div class="inner">
+      <span class="section-label fade-up">Buyouts &amp; Groups</span>
+      <h2 class="garamond heading-reveal">Groups &amp; Corporate</h2>
+      <span class="brass-rule rule-reveal"></span>
+      <p class="fade-up">
+        The ranch can be bought out for the right group. Larger parties get multi-gun pricing quoted directly — call for numbers. Non-hunting guests are welcome at $400 per person. Two hours from Dallas, ninety minutes from Oklahoma City. The lodge handles invoicing and has a W9 on file.
+      </p>
+      <ul class="detail-list fade-up">
+        <li>Full ranch buyout available</li>
+        <li>Chef-prepared meals and common space for evenings</li>
+        <li>Cell service and wifi at the lodge</li>
+        <li>Non-hunting guests: $400</li>
+        <li>Invoicing and W9 on request</li>
+        <li>Group and multi-gun pricing quoted directly</li>
+      </ul>
     </div>
   </section>
 
-  <!-- Corporate & Group -->
-  <section id="corporate">
-    <div class="container">
-      <div class="content">
-        <div>
-          <span class="section-label reveal-text">Groups &amp; Corporate</span>
-          <h2 class="section-heading reveal-text">Full Ranch<br>Buyout</h2>
-          <p class="reveal-text" id="corporate-prose"></p>
-        </div>
-        <div>
-          <ul class="detail-list" id="corporate-list"></ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing -->
+  <!-- ── 6. PRICING ───────────────────────────────────────── -->
   <section id="pricing">
-    <div class="container">
-      <span class="section-label reveal-text">Rates &amp; Fees</span>
-      <h2 class="section-heading reveal-text" id="pricing-heading"></h2>
-      <div class="pricing-grid" id="pricing-grid"></div>
+    <span class="section-label fade-up">Fees</span>
+    <h2 class="garamond heading-reveal">Pricing</h2>
+    <span class="brass-rule rule-reveal"></span>
+
+    <!-- Lodging & Meals -->
+    <div class="pricing-block fade-up">
+      <h3>Lodging &amp; Meals</h3>
+      <div class="pricing-table-wrap">
+        <table class="pricing-table">
+          <tbody>
+            <tr data-row-index="0"><td>Per hunter (2 nights / 3 days)</td><td>$1,500</td></tr>
+            <tr data-row-index="1"><td>Non-hunting guests</td><td>$400</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Lodging included when trophy fees reach $6,000 or greater.</p>
+    </div>
+
+    <!-- Whitetail -->
+    <div class="pricing-block fade-up">
+      <h3>Whitetail Trophy Fee</h3>
+      <div class="pricing-table-wrap">
+        <table class="pricing-table">
+          <thead>
+            <tr><td><strong>SCI Score</strong></td><td style="text-align:right"><strong>Fee</strong></td></tr>
+          </thead>
+          <tbody>
+            <tr data-row-index="0"><td>Up to 129</td><td>$3,000</td></tr>
+            <tr data-row-index="1"><td>130–139</td><td>$4,000</td></tr>
+            <tr data-row-index="2"><td>140–149</td><td>$5,000</td></tr>
+            <tr data-row-index="3"><td>150–159</td><td>$6,000</td></tr>
+            <tr data-row-index="4"><td>160–169</td><td>$7,000</td></tr>
+            <tr data-row-index="5"><td>170–179</td><td>$8,500</td></tr>
+            <tr data-row-index="6"><td>180–189</td><td>$9,500</td></tr>
+            <tr data-row-index="7"><td>190–199</td><td>$12,000</td></tr>
+            <tr data-row-index="8"><td>200–219</td><td>$14,000</td></tr>
+            <tr data-row-index="9"><td>220–239</td><td>$16,000</td></tr>
+            <tr data-row-index="10"><td>240–279</td><td>$18,000</td></tr>
+            <tr data-row-index="11" class="highlight-row"><td>280–300+</td><td>$20,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Exotics -->
+    <div class="pricing-block fade-up">
+      <h3>Exotic Trophy Fee</h3>
+      <div class="pricing-table-wrap">
+        <table class="pricing-table">
+          <tbody>
+            <tr data-row-index="0"><td>Bison Bull</td><td>On request</td></tr>
+            <tr data-row-index="1"><td>Gemsbok</td><td>$8,000</td></tr>
+            <tr data-row-index="2"><td>Fallow Deer</td><td>$7,000</td></tr>
+            <tr data-row-index="3"><td>Red Stag 250–299 SCI</td><td>$7,000</td></tr>
+            <tr data-row-index="4"><td>Red Stag 300–349 SCI</td><td>$10,000</td></tr>
+            <tr data-row-index="5"><td>Red Stag 350+ SCI</td><td>$15,000</td></tr>
+            <tr data-row-index="6"><td>Scimitar Oryx</td><td>$6,000</td></tr>
+            <tr data-row-index="7"><td>Zebra</td><td>$6,000</td></tr>
+            <tr data-row-index="8"><td>Red Deer Cow</td><td>$1,500</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note"><em>Best-tasting meat on the ranch.</em></p>
+    </div>
+
+    <!-- Wingshooting -->
+    <div class="pricing-block fade-up">
+      <h3>Wingshooting</h3>
+      <div class="pricing-table-wrap">
+        <table class="pricing-table">
+          <tbody>
+            <tr data-row-index="0"><td>Spring Turkey (April–May, shotgun only)</td><td>$1,500/hunter</td></tr>
+            <tr data-row-index="1"><td>Quail (January–mid March)</td><td>$1,500/gun</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Family and group specials available for turkey. Quail includes released birds, dogs, and handler. Turkey and quail work well for larger groups — everyone shoots the same days.</p>
     </div>
   </section>
 
-  <!-- Terms -->
+  <!-- ── 7. TERMS ──────────────────────────────────────────── -->
   <section id="terms">
-    <div class="container">
-      <div class="terms-inner" id="terms-inner"></div>
+    <span class="section-label fade-up">Policies</span>
+    <h2 class="garamond heading-reveal">Terms</h2>
+    <span class="brass-rule rule-reveal"></span>
+    <div class="terms-body fade-up">
+      <p><strong>Included:</strong> Field preparation of any trophy for shipment, lodging, accommodations, food and beverages.</p>
+      <p><strong>Not included:</strong> Oklahoma license and tag fees, transportation to the lodge, gratuity.</p>
+      <p>A wounded animal is charged the same as a kill. We will do our best to recover it.</p>
+      <p>Whitetail season runs October through December, subject to availability. Exotics are available year-round. Deposits lock in price.</p>
     </div>
   </section>
 
-  <!-- Contact -->
+  <!-- ── 8. CONTACT ────────────────────────────────────────── -->
   <section id="contact">
-    <div class="container">
-      <img src="img/logo.jpg" alt="Buckhorn Ranch" class="logo reveal-img" />
-      <div class="contact-line reveal-text">
-        <!-- PHONE: replace href and text with real number -->
-        <a href="tel:+1-xxx-xxx-xxxx" id="contact-phone"></a>
-      </div>
-      <div class="contact-line reveal-text" style="margin-top:8px">
-        <!-- EMAIL: replace href and text with real email -->
-        <a href="mailto:info@buckhornranch.com" id="contact-email"></a>
-      </div>
-      <p class="contact-location reveal-text" id="contact-location"></p>
+    <img src="/img/logo.jpg" alt="Buckhorn Ranch" class="contact-logo fade-in" />
+    <span class="section-label fade-up">Get In Touch</span>
+    <h2 class="garamond heading-reveal">Contact</h2>
+    <span class="brass-rule rule-reveal"></span>
+    <div class="contact-links fade-up">
+      <!-- PHONE -->
+      <a href="tel:+1-xxx-xxx-xxxx"><!-- PHONE --></a>
+      <!-- EMAIL -->
+      <a href="mailto:<!-- EMAIL -->"><!-- EMAIL --></a>
     </div>
+    <p class="contact-location fade-up">Sulphur, Oklahoma &middot; Arbuckle Mountains</p>
   </section>
 
-  <!-- Footer -->
+  <!-- ── 9. FOOTER ─────────────────────────────────────────── -->
   <footer>
-    <p id="footer-text"></p>
+    <span>Buckhorn Ranch &middot; 2026</span>
   </footer>
 
+  <!-- ── LIGHTBOX HTML ─────────────────────────────────────── -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo lightbox">
+    <button id="lb-close" aria-label="Close">&times;</button>
+    <button id="lb-prev" aria-label="Previous">&#8592;</button>
+    <img id="lb-img" src="" alt="" />
+    <button id="lb-next" aria-label="Next">&#8594;</button>
+  </div>
+
   <script>
-    /* =====================================================
-       CONFIG BLOCK — edit everything here.
-       One change here updates the entire page.
-    ===================================================== */
+    /* ── RANCH CONFIG ────────────────────────────────────── */
     const RANCH = {
       name: 'Buckhorn Ranch',
-      tagline: 'Sulphur, Oklahoma',
-
-      contact: {
-        phone: '(xxx) xxx-xxxx',              // TODO: replace with real phone
-        phoneHref: 'tel:+1-xxx-xxx-xxxx',     // TODO: replace with real tel: href
-        email: 'info@buckhornranch.com',      // TODO: replace with real email
-        emailHref: 'mailto:info@buckhornranch.com',
-        location: 'Sulphur, Oklahoma · Arbuckle Mountains',
+      tagline: 'Whitetail. Exotics. Waterfowl.',
+      phone: '', /* PHONE */
+      email: '', /* EMAIL */
+      location: 'Sulphur, Oklahoma',
+      mountains: 'Arbuckle Mountains',
+      seasonYear: '2026',
+      acreage: '1,750',
+      fenceType: 'High Fence',
+      lodgingRates: {
+        perHunter: 1500,
+        nonHunting: 400,
+        lodgingIncludedAt: 6000,
+        nights: 2,
+        days: 3,
       },
-
-      ranchCopy: [
-        'Buckhorn Ranch runs roughly 2,000 acres of free range and managed ground in the Arbuckle Mountains. Whitetail, exotics, and waterfowl on the same property.',
-        'Once you arrive, everything is handled — guides, meals, skinning, and field prep for any trophy leaving the ranch.',
+      whitetailPricing: [
+        { label: 'Up to 129', fee: 3000 },
+        { label: '130–139',   fee: 4000 },
+        { label: '140–149',   fee: 5000 },
+        { label: '150–159',   fee: 6000 },
+        { label: '160–169',   fee: 7000 },
+        { label: '170–179',   fee: 8500 },
+        { label: '180–189',   fee: 9500 },
+        { label: '190–199',   fee: 12000 },
+        { label: '200–219',   fee: 14000 },
+        { label: '220–239',   fee: 16000 },
+        { label: '240–279',   fee: 18000 },
+        { label: '280–300+',  fee: 20000, highlight: true },
       ],
-
-      gallery: [
-        { src: 'img/trophy-01.jpg', caption: 'Canada Goose · 2025' },
-        { src: 'img/trophy-02.jpg', caption: 'Mallard Drake · 2025' },
-        { src: 'img/trophy-03.jpg', caption: 'Waterfowl Hunt · 2025' },
-        { src: 'img/trophy-04.jpg', caption: 'Night Hunt · 2025' },
-        { src: 'img/trophy-05.jpg', caption: 'Evening on the Lake · 2025' },
-        { src: 'img/trophy-06.jpg', caption: 'Sunset · 2025' },
+      exoticPricing: [
+        { label: 'Bison Bull',            fee: null },
+        { label: 'Gemsbok',               fee: 8000 },
+        { label: 'Fallow Deer',           fee: 7000 },
+        { label: 'Red Stag 250–299 SCI',  fee: 7000 },
+        { label: 'Red Stag 300–349 SCI',  fee: 10000 },
+        { label: 'Red Stag 350+ SCI',     fee: 15000 },
+        { label: 'Scimitar Oryx',         fee: 6000 },
+        { label: 'Zebra',                 fee: 6000 },
+        { label: 'Red Deer Cow',          fee: 1500, note: 'Best-tasting meat on the ranch.' },
       ],
-
-      lodge: {
-        images: [
-          { src: 'img/lodge-01.jpg', alt: 'Lodge interior' },
-          { src: 'img/lodge-02.jpg', alt: 'Sunrise over the lake from the dock' },
-          { src: 'img/lodge-03.jpg', alt: 'Morning mist on the lake' },
-          { src: 'img/lodge-04.jpg', alt: 'Stone bell gate entrance' },
-          { src: 'img/lodge-05.jpg', alt: 'Ranch in winter' },
-          { src: 'img/lodge-06.jpg', alt: 'On-site shooting range' },
-          { src: 'img/lodge-07.jpg', alt: 'Snow sunrise over ranch buildings' },
-        ],
-        caption: 'Sleeps 10 · Chef-prepared meals · Covered porch · Skinning shed · Walk-in cooler · Shooting range on site',
-      },
-
-      corporate: {
-        prose: 'Full ranch buyout available for groups. Multi-gun pricing quoted directly. Non-hunting guests welcome at $400. Invoicing and W9 on request. Two hours from Dallas, ninety minutes from Oklahoma City.',
-        details: [
-          'Full ranch buyout available',
-          'Chef-prepared meals and open common space',
-          'Cell service and wifi at the lodge',
-          'Non-hunting guests: $400',
-          'Invoicing and W9 available',
-          'Group and multi-gun pricing quoted directly',
-        ],
-      },
-
-      pricing: {
-        seasonYear: '2025–2026',
-
-        lodging: {
-          title: 'Lodging & Meals',
-          rows: [
-            { label: 'Per hunter — 2 nights / 3 days', value: '$1,500' },
-            { label: 'Non-hunting guests', value: '$400' },
-          ],
-          note: 'Lodging included when trophy fees reach $6,000 or greater.',
-        },
-
-        whitetail: {
-          title: 'Whitetail Trophy Fee (SCI Score)',
-          rows: [
-            { label: 'Up to 129', value: '$3,000' },
-            { label: '130–139', value: '$4,000' },
-            { label: '140–149', value: '$5,000' },
-            { label: '150–159', value: '$6,000' },
-            { label: '160–169', value: '$7,000' },
-            { label: '170–179', value: '$8,500' },
-            { label: '180–189', value: '$9,500' },
-            { label: '190–199', value: '$12,000' },
-            { label: '200–219', value: '$14,000' },
-            { label: '220–239', value: '$16,000' },
-            { label: '240–279', value: '$18,000' },
-            { label: '280–300+', value: '$20,000' },
-          ],
-          note: null,
-        },
-
-        exotics: {
-          title: 'Exotic Trophy Fee',
-          rows: [
-            { label: 'Bison Bull', value: 'On request' },
-            { label: 'Gemsbok', value: '$8,000' },
-            { label: 'Fallow Deer', value: '$7,000' },
-            { label: 'Red Stag 250–299 SCI', value: '$7,000' },
-            { label: 'Red Stag 300–349 SCI', value: '$10,000' },
-            { label: 'Red Stag 350+ SCI', value: '$15,000' },
-            { label: 'Scimitar Oryx', value: '$6,000' },
-            { label: 'Zebra', value: '$6,000' },
-            { label: 'Red Deer Cow', value: '$1,500' },
-          ],
-          note: 'Red Deer Cow: best-tasting meat on the ranch.',
-        },
-
-        wingshooting: {
-          title: 'Wingshooting',
-          rows: [
-            { label: 'Spring Turkey — shotgun only, April–May', value: '$1,500 / hunter' },
-            { label: 'Quail — January through mid-March', value: '$1,500 / gun' },
-          ],
-          note: 'Quail: released birds, dogs and handler included. Turkey and quail work well for larger groups. Family and group specials available.',
-        },
-      },
-
-      terms: {
-        included: 'Field preparation of any trophy for shipment, lodging, accommodations, food and beverages.',
-        notIncluded: 'Oklahoma license and tag fees, transportation to the lodge, gratuity.',
-        wounded: 'A wounded animal is charged the same as a kill. We will do our best to recover it.',
-        seasons: 'Whitetail season: October through December, subject to availability. Exotics available year round. Deposits lock in price.',
-      },
+      wingshootingPricing: [
+        { label: 'Spring Turkey (April–May, shotgun only)', fee: 1500, unit: '/hunter', note: 'Family and group specials available.' },
+        { label: 'Quail (January–mid March)',               fee: 1500, unit: '/gun',    note: 'Released birds, dogs and handler included.' },
+      ],
     };
 
-    /* ===================================================
-       Render
-    =================================================== */
-    function make(tag, cls) {
-      const el = document.createElement(tag);
-      if (cls) el.className = cls;
-      return el;
-    }
-
-    // Ranch copy
-    document.getElementById('ranch-p1').textContent = RANCH.ranchCopy[0];
-    document.getElementById('ranch-p2').textContent = RANCH.ranchCopy[1];
-
-    // Gallery
-    const gGrid = document.getElementById('gallery-grid');
-    RANCH.gallery.forEach((item, i) => {
-      const fig = make('figure', 'gallery-item reveal-img');
-      fig.dataset.index = i;
-      const img = make('img');
-      img.src = item.src;
-      img.alt = item.caption;
-      img.loading = 'lazy';
-      img.width = 800;
-      img.height = 600;
-      const cap = make('figcaption');
-      cap.textContent = item.caption;
-      fig.appendChild(img);
-      fig.appendChild(cap);
-      gGrid.appendChild(fig);
-    });
-
-    // Lodge grid
-    const lGrid = document.getElementById('lodge-grid');
-    RANCH.lodge.images.forEach((item, i) => {
-      const div = make('div', i === 0 ? 'lodge-item full-width reveal-img' : 'lodge-item reveal-img');
-      const img = make('img');
-      img.src = item.src;
-      img.alt = item.alt;
-      img.loading = 'lazy';
-      if (i === 0) img.style.minHeight = '520px';
-      div.appendChild(img);
-      lGrid.appendChild(div);
-    });
-    document.getElementById('lodge-caption').textContent = RANCH.lodge.caption;
-
-    // Corporate
-    document.getElementById('corporate-prose').textContent = RANCH.corporate.prose;
-    const cList = document.getElementById('corporate-list');
-    RANCH.corporate.details.forEach(item => {
-      const li = make('li', 'reveal-text');
-      li.textContent = item;
-      cList.appendChild(li);
-    });
-
-    // Pricing heading
-    document.getElementById('pricing-heading').textContent = RANCH.pricing.seasonYear + ' Season';
-
-    // Build a pricing table
-    function buildTable(data) {
-      const wrap = make('div', 'pricing-table-wrap reveal-text');
-      const title = make('span', 'price-table-title');
-      title.textContent = data.title;
-      wrap.appendChild(title);
-
-      const table = make('table', 'price-table');
-      table.setAttribute('role', 'table');
-      const tbody = make('tbody');
-      data.rows.forEach(row => {
-        const tr = make('tr');
-        const td1 = make('td');
-        td1.textContent = row.label;
-        const td2 = make('td');
-        td2.textContent = row.value;
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        tbody.appendChild(tr);
-      });
-      table.appendChild(tbody);
-      wrap.appendChild(table);
-
-      if (data.note) {
-        const note = make('p', 'price-note');
-        note.textContent = data.note;
-        wrap.appendChild(note);
-      }
-      return wrap;
-    }
-
-    const pGrid = document.getElementById('pricing-grid');
-    const pr = RANCH.pricing;
-    pGrid.appendChild(buildTable(pr.lodging));
-    pGrid.appendChild(buildTable(pr.wingshooting));
-    pGrid.appendChild(buildTable(pr.whitetail));
-    pGrid.appendChild(buildTable(pr.exotics));
-
-    // Terms
-    const termsEl = document.getElementById('terms-inner');
-    [
-      { label: 'Included', text: RANCH.terms.included },
-      { label: 'Not included', text: RANCH.terms.notIncluded },
-      { label: 'Wounded game', text: RANCH.terms.wounded },
-      { label: 'Seasons', text: RANCH.terms.seasons },
-    ].forEach(t => {
-      const block = make('div', 'terms-block reveal-text');
-      const lbl = make('span', 'terms-block-label');
-      lbl.textContent = t.label;
-      const p = make('p');
-      p.textContent = t.text;
-      block.appendChild(lbl);
-      block.appendChild(p);
-      termsEl.appendChild(block);
-    });
-
-    // Contact
-    const phoneA = document.getElementById('contact-phone');
-    phoneA.textContent = RANCH.contact.phone;
-    phoneA.href = RANCH.contact.phoneHref;
-
-    const emailA = document.getElementById('contact-email');
-    emailA.textContent = RANCH.contact.email;
-    emailA.href = RANCH.contact.emailHref;
-
-    document.getElementById('contact-location').textContent = RANCH.contact.location;
-
-    // Footer
-    document.getElementById('footer-text').textContent =
-      RANCH.name + ' · ' + new Date().getFullYear();
-
-    /* ===================================================
-       Lightbox
-    =================================================== */
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lightbox-img');
-    const lbCap = document.getElementById('lightbox-caption');
-    let idx = 0;
-    let touchX = 0;
-
-    function lbOpen(i) {
-      idx = i;
-      lbShow();
-      lb.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function lbClose() {
-      lb.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    function lbShow() {
-      const item = RANCH.gallery[idx];
-      lbImg.src = item.src;
-      lbImg.alt = item.caption;
-      lbCap.textContent = item.caption;
-    }
-
-    function lbPrev() { idx = (idx - 1 + RANCH.gallery.length) % RANCH.gallery.length; lbShow(); }
-    function lbNext() { idx = (idx + 1) % RANCH.gallery.length; lbShow(); }
-
-    gGrid.addEventListener('click', e => {
-      const fig = e.target.closest('.gallery-item');
-      if (fig) lbOpen(parseInt(fig.dataset.index, 10));
-    });
-
-    document.getElementById('lightbox-close').addEventListener('click', lbClose);
-    document.getElementById('lightbox-prev').addEventListener('click', lbPrev);
-    document.getElementById('lightbox-next').addEventListener('click', lbNext);
-    lb.addEventListener('click', e => { if (e.target === lb) lbClose(); });
-
-    document.addEventListener('keydown', e => {
-      if (!lb.classList.contains('active')) return;
-      if (e.key === 'Escape') lbClose();
-      if (e.key === 'ArrowLeft') lbPrev();
-      if (e.key === 'ArrowRight') lbNext();
-    });
-
-    lb.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
-    lb.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - touchX;
-      if (Math.abs(dx) > 48) dx < 0 ? lbNext() : lbPrev();
-    }, { passive: true });
-
-    /* ===================================================
-       Scroll reveal (IntersectionObserver)
-    =================================================== */
-    const ioOpts = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
-
-    const imgIO = new IntersectionObserver((entries, obs) => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) return;
-        en.target.classList.add('visible');
-        obs.unobserve(en.target);
-      });
-    }, ioOpts);
-
-    const txtIO = new IntersectionObserver((entries, obs) => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) return;
-        const siblings = Array.from(en.target.parentElement.querySelectorAll('.reveal-text'));
-        const i = siblings.indexOf(en.target);
-        en.target.style.transitionDelay = (i * 80) + 'ms';
-        en.target.classList.add('visible');
-        obs.unobserve(en.target);
-      });
-    }, ioOpts);
-
-    document.querySelectorAll('.reveal-img').forEach(el => imgIO.observe(el));
-    document.querySelectorAll('.reveal-text').forEach(el => txtIO.observe(el));
-
-    // Pricing row stagger
-    const tableIO = new IntersectionObserver((entries, obs) => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) return;
-        en.target.querySelectorAll('tr').forEach((row, i) => {
-          setTimeout(() => row.classList.add('visible'), i * 40);
+    /* ── HERO FADE-IN ────────────────────────────────────── */
+    (function() {
+      const hero = document.getElementById('hero');
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          hero.classList.add('loaded');
         });
-        obs.unobserve(en.target);
       });
-    }, { threshold: 0.1 });
+    })();
 
-    document.querySelectorAll('.price-table').forEach(t => tableIO.observe(t));
+    /* ── TABS ────────────────────────────────────────────── */
+    (function() {
+      const btns = document.querySelectorAll('.tab-btn');
+      btns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const target = btn.dataset.tab;
+          btns.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+          document.getElementById('tab-' + target).classList.add('active');
+        });
+      });
+    })();
+
+    /* ── SCROLL ANIMATIONS (IntersectionObserver) ────────── */
+    (function() {
+      var ease = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+      function applyStaggerDelays() {
+        document.querySelectorAll('.trophy-grid').forEach(function(grid) {
+          var items = grid.querySelectorAll('.trophy-item');
+          items.forEach(function(item, i) {
+            item.style.transitionDelay = (i * 100) + 'ms';
+          });
+        });
+      }
+      applyStaggerDelays();
+
+      var pricingRows = document.querySelectorAll('.pricing-table [data-row-index]');
+      pricingRows.forEach(function(row) {
+        var idx = parseInt(row.getAttribute('data-row-index'), 10) || 0;
+        row.style.opacity = '0';
+        row.style.transition = 'opacity 500ms ' + ease + ' ' + (idx * 40) + 'ms';
+      });
+
+      var priceObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var block = entry.target;
+            var rows = block.querySelectorAll('[data-row-index]');
+            rows.forEach(function(row) {
+              row.style.opacity = '1';
+            });
+            priceObserver.unobserve(block);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.pricing-block').forEach(function(block) {
+        priceObserver.observe(block);
+      });
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.fade-up, .fade-in, .heading-reveal, .rule-reveal').forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
+
+    /* ── LIGHTBOX ────────────────────────────────────────── */
+    (function() {
+      var lb      = document.getElementById('lightbox');
+      var lbImg   = document.getElementById('lb-img');
+      var lbClose = document.getElementById('lb-close');
+      var lbPrev  = document.getElementById('lb-prev');
+      var lbNext  = document.getElementById('lb-next');
+
+      var images = [];
+      var current = 0;
+      var touchStartX = 0;
+
+      function buildImageList() {
+        images = [];
+        document.querySelectorAll('.trophy-item img').forEach(function(img) {
+          images.push({ src: img.src, alt: img.alt });
+        });
+      }
+
+      function openAt(index) {
+        buildImageList();
+        current = index;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        loadImage(current);
+      }
+
+      function loadImage(index) {
+        lbImg.classList.remove('lb-visible');
+        lbImg.src = images[index].src;
+        lbImg.alt = images[index].alt;
+        lbImg.onload = function() {
+          lbImg.classList.add('lb-visible');
+        };
+        if (lbImg.complete) lbImg.classList.add('lb-visible');
+      }
+
+      function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+        lbImg.classList.remove('lb-visible');
+        lbImg.src = '';
+      }
+
+      function prev() {
+        current = (current - 1 + images.length) % images.length;
+        loadImage(current);
+      }
+
+      function next() {
+        current = (current + 1) % images.length;
+        loadImage(current);
+      }
+
+      document.querySelectorAll('.trophy-item').forEach(function(item, i) {
+        item.addEventListener('click', function() { openAt(i); });
+      });
+
+      lbClose.addEventListener('click', close);
+      lbPrev.addEventListener('click', function(e) { e.stopPropagation(); prev(); });
+      lbNext.addEventListener('click', function(e) { e.stopPropagation(); next(); });
+
+      lb.addEventListener('click', function(e) {
+        if (e.target === lb) close();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'ArrowLeft')  prev();
+        if (e.key === 'ArrowRight') next();
+        if (e.key === 'Escape')     close();
+      });
+
+      lb.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+
+      lb.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) {
+          dx < 0 ? next() : prev();
+        }
+      });
+    })();
   </script>
 </body>
 </html>
