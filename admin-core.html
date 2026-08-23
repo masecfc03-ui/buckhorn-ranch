@@ -550,9 +550,21 @@
     }
     .pe-row input:focus { border-color: var(--brass); }
     .pe-row .row-label { font-size: 13px; color: var(--ink-muted); }
-    .pe-whitetail { grid-template-columns: 1fr 130px; }
-    .pe-exotic     { grid-template-columns: 1fr 110px 1fr; }
-    .pe-wing       { grid-template-columns: 1fr 110px 1fr; }
+    .pe-whitetail { grid-template-columns: 1fr 130px 32px; }
+    .pe-exotic     { grid-template-columns: 1fr 110px 1fr 32px; }
+    .pe-wing       { grid-template-columns: 1fr 90px 80px 1fr 32px; }
+    .pe-del-btn {
+      background: none; border: none; cursor: pointer; color: #C08080;
+      font-size: 16px; line-height: 1; padding: 0; text-align: center;
+    }
+    .pe-del-btn:hover { color: var(--danger); }
+    .pe-add-btn {
+      display: block; width: 100%; padding: 8px; text-align: center;
+      background: none; border: none; border-top: 1px dashed #C8C0B4;
+      color: var(--brass); font-size: 12px; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer; margin-top: 0;
+    }
+    .pe-add-btn:hover { background: var(--parchment); }
 
     /* ── SETTINGS / TOKEN ── */
     .token-wrap { margin-top: 10px; }
@@ -829,7 +841,7 @@
         <span class="admin-section-rule"></span>
         <div class="pricing-editor" id="pe-whitetail">
           <div class="pricing-editor-header pe-whitetail">
-            <span>B&amp;C Score</span><span>Fee ($)</span>
+            <span>B&amp;C Score Range</span><span>Fee ($)</span><span></span>
           </div>
         </div>
       </div>
@@ -838,10 +850,10 @@
       <div class="admin-section">
         <div class="admin-section-title">Exotic Pricing</div>
         <span class="admin-section-rule"></span>
-        <p class="field-hint" style="margin-bottom:18px">Leave Fee blank to show "Call for pricing".</p>
+        <p class="field-hint" style="margin-bottom:18px">Edit animal name, fee, or note directly. Leave Fee blank = "Call for pricing". Add or remove rows as needed.</p>
         <div class="pricing-editor" id="pe-exotics">
           <div class="pricing-editor-header pe-exotic">
-            <span>Animal</span><span>Fee ($)</span><span>Note</span>
+            <span>Animal / Score</span><span>Fee ($)</span><span>Note</span><span></span>
           </div>
         </div>
       </div>
@@ -852,7 +864,7 @@
         <span class="admin-section-rule"></span>
         <div class="pricing-editor" id="pe-wing">
           <div class="pricing-editor-header pe-wing">
-            <span>Hunt</span><span>Fee ($)</span><span>Note</span>
+            <span>Hunt</span><span>Fee ($)</span><span>Per</span><span>Note</span><span></span>
           </div>
         </div>
       </div>
@@ -903,7 +915,7 @@
   </div>
 
   <script>
-    /* v20260823-10 */
+    /* v20260823-11 */
     /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
@@ -1047,35 +1059,77 @@
     function esc(s) {
       return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
+    function addDelBtn(d, rebuildFn, dataKey) {
+      var btn = document.createElement('button');
+      btn.className = 'pe-del-btn'; btn.type = 'button'; btn.textContent = '×';
+      btn.title = 'Remove row';
+      btn.addEventListener('click', function() {
+        ranch[dataKey].splice(parseInt(d.dataset.idx), 1);
+        rebuildFn(ranch[dataKey]);
+      });
+      d.appendChild(btn);
+    }
+
+    function addRowBtn(container, rebuildFn, dataKey, defaultRow) {
+      var btn = document.createElement('button');
+      btn.className = 'pe-add-btn'; btn.type = 'button'; btn.textContent = '+ Add Row';
+      btn.addEventListener('click', function() {
+        ranch[dataKey].push(Object.assign({}, defaultRow));
+        rebuildFn(ranch[dataKey]);
+      });
+      container.parentElement.appendChild(btn);
+    }
+
     function buildWhitetailEditor(rows) {
       var c = document.getElementById('pe-whitetail');
       while (c.children.length > 1) c.removeChild(c.lastChild);
+      // Remove old add-btn if present
+      var old = c.parentElement.querySelector('.pe-add-btn'); if (old) old.remove();
       rows.forEach(function(row, i) {
         var d = document.createElement('div');
         d.className = 'pe-row pe-whitetail'; d.dataset.idx = i;
-        d.innerHTML = '<span class="row-label">' + esc(row.label) + '</span><input type="number" class="wt-fee" value="' + (row.fee||'') + '" min="0" step="100" />';
+        d.innerHTML =
+          '<input type="text" class="wt-label" value="' + esc(row.label) + '" placeholder="Score range" />' +
+          '<input type="number" class="wt-fee" value="' + (row.fee||'') + '" min="0" step="100" placeholder="Fee" />';
+        addDelBtn(d, buildWhitetailEditor, 'whitetailPricing');
         c.appendChild(d);
       });
+      addRowBtn(c, buildWhitetailEditor, 'whitetailPricing', { label: '', fee: 0 });
     }
+
     function buildExoticEditor(rows) {
       var c = document.getElementById('pe-exotics');
       while (c.children.length > 1) c.removeChild(c.lastChild);
+      var old = c.parentElement.querySelector('.pe-add-btn'); if (old) old.remove();
       rows.forEach(function(row, i) {
         var d = document.createElement('div');
         d.className = 'pe-row pe-exotic'; d.dataset.idx = i;
-        d.innerHTML = '<span class="row-label">' + esc(row.label) + '</span><input type="number" class="ex-fee" value="' + (row.fee!=null?row.fee:'') + '" min="0" step="100" placeholder="Call" /><input type="text" class="ex-note" value="' + esc(row.note||'') + '" placeholder="Note" />';
+        d.innerHTML =
+          '<input type="text" class="ex-label" value="' + esc(row.label) + '" placeholder="Animal / score" />' +
+          '<input type="number" class="ex-fee" value="' + (row.fee!=null?row.fee:'') + '" min="0" step="100" placeholder="Call" />' +
+          '<input type="text" class="ex-note" value="' + esc(row.note||'') + '" placeholder="Note" />';
+        addDelBtn(d, buildExoticEditor, 'exoticPricing');
         c.appendChild(d);
       });
+      addRowBtn(c, buildExoticEditor, 'exoticPricing', { label: '', fee: null });
     }
+
     function buildWingEditor(rows) {
       var c = document.getElementById('pe-wing');
       while (c.children.length > 1) c.removeChild(c.lastChild);
+      var old = c.parentElement.querySelector('.pe-add-btn'); if (old) old.remove();
       rows.forEach(function(row, i) {
         var d = document.createElement('div');
         d.className = 'pe-row pe-wing'; d.dataset.idx = i;
-        d.innerHTML = '<span class="row-label">' + esc(row.label) + '</span><input type="number" class="wi-fee" value="' + (row.fee||'') + '" min="0" step="100" /><input type="text" class="wi-note" value="' + esc(row.note||'') + '" placeholder="Note" />';
+        d.innerHTML =
+          '<input type="text" class="wi-label" value="' + esc(row.label) + '" placeholder="Hunt type" />' +
+          '<input type="number" class="wi-fee" value="' + (row.fee||'') + '" min="0" step="100" placeholder="Fee" />' +
+          '<input type="text" class="wi-unit" value="' + esc(row.unit||'') + '" placeholder="/hunter" />' +
+          '<input type="text" class="wi-note" value="' + esc(row.note||'') + '" placeholder="Note" />';
+        addDelBtn(d, buildWingEditor, 'wingshootingPricing');
         c.appendChild(d);
       });
+      addRowBtn(c, buildWingEditor, 'wingshootingPricing', { label: '', fee: 0, unit: '/hunter' });
     }
 
     /* ── COLLECT FORM VALUES ────────────────────────────── */
@@ -1094,20 +1148,34 @@
         nights:            parseInt(document.getElementById('f-lodge-nights').value)||0,
         days:              parseInt(document.getElementById('f-lodge-days').value)  ||0,
       };
+      r.whitetailPricing = [];
       document.querySelectorAll('#pe-whitetail .pe-row').forEach(function(row) {
-        var idx = parseInt(row.dataset.idx);
-        r.whitetailPricing[idx].fee = parseFloat(row.querySelector('.wt-fee').value)||0;
+        var label = row.querySelector('.wt-label').value.trim();
+        var fee   = parseFloat(row.querySelector('.wt-fee').value)||0;
+        if (!label && !fee) return;
+        r.whitetailPricing.push({ label: label, fee: fee });
       });
+      r.exoticPricing = [];
       document.querySelectorAll('#pe-exotics .pe-row').forEach(function(row) {
-        var idx = parseInt(row.dataset.idx);
-        var v = row.querySelector('.ex-fee').value;
-        r.exoticPricing[idx].fee  = v === '' ? null : (parseFloat(v)||0);
-        r.exoticPricing[idx].note = row.querySelector('.ex-note').value.trim() || undefined;
+        var label = row.querySelector('.ex-label').value.trim();
+        var v     = row.querySelector('.ex-fee').value;
+        var note  = row.querySelector('.ex-note').value.trim();
+        if (!label) return;
+        var entry = { label: label, fee: v === '' ? null : (parseFloat(v)||0) };
+        if (note) entry.note = note;
+        r.exoticPricing.push(entry);
       });
+      r.wingshootingPricing = [];
       document.querySelectorAll('#pe-wing .pe-row').forEach(function(row) {
-        var idx = parseInt(row.dataset.idx);
-        r.wingshootingPricing[idx].fee  = parseFloat(row.querySelector('.wi-fee').value)||0;
-        r.wingshootingPricing[idx].note = row.querySelector('.wi-note').value.trim() || undefined;
+        var label = row.querySelector('.wi-label').value.trim();
+        var fee   = parseFloat(row.querySelector('.wi-fee').value)||0;
+        var unit  = row.querySelector('.wi-unit').value.trim();
+        var note  = row.querySelector('.wi-note').value.trim();
+        if (!label) return;
+        var entry = { label: label, fee: fee };
+        if (unit) entry.unit = unit;
+        if (note) entry.note = note;
+        r.wingshootingPricing.push(entry);
       });
       return r;
     }
