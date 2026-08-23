@@ -584,6 +584,28 @@
     }
     .btn-save:hover { background: var(--brass-dark); }
     .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .mode-toggle {
+      display: flex;
+      gap: 0;
+      border: 1px solid #D8D0C4;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      width: fit-content;
+    }
+    .mode-btn {
+      padding: 10px 24px;
+      background: #fff;
+      border: none;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      color: var(--ink-muted);
+      transition: background 150ms, color 150ms;
+    }
+    .mode-btn + .mode-btn { border-left: 1px solid #D8D0C4; }
+    .mode-btn.active { background: var(--brass); color: #fff; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -612,6 +634,19 @@
     </div>
 
     <div class="admin-body">
+
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="mode-form-btn">⚙️ Form / Tim</button>
+        <button class="mode-btn" id="mode-visual-btn">🖊 Visual Editor</button>
+      </div>
+
+      <div id="visual-editor-panel" style="display:none" class="admin-section">
+        <div class="admin-section-title">Visual Editor</div>
+        <span class="admin-section-rule"></span>
+        <p class="field-hint" style="margin-bottom:12px">Click any text to edit it inline. Click any photo to replace it. Hit Save &amp; Publish when done.</p>
+        <div id="ve-status" class="photo-upload-status" style="min-height:0"></div>
+        <iframe id="ve-frame" style="width:100%;height:78vh;border:1px solid #D8D0C4;border-radius:4px;display:block;margin-top:8px"></iframe>
+      </div>
 
       <!-- ── TIM CHAT ── -->
       <div class="admin-section">
@@ -796,7 +831,7 @@
   </div>
 
   <script>
-    /* v20260823-6 */
+    /* v20260823-7 */
     /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
@@ -1083,6 +1118,7 @@
     var saveBtn = document.getElementById('save-btn');
     var saveMsg = document.getElementById('save-msg');
     saveBtn.addEventListener('click', async function() {
+      if (document.getElementById('mode-visual-btn').classList.contains('active')) return;
       saveBtn.disabled = true;
       saveBtn.textContent = 'Publishing…';
       saveMsg.className = 'save-bar-msg';
@@ -1373,6 +1409,159 @@
         });
       });
     }
+
+    /* ── MODE TOGGLE ─────────────────────────────────────── */
+    var formSections = document.querySelectorAll('.admin-section:not(#visual-editor-panel)');
+    document.getElementById('mode-form-btn').addEventListener('click', function() {
+      this.classList.add('active');
+      document.getElementById('mode-visual-btn').classList.remove('active');
+      document.getElementById('visual-editor-panel').style.display = 'none';
+      formSections.forEach(function(s) { s.style.display = ''; });
+    });
+    document.getElementById('mode-visual-btn').addEventListener('click', function() {
+      this.classList.add('active');
+      document.getElementById('mode-form-btn').classList.remove('active');
+      formSections.forEach(function(s) { s.style.display = 'none'; });
+      document.getElementById('visual-editor-panel').style.display = '';
+      if (!veLoaded) loadVisualEditor();
+    });
+
+    /* ── VISUAL EDITOR ───────────────────────────────────── */
+    var veLoaded = false;
+    var veFrame  = document.getElementById('ve-frame');
+    var veStatus = document.getElementById('ve-status');
+    var veImageSwaps = {};
+
+    function loadVisualEditor() {
+      if (!currentHTML) { veStatus.textContent = 'Site not loaded yet — wait a moment and try again.'; return; }
+      veStatus.textContent = 'Loading editor…';
+
+      var BASE = 'https://masecfc03-ui.github.io/buckhorn-ranch/';
+      var html = currentHTML.replace(/src="img\//g, 'src="' + BASE + 'img/');
+
+      // Injected editing script — runs inside the iframe
+      var editScript = '<script>(function(){\n' +
+        'var BRASS="#A07840";\n' +
+        'function hi(el,outline){\n' +
+        '  el.style.outline=outline;\n' +
+        '  el.style.outlineOffset="2px";\n' +
+        '}\n' +
+        'function makeEditable(el){\n' +
+        '  el.contentEditable="true";\n' +
+        '  el.style.cursor="text";\n' +
+        '  el.addEventListener("mouseenter",function(){if(document.activeElement!==this)hi(this,"2px dashed "+BRASS);});\n' +
+        '  el.addEventListener("mouseleave",function(){if(document.activeElement!==this)hi(this,"");});\n' +
+        '  el.addEventListener("focus",function(){hi(this,"2px solid "+BRASS);});\n' +
+        '  el.addEventListener("blur",function(){hi(this,"");});\n' +
+        '}\n' +
+        'document.addEventListener("DOMContentLoaded",function(){\n' +
+        '  var editSels=["h1","h2","h3","h4","p",".tagline",".eyebrow",".section-label",".note-text","li","blockquote","figcaption"];\n' +
+        '  editSels.forEach(function(sel){\n' +
+        '    try{document.querySelectorAll(sel).forEach(function(el){\n' +
+        '      if(!el.closest("script")&&!el.closest("style"))makeEditable(el);\n' +
+        '    });}catch(e){}\n' +
+        '  });\n' +
+        '  document.querySelectorAll("img[src]").forEach(function(img){\n' +
+        '    img.style.cursor="pointer";\n' +
+        '    img.title="Click to replace photo";\n' +
+        '    img.addEventListener("mouseenter",function(){this.style.outline="3px solid "+BRASS;this.style.outlineOffset="3px";});\n' +
+        '    img.addEventListener("mouseleave",function(){this.style.outline="";});\n' +
+        '    img.addEventListener("click",function(e){\n' +
+        '      e.preventDefault();\n' +
+        '      window.parent.postMessage({action:"replace-image",src:this.getAttribute("src")},"*");\n' +
+        '    });\n' +
+        '  });\n' +
+        '});\n' +
+        '})();<\/script>';
+
+      html = html.replace('</head>', editScript + '\n</head>');
+      var blob = new Blob([html], {type:'text/html'});
+      veFrame.src = URL.createObjectURL(blob);
+      veFrame.onload = function() {
+        veStatus.textContent = '';
+        veLoaded = true;
+      };
+    }
+
+    // Listen for image-replace messages from iframe
+    window.addEventListener('message', function(e) {
+      if (!e.data || e.data.action !== 'replace-image') return;
+      var oldAbsSrc = e.data.src;
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*,application/pdf';
+      input.onchange = function() {
+        if (!input.files[0]) return;
+        veReplaceImage(input.files[0], oldAbsSrc);
+      };
+      input.click();
+    });
+
+    async function veReplaceImage(file, oldAbsSrc) {
+      var BASE = 'https://masecfc03-ui.github.io/buckhorn-ranch/';
+      var relSrc = oldAbsSrc.replace(BASE, ''); // e.g. "img/hero.jpg"
+      veStatus.textContent = 'Uploading…';
+      veStatus.className = 'photo-upload-status';
+      try {
+        var reader = new FileReader();
+        reader.onload = async function(ev) {
+          var b64 = ev.target.result.split(',')[1];
+          var newRel = 'img/' + file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
+          var filePath = '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + newRel;
+          var body = { message: 'Visual editor: upload ' + file.name, content: b64, branch: GH_BRANCH };
+          try { var ex = await ghApi('GET', filePath); body.sha = ex.sha; } catch(e) {}
+          await ghApi('PUT', filePath, body);
+          var newAbsSrc = BASE + newRel;
+          // Update iframe image src
+          if (veFrame.contentDocument) {
+            veFrame.contentDocument.querySelectorAll('img').forEach(function(img) {
+              if (img.getAttribute('src') === oldAbsSrc) img.src = newAbsSrc;
+            });
+          }
+          veImageSwaps[relSrc] = newRel;
+          veStatus.className = 'photo-upload-status success';
+          veStatus.textContent = '✓ Photo uploaded. Hit Save & Publish to go live.';
+        };
+        reader.readAsDataURL(file);
+      } catch(err) {
+        veStatus.className = 'photo-upload-status error';
+        veStatus.textContent = '✗ Upload failed: ' + err.message;
+      }
+    }
+
+    // Hook the existing Save & Publish button to also handle visual editor mode
+    saveBtn.addEventListener('click', async function() {
+      // If visual editor is active, use it as the source of truth for static HTML
+      if (document.getElementById('mode-visual-btn').classList.contains('active') && veLoaded && veFrame.contentDocument) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Publishing…';
+        saveMsg.className = 'save-bar-msg';
+        saveMsg.textContent = 'Saving visual edits…';
+        try {
+          var BASE = 'https://masecfc03-ui.github.io/buckhorn-ranch/';
+          var modHtml = veFrame.contentDocument.documentElement.outerHTML;
+          // Reverse absolute→relative URL fix
+          modHtml = modHtml.split(BASE + 'img/').join('img/');
+          // Strip injected edit script
+          modHtml = modHtml.replace(/<script>\(function\(\)\{[\s\S]*?<\/script>/, '');
+          // Preserve canonical RANCH config from currentHTML
+          var ranchM = currentHTML.match(/const RANCH\s*=\s*\{[\s\S]*?\n\s*\};/);
+          if (ranchM) modHtml = modHtml.replace(/const RANCH\s*=\s*\{[\s\S]*?\n\s*\};/, ranchM[0]);
+          await publishToGitHub(modHtml);
+          currentHTML = modHtml;
+          saveMsg.className = 'save-bar-msg success';
+          saveMsg.textContent = '✓ Published! Live in ~60 seconds.';
+          saveBtn.textContent = 'Save & Publish';
+          saveBtn.disabled = false;
+        } catch(err) {
+          saveMsg.className = 'save-bar-msg error';
+          saveMsg.textContent = '✗ ' + err.message;
+          saveBtn.textContent = 'Save & Publish';
+          saveBtn.disabled = false;
+        }
+      }
+      // Form mode: existing handler runs naturally (was added first)
+    }, false);
 
     uploadBtn.addEventListener('click', async function() {
       uploadBtn.disabled = true;
