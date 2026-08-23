@@ -903,7 +903,7 @@
   </div>
 
   <script>
-    /* v20260823-9 */
+    /* v20260823-10 */
     /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
@@ -1174,15 +1174,26 @@
 
     /* ── GITHUB PUBLISH ─────────────────────────────────── */
     async function publishToGitHub(newHTML) {
-      var data = await ghApi('PUT',
-        '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE,
-        {
-          message: 'Admin update: pricing & content',
-          content: btoa(unescape(encodeURIComponent(newHTML))),
-          sha: currentSHA,
-          branch: GH_BRANCH,
+      var payload = {
+        message: 'Admin update: pricing & content',
+        content: btoa(unescape(encodeURIComponent(newHTML))),
+        sha: currentSHA,
+        branch: GH_BRANCH,
+      };
+      var data;
+      try {
+        data = await ghApi('PUT', '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE, payload);
+      } catch(err) {
+        if (err.message && err.message.includes('409')) {
+          // SHA conflict — re-fetch latest and retry once
+          var fresh = await ghApi('GET', '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE + '?ref=' + GH_BRANCH);
+          currentSHA = fresh.sha;
+          payload.sha = currentSHA;
+          data = await ghApi('PUT', '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE, payload);
+        } else {
+          throw err;
         }
-      );
+      }
       currentSHA = data.content.sha;
     }
 
