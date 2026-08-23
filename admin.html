@@ -1084,6 +1084,7 @@
     /* ── TOKEN SAVES ────────────────────────────────────── */
 
     /* ── TIM CHAT ───────────────────────────────────────── */
+    var chatHistory  = []; // {role, content} pairs for context
     var timMessages  = document.getElementById('tim-messages');
     var timInput     = document.getElementById('tim-input');
     var timSendBtn   = document.getElementById('tim-send-btn');
@@ -1121,12 +1122,14 @@
       timInput.value = '';
       timSendBtn.disabled = true;
       appendMsg('john', msg);
+      chatHistory.push({ role: 'user', content: msg });
       var typing = appendTyping();
       try {
         var currentConfig = collectRanch();
-        var response = await callClaude(msg, currentConfig);
+        var response = await callClaude(chatHistory, currentConfig);
         timMessages.removeChild(typing);
         var parsed = parseTimResponse(response);
+        chatHistory.push({ role: 'assistant', content: parsed.summary });
         appendMsg('tim', parsed.summary);
         if (parsed.changes) {
           pendingChanges = parsed.changes;
@@ -1141,7 +1144,7 @@
       timSendBtn.disabled = false;
     }
 
-    async function callClaude(userMessage, currentConfig) {
+    async function callClaude(history, currentConfig) {
       var systemPrompt =
         'You are Tim, an AI assistant exclusively for managing the Buckhorn Ranch website. ' +
         'You exist solely to help John update this site — pricing, copy, season info, photos. Nothing else.\n\n' +
@@ -1173,7 +1176,7 @@
           model: 'claude-haiku-4-5-20251001',
           max_tokens: 1024,
           system: systemPrompt,
-          messages: [{ role: 'user', content: userMessage }],
+          messages: history,
         }),
       });
 
