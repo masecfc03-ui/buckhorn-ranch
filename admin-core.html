@@ -446,6 +446,58 @@
     }
     .photo-upload-status.success { color: #2A7A2A; }
     .photo-upload-status.error { color: var(--danger); }
+
+    /* ── PHOTO LIBRARY MODAL ── */
+    #pl-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(28,20,16,0.78); z-index: 9999;
+      align-items: center; justify-content: center;
+    }
+    #pl-modal.open { display: flex; }
+    .pl-box {
+      background: var(--bone); border-radius: 10px;
+      padding: 24px; width: min(700px,95vw);
+      max-height: 82vh; display: flex; flex-direction: column; gap: 14px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+    .pl-head { display: flex; align-items: center; justify-content: space-between; }
+    .pl-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 22px; font-weight: 400; color: var(--ink);
+    }
+    .pl-close-btn {
+      background: none; border: none; font-size: 22px;
+      cursor: pointer; color: var(--ink-muted); line-height: 1; padding: 2px 8px;
+    }
+    .pl-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(110px,1fr));
+      gap: 8px; overflow-y: auto; flex: 1; padding-right: 2px;
+    }
+    .pl-thumb-wrap { position: relative; aspect-ratio: 1; }
+    .pl-thumb {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 5px;
+      cursor: pointer; border: 3px solid transparent; display: block;
+      transition: border-color 0.12s;
+    }
+    .pl-thumb:hover { border-color: var(--brass); }
+    .pl-add-slot {
+      aspect-ratio: 1; border: 2px dashed var(--brass); border-radius: 5px;
+      cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-size: 12px; color: var(--brass); gap: 6px; background: none;
+      padding: 0; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .pl-add-slot:hover { background: var(--parchment); }
+    .pl-add-slot-icon { font-size: 28px; line-height: 1; }
+    .pl-foot { display: flex; gap: 10px; align-items: center; }
+    .pl-foot-status { flex: 1; font-size: 13px; color: var(--ink-muted); }
+    .pl-cancel {
+      padding: 9px 18px; background: none; border: 1px solid #C8C0B4;
+      border-radius: 3px; font-size: 12px; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer; color: var(--ink-muted);
+    }
+    .pl-cancel:hover { background: var(--parchment); }
+
     .btn-upload-photos {
       margin-top: 12px;
       padding: 10px 20px;
@@ -830,8 +882,28 @@
     </div>
   </div>
 
+  <!-- ── PHOTO LIBRARY MODAL ── -->
+  <div id="pl-modal">
+    <div class="pl-box">
+      <div class="pl-head">
+        <span class="pl-title">Photo Library</span>
+        <button class="pl-close-btn" id="pl-close-btn">✕</button>
+      </div>
+      <p style="font-size:13px;color:var(--ink-muted);margin:0">
+        Pick a photo from your library to swap into the selected spot. Or upload new photos to add them.
+      </p>
+      <div class="pl-grid" id="pl-grid"></div>
+      <div class="pl-foot">
+        <span class="pl-foot-status" id="pl-foot-status"></span>
+        <input type="file" id="pl-file-input" multiple accept="image/*,application/pdf" style="display:none" />
+        <button class="btn-upload-photos" style="margin:0" id="pl-upload-btn">+ Add Photos</button>
+        <button class="pl-cancel" id="pl-cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    /* v20260823-8 */
+    /* v20260823-9 */
     /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
@@ -1493,23 +1565,114 @@
       };
     }
 
-    // Listen for image-replace messages from iframe
+    /* ── PHOTO LIBRARY ─────────────────────────────────────── */
+    var plModal      = document.getElementById('pl-modal');
+    var plGrid       = document.getElementById('pl-grid');
+    var plFootStatus = document.getElementById('pl-foot-status');
+    var plFileInput  = document.getElementById('pl-file-input');
+    var plCurrentTarget = null; // {oldAbsSrc, relSrc}
+
+    document.getElementById('pl-close-btn').addEventListener('click', function() { plModal.classList.remove('open'); });
+    document.getElementById('pl-cancel-btn').addEventListener('click', function() { plModal.classList.remove('open'); });
+    document.getElementById('pl-upload-btn').addEventListener('click', function() { plFileInput.click(); });
+
+    plFileInput.addEventListener('change', async function() {
+      var files = Array.from(plFileInput.files);
+      if (!files.length) return;
+      plFootStatus.textContent = 'Uploading ' + files.length + ' photo' + (files.length > 1 ? 's' : '') + '…';
+      var lastNewRel = null;
+      for (var i = 0; i < files.length; i++) {
+        var f = files[i];
+        try {
+          var dataUrl = await new Promise(function(res, rej) {
+            var r = new FileReader(); r.onload = function(ev) { res(ev.target.result); }; r.onerror = rej; r.readAsDataURL(f);
+          });
+          var b64 = dataUrl.split(',')[1];
+          var newRel = 'img/' + f.name.replace(/[^a-zA-Z0-9._-]/g, '-');
+          var fp = '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + newRel;
+          var body = { message: 'Photo library: upload ' + f.name, content: b64, branch: GH_BRANCH };
+          try { var ex2 = await ghApi('GET', fp); body.sha = ex2.sha; } catch(e) {}
+          await ghApi('PUT', fp, body);
+          lastNewRel = newRel;
+        } catch(e) {}
+      }
+      plFootStatus.textContent = '✓ Uploaded ' + files.length + ' photo' + (files.length > 1 ? 's' : '') + '!';
+      plFileInput.value = '';
+      await plLoadGrid();
+      // Also add to Tim's upload history so Tim knows about them
+      var uploadedNames = files.map(function(f) { return 'img/' + f.name.replace(/[^a-zA-Z0-9._-]/g, '-'); }).join(', ');
+      var timMsg = 'Got it — uploaded ' + files.length + ' photo' + (files.length > 1 ? 's' : '') + ' to the library: ' + uploadedNames + '. Tell me where you want them used.';
+      appendMsg('tim', timMsg);
+      chatHistory.push({ role: 'assistant', content: timMsg });
+    });
+
+    async function plLoadGrid() {
+      plGrid.innerHTML = '';
+      plFootStatus.textContent = 'Loading library…';
+      var BASE = 'https://masecfc03-ui.github.io/buckhorn-ranch/';
+      try {
+        var files = await ghApi('GET', '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/img?ref=' + GH_BRANCH);
+        var imgs = files.filter(function(f) { return /\.(jpe?g|png|gif|webp)$/i.test(f.name); });
+        // "Add photos" tile first
+        var addTile = document.createElement('button');
+        addTile.className = 'pl-add-slot';
+        addTile.innerHTML = '<span class="pl-add-slot-icon">+</span>Upload New';
+        addTile.addEventListener('click', function() { plFileInput.click(); });
+        plGrid.appendChild(addTile);
+        imgs.forEach(function(f) {
+          var wrap = document.createElement('div');
+          wrap.className = 'pl-thumb-wrap';
+          var img = document.createElement('img');
+          img.className = 'pl-thumb';
+          img.src = BASE + 'img/' + f.name + '?cb=' + Date.now();
+          img.alt = f.name;
+          img.title = f.name;
+          img.addEventListener('click', function() {
+            plSelectPhoto('img/' + f.name);
+          });
+          wrap.appendChild(img);
+          plGrid.appendChild(wrap);
+        });
+        plFootStatus.textContent = imgs.length + ' photo' + (imgs.length !== 1 ? 's' : '') + ' in library';
+      } catch(err) {
+        plFootStatus.textContent = '✗ Could not load library: ' + err.message;
+      }
+    }
+
+    function plSelectPhoto(newRel) {
+      if (!plCurrentTarget) return;
+      var BASE = 'https://masecfc03-ui.github.io/buckhorn-ranch/';
+      var oldAbsSrc = plCurrentTarget.oldAbsSrc;
+      var relSrc    = plCurrentTarget.relSrc;
+      var newAbsSrc = BASE + newRel + '?cb=' + Date.now();
+      if (veFrame.contentDocument) {
+        veFrame.contentDocument.querySelectorAll('img').forEach(function(img) {
+          if (img.getAttribute('src') === oldAbsSrc || img.src === oldAbsSrc) {
+            img.src = newAbsSrc;
+            img.setAttribute('src', newAbsSrc);
+          }
+        });
+      }
+      veImageSwaps[relSrc] = newRel;
+      plModal.classList.remove('open');
+      veStatus.className = 'photo-upload-status success';
+      veStatus.textContent = '✓ Photo swapped. Hit Save & Publish to go live.';
+    }
+
+    // Listen for image-replace messages from iframe → open library modal
     window.addEventListener('message', function(e) {
       if (!e.data || e.data.action !== 'replace-image') return;
       var oldAbsSrc = e.data.src;
-      var input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*,application/pdf';
-      input.onchange = function() {
-        if (!input.files[0]) return;
-        veReplaceImage(input.files[0], oldAbsSrc);
-      };
-      input.click();
+      var BASE = 'https://masecfc03-ui.github.io/buckhorn-ranch/';
+      plCurrentTarget = { oldAbsSrc: oldAbsSrc, relSrc: oldAbsSrc.replace(BASE, '').split('?')[0] };
+      plFootStatus.textContent = '';
+      plModal.classList.add('open');
+      plLoadGrid();
     });
 
     async function veReplaceImage(file, oldAbsSrc) {
       var BASE = 'https://masecfc03-ui.github.io/buckhorn-ranch/';
-      var relSrc = oldAbsSrc.replace(BASE, ''); // e.g. "img/hero.jpg"
+      var relSrc = oldAbsSrc.replace(BASE, '');
       veStatus.textContent = 'Uploading…';
       veStatus.className = 'photo-upload-status';
       try {
@@ -1522,7 +1685,6 @@
           try { var ex = await ghApi('GET', filePath); body.sha = ex.sha; } catch(e) {}
           await ghApi('PUT', filePath, body);
           var newAbsSrc = BASE + newRel;
-          // Update iframe image src
           if (veFrame.contentDocument) {
             veFrame.contentDocument.querySelectorAll('img').forEach(function(img) {
               if (img.getAttribute('src') === oldAbsSrc) img.src = newAbsSrc;
