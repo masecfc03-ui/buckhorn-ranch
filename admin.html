@@ -582,6 +582,7 @@
     .btn-save:hover { background: var(--brass-dark); }
     .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -1239,15 +1240,43 @@
       addPhotoFiles(Array.from(e.dataTransfer.files).filter(function(f) { return f.type.startsWith('image/') || f.type === 'application/pdf' || f.name.match(/\.(pdf|heic|heif)$/i); }));
     });
 
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
     function addPhotoFiles(files) {
       files.forEach(function(file) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var entry = { file: file, dataUrl: e.target.result, name: file.name };
-          pendingPhotos.push(entry);
-          renderPhotoPreviews();
-        };
-        reader.readAsDataURL(file);
+        var isPdf = file.type === 'application/pdf' || file.name.match(/\.pdf$/i);
+        if (isPdf) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            pdfjsLib.getDocument({ data: e.target.result }).promise.then(function(pdf) {
+              pdf.getPage(1).then(function(page) {
+                var scale = 2;
+                var viewport = page.getViewport({ scale: scale });
+                var canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise.then(function() {
+                  var dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                  var jpgName = file.name.replace(/\.pdf$/i, '.jpg');
+                  pendingPhotos.push({ file: file, dataUrl: dataUrl, name: jpgName });
+                  renderPhotoPreviews();
+                });
+              });
+            }).catch(function() {
+              photoStatus.textContent = '✗ Could not read PDF: ' + file.name;
+              photoStatus.className = 'photo-upload-status error';
+            });
+          };
+          reader.readAsArrayBuffer(file);
+        } else {
+          var reader2 = new FileReader();
+          reader2.onload = function(e) {
+            pendingPhotos.push({ file: file, dataUrl: e.target.result, name: file.name });
+            renderPhotoPreviews();
+          };
+          reader2.readAsDataURL(file);
+        }
       });
     }
 
@@ -1256,11 +1285,8 @@
       pendingPhotos.forEach(function(entry, i) {
         var div = document.createElement('div');
         div.className = 'photo-preview-item';
-        var preview = entry.file.type === 'application/pdf' || entry.name.match(/\.pdf$/i)
-          ? '<div style="width:100%;height:80px;display:flex;align-items:center;justify-content:center;font-size:32px;background:#f0ebe0;border-radius:4px">📄</div>'
-          : '<img src="' + entry.dataUrl + '" alt="' + esc(entry.name) + '" />';
         div.innerHTML =
-          preview +
+          '<img src="' + entry.dataUrl + '" alt="' + esc(entry.name) + '" />' +
           '<div class="photo-name">' + esc(entry.name) + '</div>' +
           '<button class="photo-remove" data-idx="' + i + '" title="Remove">&times;</button>';
         photoPreviews.appendChild(div);
