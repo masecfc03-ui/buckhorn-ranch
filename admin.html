@@ -775,14 +775,7 @@
         </p>
 
         <div class="token-wrap" style="margin-bottom:24px">
-          <label>GitHub Token (for Save &amp; Publish)</label>
-          <div class="token-input-row">
-            <input type="password" id="gh-token-input" placeholder="github_pat_…" autocomplete="off" />
-            <button class="token-save-btn" id="gh-token-save">Save</button>
-          </div>
-          <p class="token-note" id="gh-token-status"></p>
-          <p class="token-note" style="margin-top:4px">
-            Create at: github.com → Settings → Developer settings → Personal access tokens → Fine-grained → Contents read/write on <code>masecfc03-ui/buckhorn-ranch</code>
+          <p class="token-note" id="gh-token-status" style="color:var(--brass)">✓ Publishing connected.</p>
           </p>
         </div>
 
@@ -843,16 +836,20 @@
     let currentSHA  = '';
     let ranch = null;
 
+    async function ghApi(method, path, body) {
+      var res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Action': 'github' },
+        body: JSON.stringify({ method, path, body }),
+      });
+      if (!res.ok) throw new Error('GitHub API error: ' + res.status);
+      return res.json();
+    }
+
     async function fetchCurrentFile() {
-      var token = localStorage.getItem(TOKEN_KEY);
-      var headers = { 'Accept': 'application/vnd.github+json' };
-      if (token) headers['Authorization'] = 'Bearer ' + token;
-      var res = await fetch(
-        'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO +
-        '/contents/' + GH_FILE + '?ref=' + GH_BRANCH, { headers }
+      var data = await ghApi('GET',
+        '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE + '?ref=' + GH_BRANCH
       );
-      if (!res.ok) throw new Error('GitHub fetch failed: ' + res.status);
-      var data = await res.json();
       currentSHA  = data.sha;
       currentHTML = atob(data.content.replace(/\n/g, ''));
       return currentHTML;
@@ -925,8 +922,6 @@
       buildWhitetailEditor(ranch.whitetailPricing  || []);
       buildExoticEditor(ranch.exoticPricing        || []);
       buildWingEditor(ranch.wingshootingPricing    || []);
-      var ghTok = localStorage.getItem(TOKEN_KEY);
-      document.getElementById('gh-token-status').textContent = ghTok ? '✓ Saved.' : 'Not set.';
     }
 
     /* ── PRICING EDITORS ────────────────────────────────── */
@@ -1047,30 +1042,15 @@
 
     /* ── GITHUB PUBLISH ─────────────────────────────────── */
     async function publishToGitHub(newHTML) {
-      var token = localStorage.getItem(TOKEN_KEY);
-      if (!token) throw new Error('No GitHub token. Save it in Publish Settings.');
-      var res = await fetch(
-        'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE,
+      var data = await ghApi('PUT',
+        '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE,
         {
-          method: 'PUT',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Accept': 'application/vnd.github+json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: 'Admin update: pricing & content',
-            content: btoa(unescape(encodeURIComponent(newHTML))),
-            sha: currentSHA,
-            branch: GH_BRANCH,
-          }),
+          message: 'Admin update: pricing & content',
+          content: btoa(unescape(encodeURIComponent(newHTML))),
+          sha: currentSHA,
+          branch: GH_BRANCH,
         }
       );
-      if (!res.ok) {
-        var err = await res.json().catch(function(){ return {}; });
-        throw new Error(err.message || 'GitHub error ' + res.status);
-      }
-      var data = await res.json();
       currentSHA = data.content.sha;
     }
 
@@ -1101,13 +1081,6 @@
     });
 
     /* ── TOKEN SAVES ────────────────────────────────────── */
-    document.getElementById('gh-token-save').addEventListener('click', function() {
-      var tok = document.getElementById('gh-token-input').value.trim();
-      if (!tok) return;
-      localStorage.setItem(TOKEN_KEY, tok);
-      document.getElementById('gh-token-input').value = '';
-      document.getElementById('gh-token-status').textContent = '✓ Saved.';
-    });
 
     /* ── TIM CHAT ───────────────────────────────────────── */
     var timMessages  = document.getElementById('tim-messages');
@@ -1299,12 +1272,6 @@
     }
 
     uploadBtn.addEventListener('click', async function() {
-      var token = localStorage.getItem(TOKEN_KEY);
-      if (!token) {
-        photoStatus.textContent = '✗ No GitHub token. Save it in Publish Settings first.';
-        photoStatus.className = 'photo-upload-status error';
-        return;
-      }
       uploadBtn.disabled = true;
       photoStatus.className = 'photo-upload-status';
       photoStatus.textContent = 'Uploading…';
@@ -1315,25 +1282,14 @@
         try {
           var b64 = entry.dataUrl.split(',')[1];
           var filename = 'img/' + entry.name.replace(/[^a-zA-Z0-9._-]/g, '-');
-          var checkRes = await fetch(
-            'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + filename,
-            { headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' } }
-          );
-          var body = { message: 'Upload photo: ' + entry.name, content: b64, branch: GH_BRANCH };
-          if (checkRes.ok) { var existing = await checkRes.json(); body.sha = existing.sha; }
-          var putRes = await fetch(
-            'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + filename,
-            {
-              method: 'PUT',
-              headers: {
-                'Authorization': 'Bearer ' + token,
-                'Accept': 'application/vnd.github+json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(body),
-            }
-          );
-          if (!putRes.ok) throw new Error('Upload failed');
+          var filePath = '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + filename;
+          var photoBody = { message: 'Upload photo: ' + entry.name, content: b64, branch: GH_BRANCH };
+          try {
+            var existing = await ghApi('GET', filePath);
+            photoBody.sha = existing.sha;
+          } catch(e) {}
+          await ghApi('PUT', filePath, photoBody);
+          if (false) throw new Error('Upload failed');
           uploaded.push(filename);
         } catch(err) {
           errors.push(entry.name);

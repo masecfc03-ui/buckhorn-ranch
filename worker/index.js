@@ -1,22 +1,40 @@
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Action',
+}
+
 export default {
   async fetch(request, env) {
     if (request.method === 'OPTIONS') {
-      return new Response(null, {
+      return new Response(null, { headers: CORS })
+    }
+
+    const action = request.headers.get('X-Action') || 'claude'
+
+    // ── GitHub proxy ──────────────────────────────────────
+    if (action === 'github') {
+      const { method, path, body } = await request.json()
+      const res = await fetch('https://api.github.com' + path, {
+        method: method || 'GET',
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          'Authorization': 'Bearer ' + env.GH_TOKEN,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'buckhorn-admin',
         },
+        body: body ? JSON.stringify(body) : undefined,
+      })
+      const data = await res.text()
+      return new Response(data, {
+        status: res.status,
+        headers: { 'Content-Type': 'application/json', ...CORS },
       })
     }
 
-    if (request.method !== 'POST') {
-      return new Response('Method not allowed', { status: 405 })
-    }
-
+    // ── Anthropic proxy ───────────────────────────────────
     const body = await request.text()
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'x-api-key': env.ANTHROPIC_KEY,
@@ -26,15 +44,10 @@ export default {
       },
       body,
     })
-
-    const data = await response.text()
-
+    const data = await res.text()
     return new Response(data, {
-      status: response.status,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
+      status: res.status,
+      headers: { 'Content-Type': 'application/json', ...CORS },
     })
   },
 }
