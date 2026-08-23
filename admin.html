@@ -796,7 +796,15 @@
   </div>
 
   <script>
-    /* v20260823-unleashed */
+    /* v20260823-4 */
+    // Auto-update: fetches version.json with cache buster; reloads if stale
+    (function() {
+      var V = '20260823-4';
+      fetch('version.json?t=' + Date.now())
+        .then(function(r) { return r.json(); })
+        .then(function(d) { if (d.v && d.v !== V) window.location.href = window.location.pathname + '?v=' + d.v; })
+        .catch(function() {});
+    })();
     /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
