@@ -859,7 +859,7 @@
     }
 
     function extractRanchConfig(html) {
-      var m = html.match(/const RANCH\s*=\s*(\{[\s\S]*?\});\s*\/\* ── HERO/);
+      var m = html.match(/const RANCH\s*=\s*(\{[\s\S]*?\n\s*\});/);
       if (!m) return null;
       try { return Function('"use strict"; return (' + m[1] + ')')(); }
       catch(e) { return null; }
