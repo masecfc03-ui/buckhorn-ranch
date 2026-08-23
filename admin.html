@@ -793,7 +793,7 @@
   </div>
 
   <script>
-    /* v20260823-sonnet */
+    /* v20260823-fullpower */
     /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
@@ -1031,7 +1031,7 @@
       ].join('\n');
     }
 
-    function buildNewHTML(html, r, imageSwaps) {
+    function buildNewHTML(html, r, imageSwaps, htmlReplacements) {
       var newConfig = 'const RANCH = {\n' + serializeRanch(r) + '\n    };';
       var updated = html.replace(/const RANCH\s*=\s*\{[\s\S]*?\};/, newConfig);
       var phoneHref = 'tel:+1' + r.phone.replace(/\D/g,'').replace(/^1/,'');
@@ -1043,6 +1043,13 @@
         Object.keys(imageSwaps).forEach(function(oldSrc) {
           var newSrc = imageSwaps[oldSrc];
           updated = updated.split(oldSrc).join(newSrc);
+        });
+      }
+      if (htmlReplacements) {
+        htmlReplacements.forEach(function(op) {
+          if (op.find != null && op.replace != null) {
+            updated = updated.split(op.find).join(op.replace);
+          }
         });
       }
       return updated;
@@ -1072,10 +1079,12 @@
       saveMsg.textContent = 'Uploading to GitHub…';
       try {
         var r = collectRanch();
-        var newHTML = buildNewHTML(currentHTML, r, pendingImageSwaps);
+        var newHTML = buildNewHTML(currentHTML, r, pendingImageSwaps, pendingHtmlReplacements);
         await publishToGitHub(newHTML);
         currentHTML = newHTML;
         ranch = r;
+        pendingImageSwaps = null;
+        pendingHtmlReplacements = null;
         saveMsg.className = 'save-bar-msg success';
         saveMsg.textContent = '✓ Published! Live in ~60 seconds.';
         saveBtn.textContent = 'Save & Publish';
@@ -1100,6 +1109,7 @@
     var timDiscardBtn= document.getElementById('tim-discard-btn');
     var pendingChanges = null;
     var pendingImageSwaps = null;
+    var pendingHtmlReplacements = null;
 
     function appendMsg(role, text) {
       var div = document.createElement('div');
@@ -1139,11 +1149,14 @@
         var parsed = parseTimResponse(response);
         chatHistory.push({ role: 'assistant', content: parsed.summary });
         appendMsg('tim', parsed.summary);
-        if (parsed.changes || parsed.images) {
+        if (parsed.changes || parsed.images || parsed.htmlReplacements) {
           pendingChanges = parsed.changes || null;
           pendingImageSwaps = parsed.images || null;
+          pendingHtmlReplacements = parsed.htmlReplacements || null;
           var summary = parsed.images
             ? 'Tim has photo changes ready. Hit Apply to update the site.'
+            : parsed.htmlReplacements && !parsed.changes
+            ? 'Tim has design/style changes ready. Hit Apply, then Save & Publish.'
             : 'Tim has changes ready. Review the fields below, then apply or discard.';
           document.getElementById('tim-apply-summary').textContent = summary;
           timApplyBar.classList.add('visible');
@@ -1180,13 +1193,36 @@
         '```json\n' +
         '{"images": {"img/lodge-03.jpg": "img/IMG_5041.jpeg"}}\n' +
         '```\n\n' +
-        '=== OTHER CHANGES ===\n' +
-        'For pricing/text, append a ```json block with changed fields only:\n' +
+        '=== PRICING / TEXT CHANGES ===\n' +
+        'For pricing/contact fields, include a ```json block with changed fields only:\n' +
         '- phone, email, seasonYear, acreage, fenceType, location\n' +
         '- lodgingRates: {perHunter, nonHunting, lodgingIncludedAt, nights, days}\n' +
         '- whitetailPricing: [{label, fee, highlight?}]\n' +
         '- exoticPricing: [{label, fee, note?}]\n' +
-        '- wingshootingPricing: [{label, fee, unit, note?}]\n' +
+        '- wingshootingPricing: [{label, fee, unit, note?}]\n\n' +
+        '=== FULL SITE DESIGN EDITING ===\n' +
+        'You can change ANYTHING on the site — colors, fonts, headings, body text, layout.\n' +
+        'Use html_replacements: [{find, replace}] in your JSON to do exact string replacements in the site HTML.\n\n' +
+        'SITE CSS VARIABLES (in the public site):\n' +
+        '  --bone: #F5F0E8        (main page background)\n' +
+        '  --parchment: #EDE5D8   (card/section backgrounds)\n' +
+        '  --ink: #1C1410         (primary text color)\n' +
+        '  --ink-muted: #4A3F35   (secondary/muted text)\n' +
+        '  --brass: #A07840       (accent — buttons, borders, highlights)\n' +
+        '  --section-pad: clamp(80px, 12vw, 160px)  (section spacing)\n\n' +
+        'FONTS:\n' +
+        '  Headings: Cormorant Garamond (elegant serif)\n' +
+        '  Body: system-ui\n\n' +
+        'EXAMPLES:\n' +
+        '  Change accent color to forest green:\n' +
+        '  {"html_replacements": [{"find": "--brass: #A07840", "replace": "--brass: #2D5016"}, {"find": "--brass-dark: #7A5C2E", "replace": "--brass-dark: #1A3A0C"}]}\n\n' +
+        '  Change background lighter:\n' +
+        '  {"html_replacements": [{"find": "--bone: #F5F0E8", "replace": "--bone: #FAFAF7"}]}\n\n' +
+        '  Change hero tagline copy:\n' +
+        '  {"html_replacements": [{"find": "Whitetail. Exotics. Waterfowl.", "replace": "World-Class Hunting in Oklahoma."}]}\n\n' +
+        '  Change to Playfair Display font:\n' +
+        '  {"html_replacements": [{"find": "family=Cormorant+Garamond", "replace": "family=Playfair+Display"}, {"find": "\'Cormorant Garamond\'", "replace": "\'Playfair Display\'"}]}\n\n' +
+        'RULES: The find string must match EXACTLY what is in the HTML. You can combine html_replacements with changes or images in one JSON block.\n' +
         'No changes needed → plain text only.';
 
       var res = await fetch(WORKER_URL, {
@@ -1215,26 +1251,33 @@
       var summary = text.replace(/```json[\s\S]*?```/g, '').trim();
       var changes = null;
       var images = null;
+      var htmlReplacements = null;
       if (jsonMatch) {
         try {
           var parsed = JSON.parse(jsonMatch[1]);
           if (parsed.images) { images = parsed.images; delete parsed.images; }
+          if (parsed.html_replacements) { htmlReplacements = parsed.html_replacements; delete parsed.html_replacements; }
           if (Object.keys(parsed).length > 0) changes = parsed;
         } catch(e) {}
       }
-      return { summary, changes, images };
+      return { summary, changes, images, htmlReplacements };
     }
 
     timApplyBtn.addEventListener('click', function() {
       if (pendingChanges) applyTimChanges(pendingChanges);
       pendingChanges = null;
+      // pendingHtmlReplacements stays set — applied at publish time via buildNewHTML
       timApplyBar.classList.remove('visible');
-      appendMsg('tim', 'Applied. Hit Save & Publish when you\'re ready to go live.');
+      var applyMsg = pendingHtmlReplacements
+        ? 'Changes staged. Hit Save & Publish to make them live.'
+        : 'Applied. Hit Save & Publish when you\'re ready to go live.';
+      appendMsg('tim', applyMsg);
     });
 
     timDiscardBtn.addEventListener('click', function() {
       pendingChanges = null;
       pendingImageSwaps = null;
+      pendingHtmlReplacements = null;
       timApplyBar.classList.remove('visible');
       appendMsg('tim', 'Discarded. Let me know if you want to try something different.');
     });
