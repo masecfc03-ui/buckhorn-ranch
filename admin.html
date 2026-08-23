@@ -652,7 +652,7 @@
           Drop photos here to add them to the site's image library. After uploading, tell Tim which image slot to use them in (e.g. "swap lodge photo 3 with the new one").
         </p>
         <div class="photo-drop" id="photo-drop">
-          <input type="file" id="photo-input" multiple accept="image/*" />
+          <input type="file" id="photo-input" multiple accept="image/*,application/pdf,.pdf,.heic,.heif" />
           <div class="photo-drop-icon">📷</div>
           <div class="photo-drop-label">Drop photos here or <strong>click to browse</strong></div>
         </div>
@@ -1236,7 +1236,7 @@
     photoDrop.addEventListener('drop', function(e) {
       e.preventDefault();
       photoDrop.classList.remove('dragover');
-      addPhotoFiles(Array.from(e.dataTransfer.files).filter(function(f) { return f.type.startsWith('image/'); }));
+      addPhotoFiles(Array.from(e.dataTransfer.files).filter(function(f) { return f.type.startsWith('image/') || f.type === 'application/pdf' || f.name.match(/\.(pdf|heic|heif)$/i); }));
     });
 
     function addPhotoFiles(files) {
@@ -1256,8 +1256,11 @@
       pendingPhotos.forEach(function(entry, i) {
         var div = document.createElement('div');
         div.className = 'photo-preview-item';
+        var preview = entry.file.type === 'application/pdf' || entry.name.match(/\.pdf$/i)
+          ? '<div style="width:100%;height:80px;display:flex;align-items:center;justify-content:center;font-size:32px;background:#f0ebe0;border-radius:4px">📄</div>'
+          : '<img src="' + entry.dataUrl + '" alt="' + esc(entry.name) + '" />';
         div.innerHTML =
-          '<img src="' + entry.dataUrl + '" alt="' + esc(entry.name) + '" />' +
+          preview +
           '<div class="photo-name">' + esc(entry.name) + '</div>' +
           '<button class="photo-remove" data-idx="' + i + '" title="Remove">&times;</button>';
         photoPreviews.appendChild(div);
