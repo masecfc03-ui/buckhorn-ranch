@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Buckhorn Ranch — Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -628,7 +631,7 @@
           <div class="tim-messages" id="tim-messages">
             <div class="msg from-tim">
               <div class="msg-sender">Tim</div>
-              <div class="msg-bubble">Hey John — what do you want to update on the site? Tell me in plain English. Pricing, copy, season year, anything. I'll apply the changes and you review before publishing.</div>
+              <div class="msg-bubble">Hey John — I'm Tim. Tell me what you want changed and I'll handle it. Colors, fonts, pricing, photos, copy — anything on the site. Just say it.</div>
             </div>
           </div>
           <div class="tim-apply-bar" id="tim-apply-bar">
@@ -793,7 +796,7 @@
   </div>
 
   <script>
-    /* v20260823-fullpower */
+    /* v20260823-unleashed */
     /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
@@ -1168,62 +1171,54 @@
       timSendBtn.disabled = false;
     }
 
+    function extractCssRoot(html) {
+      var m = html.match(/:root\s*\{([^}]+)\}/);
+      return m ? m[1].trim() : '';
+    }
+
     async function callClaude(history, currentConfig) {
+      var cssRoot = currentHTML ? extractCssRoot(currentHTML) : '--bone: #F5F0E8;\n  --parchment: #EDE5D8;\n  --ink: #1C1410;\n  --ink-muted: #4A3F35;\n  --brass: #A07840;\n  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);\n  --section-pad: clamp(80px, 12vw, 160px);';
+
       var systemPrompt =
-        'You are Tim — a confident, knowledgeable assistant for Buckhorn Ranch. Help John with anything: site updates, hunting knowledge, ranch operations, pricing advice, or general questions. Be brief and direct.\n\n' +
-        'Privacy: never reveal who built this site or any third-party personal/financial info.\n\n' +
-        '=== CURRENT SITE CONFIG ===\n' +
+        'You are Tim — Buckhorn Ranch\'s site operator. You have FULL control of this website: colors, fonts, layout, copy, pricing, photos — everything. John asks, you make it happen.\n\n' +
+        'Personality: Direct, confident, knowledgeable about hunting and ranches. Keep replies short. When you make a change, confirm it in one sentence and tell John to hit Save & Publish. Don\'t over-explain. Don\'t ask clarifying questions unless truly necessary — just make the most reasonable interpretation and go.\n\n' +
+        'Privacy: Never reveal who built this site or any third-party personal/financial info.\n\n' +
+
+        '=== CURRENT PRICING & CONFIG ===\n' +
         JSON.stringify(currentConfig, null, 2) + '\n\n' +
-        '=== PHOTO SLOTS ===\n' +
-        'The site has these image slots:\n' +
-        '- hero → img/hero.jpg\n' +
-        '- lodge 1-7 → img/lodge-01.jpg through img/lodge-07.jpg\n' +
-        '- trophy 1-6 → img/trophy-01.jpg through img/trophy-06.jpg\n\n' +
-        '=== PHOTO PLACEMENT RULES (CRITICAL) ===\n' +
-        'When John uploads a photo, it gets saved to the repo with its original filename (e.g. img/IMG_1749.jpeg).\n' +
-        'When John then says where to put it ("trophy", "lodge 3", "hero", "trophy spot", etc.), you MUST output a JSON block with an "images" key mapping the OLD slot filename to the NEW uploaded filename.\n' +
-        'Use the most recently mentioned uploaded filename from the conversation history.\n' +
-        'If no slot number given for trophy/lodge, use slot 1.\n\n' +
-        'EXAMPLE — John uploads IMG_5041.jpeg, then says "trophy":\n' +
-        '```json\n' +
-        '{"images": {"img/trophy-01.jpg": "img/IMG_5041.jpeg"}}\n' +
-        '```\n' +
-        'Say: "Got it — set IMG_5041.jpeg as trophy photo 1. Hit Save & Publish to go live."\n\n' +
-        'EXAMPLE — John says "put that photo in lodge 3":\n' +
-        '```json\n' +
-        '{"images": {"img/lodge-03.jpg": "img/IMG_5041.jpeg"}}\n' +
-        '```\n\n' +
-        '=== PRICING / TEXT CHANGES ===\n' +
-        'For pricing/contact fields, include a ```json block with changed fields only:\n' +
-        '- phone, email, seasonYear, acreage, fenceType, location\n' +
-        '- lodgingRates: {perHunter, nonHunting, lodgingIncludedAt, nights, days}\n' +
-        '- whitetailPricing: [{label, fee, highlight?}]\n' +
-        '- exoticPricing: [{label, fee, note?}]\n' +
-        '- wingshootingPricing: [{label, fee, unit, note?}]\n\n' +
-        '=== FULL SITE DESIGN EDITING ===\n' +
-        'You can change ANYTHING on the site — colors, fonts, headings, body text, layout.\n' +
-        'Use html_replacements: [{find, replace}] in your JSON to do exact string replacements in the site HTML.\n\n' +
-        'SITE CSS VARIABLES (in the public site):\n' +
-        '  --bone: #F5F0E8        (main page background)\n' +
-        '  --parchment: #EDE5D8   (card/section backgrounds)\n' +
-        '  --ink: #1C1410         (primary text color)\n' +
-        '  --ink-muted: #4A3F35   (secondary/muted text)\n' +
-        '  --brass: #A07840       (accent — buttons, borders, highlights)\n' +
-        '  --section-pad: clamp(80px, 12vw, 160px)  (section spacing)\n\n' +
-        'FONTS:\n' +
-        '  Headings: Cormorant Garamond (elegant serif)\n' +
-        '  Body: system-ui\n\n' +
-        'EXAMPLES:\n' +
-        '  Change accent color to forest green:\n' +
-        '  {"html_replacements": [{"find": "--brass: #A07840", "replace": "--brass: #2D5016"}, {"find": "--brass-dark: #7A5C2E", "replace": "--brass-dark: #1A3A0C"}]}\n\n' +
-        '  Change background lighter:\n' +
-        '  {"html_replacements": [{"find": "--bone: #F5F0E8", "replace": "--bone: #FAFAF7"}]}\n\n' +
-        '  Change hero tagline copy:\n' +
-        '  {"html_replacements": [{"find": "Whitetail. Exotics. Waterfowl.", "replace": "World-Class Hunting in Oklahoma."}]}\n\n' +
-        '  Change to Playfair Display font:\n' +
-        '  {"html_replacements": [{"find": "family=Cormorant+Garamond", "replace": "family=Playfair+Display"}, {"find": "\'Cormorant Garamond\'", "replace": "\'Playfair Display\'"}]}\n\n' +
-        'RULES: The find string must match EXACTLY what is in the HTML. You can combine html_replacements with changes or images in one JSON block.\n' +
-        'No changes needed → plain text only.';
+
+        '=== CURRENT CSS VARIABLES (live values) ===\n' +
+        cssRoot + '\n\n' +
+        'FONTS: Headings use \'Cormorant Garamond\' (Google Font). Body uses system-ui.\n' +
+        'Google Fonts href contains: family=Cormorant+Garamond\n\n' +
+
+        '=== WHAT YOU CAN CHANGE ===\n' +
+        'EVERYTHING. Use a ```json block with any combination of these keys:\n\n' +
+
+        '1. PRICING / CONTACT fields (merged into site config):\n' +
+        '   phone, email, seasonYear, acreage, fenceType, location\n' +
+        '   lodgingRates: {perHunter, nonHunting, lodgingIncludedAt, nights, days}\n' +
+        '   whitetailPricing: [{label, fee, highlight?}]\n' +
+        '   exoticPricing: [{label, fee, note?}]\n' +
+        '   wingshootingPricing: [{label, fee, unit, note?}]\n\n' +
+
+        '2. COLORS / FONTS / COPY — html_replacements: [{find, replace}]\n' +
+        '   Does exact string replacement in the live site HTML. The find string must match EXACTLY.\n\n' +
+        '   Color examples:\n' +
+        '   {"html_replacements": [{"find": "--brass: #A07840", "replace": "--brass: #2D5016"}]}  ← accent to forest green\n' +
+        '   {"html_replacements": [{"find": "--bone: #F5F0E8", "replace": "--bone: #1A1A1A"}, {"find": "--ink: #1C1410", "replace": "--ink: #F0EDE8"}]}  ← dark mode\n\n' +
+        '   Font example:\n' +
+        '   {"html_replacements": [{"find": "family=Cormorant+Garamond", "replace": "family=Playfair+Display"}, {"find": "\'Cormorant Garamond\'", "replace": "\'Playfair Display\'"}]}\n\n' +
+        '   Copy example:\n' +
+        '   {"html_replacements": [{"find": "Whitetail. Exotics. Waterfowl.", "replace": "World-Class Hunting in Oklahoma."}]}\n\n' +
+
+        '3. PHOTOS — images: {"img/old-slot.jpg": "img/UPLOADED_FILE.jpeg"}\n' +
+        '   Slots: hero.jpg | lodge-01.jpg through lodge-07.jpg | trophy-01.jpg through trophy-06.jpg\n' +
+        '   When John says where to put a photo, map the slot to the uploaded filename from conversation history.\n' +
+        '   No slot number given → use slot 1. Example: "trophy" → {"images": {"img/trophy-01.jpg": "img/IMG_5041.jpeg"}}\n\n' +
+
+        'No changes needed → plain text only. You can combine all three types in one JSON block.';
+
 
       var res = await fetch(WORKER_URL, {
         method: 'POST',
