@@ -786,16 +786,6 @@
           </p>
         </div>
 
-        <div class="token-wrap">
-          <label>Anthropic API Key (for Tim chat)</label>
-          <div class="token-input-row">
-            <input type="password" id="ai-token-input" placeholder="sk-ant-…" autocomplete="off" />
-            <button class="token-save-btn" id="ai-token-save">Save</button>
-          </div>
-          <p class="token-note" id="ai-token-status"></p>
-          <p class="token-note" style="margin-top:4px">
-            Create at: console.anthropic.com → API Keys. Free tier available. Tim uses the cheapest model — typical update costs &lt;$0.01.
-          </p>
         </div>
       </div>
 
@@ -816,7 +806,7 @@
     const GH_BRANCH  = 'main';
     const GH_FILE    = 'index.html';
     const TOKEN_KEY  = 'bhr_gh_token';
-    const AI_KEY     = 'bhr_ai_key';
+    const WORKER_URL = 'https://buckhorn-proxy.masecfc03.workers.dev';
 
     /* ── LOGIN ──────────────────────────────────────────── */
     const loginScreen = document.getElementById('login-screen');
@@ -936,9 +926,7 @@
       buildExoticEditor(ranch.exoticPricing        || []);
       buildWingEditor(ranch.wingshootingPricing    || []);
       var ghTok = localStorage.getItem(TOKEN_KEY);
-      var aiTok = localStorage.getItem(AI_KEY);
       document.getElementById('gh-token-status').textContent = ghTok ? '✓ Saved.' : 'Not set.';
-      document.getElementById('ai-token-status').textContent = aiTok ? '✓ Saved.' : 'Not set — Tim chat won\'t work without this.';
     }
 
     /* ── PRICING EDITORS ────────────────────────────────── */
@@ -1120,13 +1108,6 @@
       document.getElementById('gh-token-input').value = '';
       document.getElementById('gh-token-status').textContent = '✓ Saved.';
     });
-    document.getElementById('ai-token-save').addEventListener('click', function() {
-      var tok = document.getElementById('ai-token-input').value.trim();
-      if (!tok) return;
-      localStorage.setItem(AI_KEY, tok);
-      document.getElementById('ai-token-input').value = '';
-      document.getElementById('ai-token-status').textContent = '✓ Saved.';
-    });
 
     /* ── TIM CHAT ───────────────────────────────────────── */
     var timMessages  = document.getElementById('tim-messages');
@@ -1163,18 +1144,13 @@
     async function sendToTim() {
       var msg = timInput.value.trim();
       if (!msg) return;
-      var apiKey = localStorage.getItem(AI_KEY);
-      if (!apiKey) {
-        appendMsg('tim', 'I need an Anthropic API key to work. Scroll down to Publish Settings and save your key — it only takes a minute. Create one free at console.anthropic.com.');
-        return;
-      }
       timInput.value = '';
       timSendBtn.disabled = true;
       appendMsg('john', msg);
       var typing = appendTyping();
       try {
         var currentConfig = collectRanch();
-        var response = await callClaude(apiKey, msg, currentConfig);
+        var response = await callClaude(msg, currentConfig);
         timMessages.removeChild(typing);
         var parsed = parseTimResponse(response);
         appendMsg('tim', parsed.summary);
@@ -1186,12 +1162,12 @@
         }
       } catch(err) {
         timMessages.removeChild(typing);
-        appendMsg('tim', 'Something went wrong: ' + err.message + '\n\nCheck that your Anthropic API key is correct in Publish Settings.');
+        appendMsg('tim', 'Something went wrong: ' + err.message);
       }
       timSendBtn.disabled = false;
     }
 
-    async function callClaude(apiKey, userMessage, currentConfig) {
+    async function callClaude(userMessage, currentConfig) {
       var systemPrompt =
         'You are Tim, an AI assistant exclusively for managing the Buckhorn Ranch website. ' +
         'You exist solely to help John update this site — pricing, copy, season info, photos. Nothing else.\n\n' +
@@ -1214,13 +1190,10 @@
         '- If the request is unclear, ask one focused question.\n' +
         '- If no values change, just reply in plain text — no JSON block needed.';
 
-      var res = await fetch('https://api.anthropic.com/v1/messages', {
+      var res = await fetch(WORKER_URL, {
         method: 'POST',
         headers: {
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
           'content-type': 'application/json',
-          'anthropic-dangerous-direct-browser-access': 'true',
         },
         body: JSON.stringify({
           model: 'claude-haiku-4-5-20251001',
@@ -1369,11 +1342,8 @@
       if (uploaded.length) {
         photoStatus.className = 'photo-upload-status success';
         photoStatus.textContent = '✓ Uploaded: ' + uploaded.join(', ') + '. Tell Tim which slot to use them in.';
-        var aiKey = localStorage.getItem(AI_KEY);
-        if (aiKey) {
-          var uploadedNames = uploaded.join(', ');
-          appendMsg('tim', 'Got it — uploaded ' + uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' to the repo: ' + uploadedNames + '. Tell me where you want them used and I\'ll note it for the next publish.');
-        }
+        var uploadedNames = uploaded.join(', ');
+        appendMsg('tim', 'Got it — uploaded ' + uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' to the repo: ' + uploadedNames + '. Tell me where you want them used and I\'ll note it for the next publish.');
         pendingPhotos = [];
         renderPhotoPreviews();
       }
