@@ -796,10 +796,10 @@
   </div>
 
   <script>
-    /* v20260823-4 */
+    /* v20260823-5 */
     // Auto-update: fetches version.json with cache buster; reloads if stale
     (function() {
-      var V = '20260823-4';
+      var V = '20260823-5';
       fetch('version.json?t=' + Date.now())
         .then(function(r) { return r.json(); })
         .then(function(d) { if (d.v && d.v !== V) window.location.href = window.location.pathname + '?v=' + d.v; })
@@ -859,12 +859,19 @@
       return res.json();
     }
 
+    function b64ToUtf8(b64) {
+      var bin = atob(b64.replace(/\n/g, ''));
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    }
+
     async function fetchCurrentFile() {
       var data = await ghApi('GET',
         '/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_FILE + '?ref=' + GH_BRANCH
       );
       currentSHA  = data.sha;
-      currentHTML = atob(data.content.replace(/\n/g, ''));
+      currentHTML = b64ToUtf8(data.content);
       return currentHTML;
     }
 
