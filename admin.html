@@ -1348,7 +1348,9 @@
         photoStatus.className = 'photo-upload-status success';
         photoStatus.textContent = '✓ Uploaded: ' + uploaded.join(', ') + '. Tell Tim which slot to use them in.';
         var uploadedNames = uploaded.join(', ');
-        appendMsg('tim', 'Got it — uploaded ' + uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' to the repo: ' + uploadedNames + '. Tell me where you want them used and I\'ll note it for the next publish.');
+        var timMsg = 'Got it — uploaded ' + uploaded.length + ' photo' + (uploaded.length > 1 ? 's' : '') + ' to the repo: ' + uploadedNames + '. Tell me where you want them used (e.g. "trophy", "lodge 3", "hero") and I\'ll update the site.';
+        appendMsg('tim', timMsg);
+        chatHistory.push({ role: 'assistant', content: timMsg });
         pendingPhotos = [];
         renderPhotoPreviews();
       }
