@@ -831,7 +831,7 @@
   </div>
 
   <script>
-    /* v20260823-7 */
+    /* v20260823-8 */
     /* ── CONFIG ─────────────────────────────────────────── */
     const PASSWORD   = 'Buckhorn2026';
     const GH_OWNER   = 'masecfc03-ui';
@@ -1131,6 +1131,7 @@
         ranch = r;
         pendingImageSwaps = null;
         pendingHtmlReplacements = null;
+        veLoaded = false; // force visual editor to reload with new HTML
         saveMsg.className = 'save-bar-msg success';
         saveMsg.textContent = '✓ Published! Live in ~60 seconds.';
         saveBtn.textContent = 'Save & Publish';
@@ -1260,7 +1261,16 @@
         '   When John says where to put a photo, map the slot to the uploaded filename from conversation history.\n' +
         '   No slot number given → use slot 1. Example: "trophy" → {"images": {"img/trophy-01.jpg": "img/IMG_5041.jpeg"}}\n\n' +
 
-        'No changes needed → plain text only. You can combine all three types in one JSON block.';
+        '4. STRUCTURAL CHANGES — also use html_replacements for layout, nav, sections, new pages:\n' +
+        '   Add a nav tab: find the existing nav list and insert a new <li> item. Example:\n' +
+        '   {"html_replacements": [{"find": "<li><a href=\\"#contact\\">Contact</a></li>\\n        </ul>", "replace": "<li><a href=\\"#contact\\">Contact</a></li>\\n        <li><a href=\\"#about\\">About Us</a></li>\\n        </ul>"}]}\n\n' +
+        '   Add a new section: append HTML before </main> or after a known section ID.\n' +
+        '   Remove a section: find its opening tag (include a unique string like its id or heading) and replace with empty string.\n' +
+        '   Change nav order: find the full <ul> nav list, rewrite it in the replace.\n' +
+        '   Add a text box / description block: find an existing nearby element and insert HTML after it.\n\n' +
+        '   IMPORTANT: Use exact strings that appear in the HTML. When making structural changes, include enough surrounding context (10-20 chars before/after) so the find is unique. Do not guess at indentation — match it exactly.\n\n' +
+
+        'No changes needed → plain text only. You can combine all four types in one JSON block.';
 
 
       var res = await fetch(WORKER_URL, {
@@ -1455,11 +1465,11 @@
         '  el.addEventListener("blur",function(){hi(this,"");});\n' +
         '}\n' +
         'document.addEventListener("DOMContentLoaded",function(){\n' +
-        '  var editSels=["h1","h2","h3","h4","p",".tagline",".eyebrow",".section-label",".note-text","li","blockquote","figcaption"];\n' +
-        '  editSels.forEach(function(sel){\n' +
-        '    try{document.querySelectorAll(sel).forEach(function(el){\n' +
-        '      if(!el.closest("script")&&!el.closest("style"))makeEditable(el);\n' +
-        '    });}catch(e){}\n' +
+        '  var SKIP={"SCRIPT":1,"STYLE":1,"NOSCRIPT":1,"INPUT":1,"TEXTAREA":1,"SELECT":1,"OPTION":1,"META":1,"LINK":1};\n' +
+        '  document.querySelectorAll("*").forEach(function(el){\n' +
+        '    if(SKIP[el.tagName])return;\n' +
+        '    var hasDirectText=Array.from(el.childNodes).some(function(n){return n.nodeType===3&&n.textContent.trim().length>0;});\n' +
+        '    if(hasDirectText&&!el.closest("script")&&!el.closest("style"))makeEditable(el);\n' +
         '  });\n' +
         '  document.querySelectorAll("img[src]").forEach(function(img){\n' +
         '    img.style.cursor="pointer";\n' +
