@@ -211,17 +211,13 @@ async function handleAuth(request, env) {
   const { passcode } = body;
   if (!passcode) return err('passcode required');
 
-  // Compare SHA-256 hex of passcode against env.PASSCODE_HASH
   const digest = await hexDigest(passcode);
   const activeHash = (await env.BHR_KV.get('config:passcode-hash')) || env.PASSCODE_HASH;
   if (digest !== activeHash) {
-    // Increment rate limit counter
-    const newCount = attempts + 1;
-    await env.BHR_KV.put(rateKey, String(newCount), { expirationTtl: AUTH_RATE_WINDOW });
+    await env.BHR_KV.put(rateKey, String(attempts + 1), { expirationTtl: AUTH_RATE_WINDOW });
     return err('Invalid passcode', 401);
   }
 
-  // Clear rate limit on success
   await env.BHR_KV.delete(rateKey);
 
   const sessionId = randomHex(32);
@@ -836,8 +832,8 @@ async function handlePreview(request, env) {
     content = await res.json();
   }
 
-  // Fetch the v2 public site HTML
-  const siteRes = await fetch(`${GH_RAW}/v2/index.html`);
+  // Fetch the v2 public site HTML — cache-bust so Timmy dev changes show immediately
+  const siteRes = await fetch(`${GH_RAW}/v2/index.html?t=${Date.now()}`, { cf: { cacheEverything: false } });
   if (!siteRes.ok) {
     return err('Could not load preview template', 502);
   }
@@ -1019,6 +1015,23 @@ async function handleScheduled(env) {
 
 export default {
   async fetch(request, env) {
+    try {
+      return await handleRequest(request, env);
+    } catch (e) {
+      console.error('[buckhorn-worker] Unhandled error:', e?.message || e, e?.stack);
+      return new Response(JSON.stringify({ error: 'Internal server error', detail: e?.message }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...SECURE_HEADERS },
+      });
+    }
+  },
+
+  async scheduled(event, env) {
+    await handleScheduled(env);
+  },
+};
+
+async function handleRequest(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
@@ -1136,9 +1149,4 @@ export default {
     }
 
     return err('Not found', 404);
-  },
-
-  async scheduled(event, env) {
-    await handleScheduled(env);
-  },
-};
+}
