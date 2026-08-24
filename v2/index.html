@@ -1432,7 +1432,6 @@
     var ranchName  = v(data.ranch && data.ranch.name) || 'Buckhorn Ranch';
     var seasonYear = v(data.meta && data.meta.seasonYear) || '';
     return '<footer>' +
-      '' alt="' + escape(ranchName) + '" onerror="this.style.display=\'none\'">' +
       escape(ranchName) +
       (seasonYear ? ' &nbsp;·&nbsp; Season ' + escape(seasonYear) : '') +
     '</footer>';
