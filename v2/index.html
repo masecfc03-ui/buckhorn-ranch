@@ -9,7 +9,7 @@
   <meta name="robots" content="index, follow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
   <style>
     /* ── DESIGN TOKENS ──────────────────────────────────────── */
@@ -22,6 +22,7 @@
       --brass-dim: #C9B896;
       --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
       --section-pad: clamp(80px, 12vw, 160px);
+      --heading-font: 'Cormorant Garamond', Georgia, serif;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -56,7 +57,7 @@
 
     /* ── TYPOGRAPHY ─────────────────────────────────────────── */
     h1, h2, h3, .garamond {
-      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-family: var(--heading-font);
       font-weight: 500;
     }
 
@@ -212,7 +213,7 @@
     }
 
     .hero-content h1 {
-      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-family: var(--heading-font);
       font-size: clamp(42px, 7vw, 80px);
       font-weight: 600;
       letter-spacing: 0.2em;
@@ -235,7 +236,7 @@
     }
 
     .hero-content .hero-tag {
-      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-family: var(--heading-font);
       font-style: italic;
       font-size: clamp(20px, 3vw, 28px);
       color: var(--parchment);
@@ -507,7 +508,7 @@
     }
     .pricing-block:last-child { margin-bottom: 0; }
     .pricing-block h3 {
-      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-family: var(--heading-font);
       font-size: 22px;
       font-weight: 500;
       letter-spacing: 0.04em;
@@ -579,7 +580,7 @@
       margin-bottom: 8px;
     }
     .lodging-cell .rate-value {
-      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-family: var(--heading-font);
       font-size: 32px;
       font-weight: 500;
       color: var(--ink);
@@ -1266,6 +1267,18 @@
   function render(data) {
     setupMeta(data);
 
+    // Apply heading font from theme
+    (function applyTheme(theme) {
+      var fontMap = {
+        'cormorant': "'Cormorant Garamond', Georgia, serif",
+        'playfair':  "'Playfair Display', Georgia, serif",
+        'cinzel':    "'Cinzel', Georgia, serif",
+        'libre-baskerville': "'Libre Baskerville', Georgia, serif"
+      };
+      var font = theme && fontMap[theme.headingFont] || fontMap['cormorant'];
+      document.documentElement.style.setProperty('--heading-font', font);
+    })(data.theme || {});
+
     var sections = data.sections || [];
     var html = '';
 
@@ -1292,6 +1305,7 @@
     setupTabs();
     setupLightbox(data);
     setupAudio(data);
+    if (window.__BHR_PREVIEW__) attachPreviewHooks();
   }
 
   /* ────────────────────────────────────────────────────────────
@@ -1515,6 +1529,26 @@
         btn.setAttribute('aria-pressed', 'false');
         btn.textContent = '♪';
       }
+    });
+  }
+
+  /* ---- PREVIEW CLICK HOOKS (admin visual tab) ---- */
+  function attachPreviewHooks() {
+    var sectionMap = {
+      'sec-hero': 'photos', 'sec-ranch': 'ranch', 'sec-trophies': 'photos',
+      'sec-lodge': 'photos', 'sec-corporate': 'corporate', 'sec-pricing': 'whitetail',
+      'sec-terms': 'terms', 'sec-contact': 'contact'
+    };
+    var style = document.createElement('style');
+    style.textContent = '[data-bhr-jump]{cursor:pointer;position:relative;}[data-bhr-jump]:hover::after{content:"✏️ Edit";position:absolute;top:8px;right:12px;background:rgba(168,133,75,0.9);color:#fff;font-size:12px;font-family:system-ui,sans-serif;padding:3px 8px;border-radius:3px;pointer-events:none;z-index:9999;}';
+    document.head.appendChild(style);
+    document.querySelectorAll('section[id]').forEach(function(sec) {
+      var target = sectionMap[sec.id];
+      if (!target) return;
+      sec.setAttribute('data-bhr-jump', target);
+      sec.addEventListener('click', function() {
+        window.parent.postMessage({ type: 'bhr-nav', section: target }, '*');
+      });
     });
   }
 

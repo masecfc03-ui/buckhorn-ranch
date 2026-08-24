@@ -98,5 +98,8 @@
     { "id": "sec-terms",     "type": "terms",       "visible": true },
     { "id": "sec-contact",   "type": "contact",     "visible": true }
   ],
-  "audio": { "enabled": true, "file": "audio/ambient.mp3" }
+  "audio": { "enabled": true, "file": "audio/ambient.mp3" },
+  "theme": {
+    "headingFont": "cormorant"
+  }
 }

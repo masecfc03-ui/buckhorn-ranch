@@ -5,7 +5,7 @@
 
 const GH_OWNER = 'masecfc03-ui';
 const GH_REPO = 'buckhorn-ranch';
-const GH_BRANCH = 'main';
+const GH_BRANCH = 'v2-rebuild';
 const GH_RAW = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}`;
 const GH_API = 'https://api.github.com';
 
@@ -632,7 +632,7 @@ async function handlePreview(request, env) {
   let siteHtml = await siteRes.text();
 
   // Inject content
-  const injection = `<script id="CONTENT_DATA">window.__CONTENT__ = ${JSON.stringify(content)};</script>`;
+  const injection = `<script id="CONTENT_DATA">window.__BHR_PREVIEW__=true;window.__CONTENT__ = ${JSON.stringify(content)};</script>`;
   siteHtml = siteHtml.replace('<script id="CONTENT_DATA"></script>', injection);
 
   return new Response(siteHtml, {
@@ -839,23 +839,20 @@ export default {
       return handlePreview(request, env);
     }
 
+    // Admin HTML is always served — the page itself handles auth via JS
+    if (method === 'GET' && path === '/admin') {
+      return handleAdminPage();
+    }
+
     // ── Auth-required routes ───────────────────────────────────────────────────
 
     const session = await requireAuth(request, env);
     if (!session) {
-      // Return 401 HTML for /admin, JSON for /api/*
-      if (path === '/admin') {
-        return html('<h1>401 Unauthorized</h1><p><a href="/auth">Log in</a></p>', 401);
-      }
       return err('Unauthorized', 401);
     }
 
     if (method === 'POST' && path === '/auth/logout') {
       return handleLogout(request, env, session);
-    }
-
-    if (method === 'GET' && path === '/admin') {
-      return handleAdminPage();
     }
 
     if (method === 'GET' && path === '/api/draft') {

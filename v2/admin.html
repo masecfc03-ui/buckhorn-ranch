@@ -790,23 +790,44 @@ function renderForm() {
 
 function buildFormHTML() {
   return `
-    ${buildSection('Ranch Info', buildRanchFields())}
-    ${buildSection('Contact', buildContactFields())}
-    ${buildSection('Lodging', buildLodgingFields())}
-    ${buildSection('Whitetail Tiers', buildWhitetailTable(), 'Add Tier', 'addWhitetailTier')}
-    ${buildSection('Exotics', buildExoticsTable(), 'Add Exotic', 'addExotic')}
-    ${buildSection('Wingshooting', buildWingshootingTable(), 'Add Hunt', 'addWingshooting')}
-    ${buildSection('Corporate', buildCorporateFields())}
-    ${buildSection('Terms', buildTermsFields())}
-    ${buildSection('Audio', buildAudioFields())}
-    ${buildSection('Photos & Slots', buildSlotsFields())}
-    ${buildSection('Section Visibility', buildSectionsToggle())}
+    ${buildSection('Ranch Info', buildRanchFields(), null, null, 'ranch')}
+    ${buildSection('Contact', buildContactFields(), null, null, 'contact')}
+    ${buildSection('Lodging', buildLodgingFields(), null, null, 'lodging')}
+    ${buildSection('Whitetail Tiers', buildWhitetailTable(), 'Add Tier', 'addWhitetailTier', 'whitetail')}
+    ${buildSection('Exotics', buildExoticsTable(), 'Add Exotic', 'addExotic', 'exotics')}
+    ${buildSection('Wingshooting', buildWingshootingTable(), 'Add Hunt', 'addWingshooting', 'wingshooting')}
+    ${buildSection('Corporate', buildCorporateFields(), null, null, 'corporate')}
+    ${buildSection('Terms', buildTermsFields(), null, null, 'terms')}
+    ${buildSection('Appearance', buildAppearanceFields(), null, null, 'appearance')}
+    ${buildSection('Audio', buildAudioFields(), null, null, 'audio')}
+    ${buildSection('Photos & Slots', buildSlotsFields(), null, null, 'photos')}
+    ${buildSection('Section Visibility', buildSectionsToggle(), null, null, 'visibility')}
   `;
 }
 
-function buildSection(title, body, addLabel, addFn) {
+function buildAppearanceFields() {
+  const theme = draft.theme || {};
+  const fonts = [
+    { value: 'cormorant',         label: 'Cormorant Garamond (default — elegant)' },
+    { value: 'playfair',          label: 'Playfair Display (bold editorial)' },
+    { value: 'cinzel',            label: 'Cinzel (strong, classic)' },
+    { value: 'libre-baskerville', label: 'Libre Baskerville (traditional)' },
+  ];
+  const opts = fonts.map(f => `<option value="${f.value}" ${theme.headingFont === f.value ? 'selected' : ''}>${f.label}</option>`).join('');
+  return `
+    <div class="field-row">
+      <div class="field-group">
+        <label>Heading Font</label>
+        <select data-path="theme.headingFont">${opts}</select>
+      </div>
+    </div>
+  `;
+}
+
+function buildSection(title, body, addLabel, addFn, sectionId) {
   const addBtn = addLabel ? `<button class="add-row-btn" data-addfn="${addFn}">+ ${addLabel}</button>` : '';
-  return `<div class="form-section">
+  const idAttr = sectionId ? ` id="fsec-${sectionId}"` : '';
+  return `<div class="form-section"${idAttr}>
     <div class="form-section-header">${title}</div>
     <div class="form-body">${body}${addBtn}</div>
   </div>`;
@@ -1901,6 +1922,15 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal-backdrop:not(.hidden)').forEach(m => closeModal(m.id));
   }
+});
+
+window.addEventListener('message', function(e) {
+  if (!e.data || e.data.type !== 'bhr-nav') return;
+  switchTab('form');
+  setTimeout(function() {
+    var el = document.getElementById('fsec-' + e.data.section);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 80);
 });
 </script>
 </body>
