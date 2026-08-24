@@ -1857,7 +1857,7 @@ NOTES:
 
     if (timmyDevMode && data.patchResults && data.patchResults.length > 0) {
       const committed = data.patchResults.filter(r => r.op === 'commit' && r.ok).map(r => r.path);
-      const failed = data.patchResults.filter(r => !r.ok).map(r => r.path);
+      const failed = data.patchResults.filter(r => !r.ok);
       if (committed.length > 0) {
         const div = document.createElement('div');
         div.style.cssText = 'margin:8px 0;padding:10px 14px;background:rgba(168,133,75,0.12);border-radius:6px;border-left:3px solid var(--brass);font-size:12px;';
@@ -1867,7 +1867,8 @@ NOTES:
       if (failed.length > 0) {
         const div = document.createElement('div');
         div.style.cssText = 'margin:8px 0;padding:10px 14px;background:rgba(200,50,50,0.08);border-radius:6px;border-left:3px solid #c23232;font-size:12px;';
-        div.innerHTML = `<strong>Some patches failed:</strong> ${failed.map(p => `<code>${escHtml(p)}</code>`).join(', ')}<br><span style="color:var(--brown)">Try rephrasing your request or be more specific.</span>`;
+        const errLines = failed.map(r => `<code>${escHtml(r.path)}</code>${r.error ? ': ' + escHtml(r.error) : ''}`).join('<br>');
+        div.innerHTML = `<strong>Some patches failed:</strong><br>${errLines}<br><span style="color:var(--brown)">Try rephrasing — Timmy will retry with a corrected patch.</span>`;
         document.getElementById('chat-messages').appendChild(div);
       }
     }
