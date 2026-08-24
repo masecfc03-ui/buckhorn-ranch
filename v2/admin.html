@@ -113,8 +113,8 @@ input[type=text], input[type=email], input[type=tel], input[type=number], input[
 input:focus, textarea:focus, select:focus { border-color: var(--brass); background: white; }
 textarea { resize: vertical; min-height: 80px; }
 .money-wrap { position: relative; }
-.money-wrap span { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--brown); font-size: 12px; pointer-events: none; }
-.money-wrap input { padding-left: 22px; }
+.money-wrap span { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--brown); font-size: 13px; pointer-events: none; font-weight: 500; }
+.money-wrap input { padding-left: 26px; }
 
 /* ---- TABLES ---- */
 .admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -558,7 +558,7 @@ footer a:hover { text-decoration: underline; }
    ============================================================ */
 let draft = null;
 let undoStack = [];
-const MAX_UNDO = 30;
+const MAX_UNDO = 200;
 let saveTimer = null;
 let currentTab = 'timmy';
 let chatHistory = [];   // Anthropic messages format
@@ -1033,8 +1033,21 @@ function esc(v) {
 /* ============================================================
    FORM LISTENERS
    ============================================================ */
+function autoResizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
 function attachFormListeners() {
   const form = document.getElementById('form-scroll');
+
+  // Auto-expand all textareas on load and input
+  form.querySelectorAll('textarea').forEach(ta => {
+    ta.style.overflow = 'hidden';
+    ta.style.resize = 'none';
+    autoResizeTextarea(ta);
+    ta.addEventListener('input', () => autoResizeTextarea(ta));
+  });
 
   // Generic path inputs (text/number/textarea)
   form.querySelectorAll('[data-path]').forEach(el => {
