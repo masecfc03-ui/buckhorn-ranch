@@ -1054,6 +1054,16 @@ export default {
       return handleAdminPage();
     }
 
+    // Proxy img/* to GitHub raw (serves repo photos to admin panel)
+    if (method === 'GET' && path.startsWith('/img/')) {
+      const ghRes = await fetch(`${GH_RAW}${path}`, { cf: { cacheEverything: true, cacheTtl: 3600 } });
+      if (!ghRes.ok) return err('Image not found', 404);
+      const ct = ghRes.headers.get('content-type') || 'image/jpeg';
+      return new Response(ghRes.body, {
+        headers: { 'Content-Type': ct, 'Cache-Control': 'public, max-age=3600' }
+      });
+    }
+
     // ── Auth-required routes ───────────────────────────────────────────────────
 
     const session = await requireAuth(request, env);
