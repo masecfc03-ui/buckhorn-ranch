@@ -1078,6 +1078,9 @@
     var taglineRaw   = v(data.ranch.tagline) || '';
     var locLineRaw   = locationRaw + (acreage ? ' · ' + acreage + ' Acres' : '');
 
+    var logoSrc = (data.branding && data.branding.logoUrl) || 'img/Buckhorn-Brand-and-Name---White.jpg';
+    var logoHtml = '<div class="hero-logo"><img src="' + escape(logoSrc) + '" alt="' + ranchName + '" onerror="this.style.display=\'none\'"></div>';
+
     return '<section id="sec-hero">' +
       '<div id="hero-bg" data-photo-slot="hero">' + bgHtml + '</div>' +
       '<div class="hero-content">' +
