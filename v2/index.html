@@ -2083,6 +2083,7 @@
   function attachPreviewHooks() {
     var sectionMap = {
       'sec-hero': 'photos', 'sec-ranch': 'ranch', 'sec-trophies': 'photos',
+      'sec-wt-gallery': 'photos', 'sec-ex-gallery': 'photos',
       'sec-lodge': 'photos', 'sec-corporate': 'corporate', 'sec-pricing': 'whitetail',
       'sec-terms': 'terms', 'sec-contact': 'contact'
     };
@@ -2092,7 +2093,7 @@
         '.bhr-edit-btn{position:absolute;top:10px;right:14px;z-index:10001;',
         'background:rgba(168,133,75,0.92);color:#fff;border:none;border-radius:4px;',
         'font-family:system-ui,sans-serif;font-size:12px;letter-spacing:0.03em;',
-        'padding:4px 10px;cursor:pointer;opacity:0;transition:opacity 0.15s;pointer-events:auto;}',
+        'padding:4px 10px;cursor:pointer;opacity:0.35;transition:opacity 0.15s;pointer-events:auto;}',
         'section:hover .bhr-edit-btn{opacity:1;}'
       ].join('');
       document.head.appendChild(_previewHooksStyle);

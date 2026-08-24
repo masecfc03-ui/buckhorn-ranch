@@ -2384,12 +2384,17 @@ let qeSnapshot = null; // draft snapshot for cancel
 function openQuickEdit(sectionId) {
   const def = QE_SECTION_MAP[sectionId];
   if (!def) return;
-  qeCurrentSection = sectionId;
-  qeSnapshot = deepClone(draft);
-  document.getElementById('qe-title').textContent = def.title;
-  document.getElementById('qe-body').innerHTML = def.builder();
-  attachQeListeners();
-  document.getElementById('quick-edit-panel').classList.add('open');
+  try {
+    qeCurrentSection = sectionId;
+    qeSnapshot = deepClone(draft);
+    document.getElementById('qe-title').textContent = def.title;
+    document.getElementById('qe-body').innerHTML = def.builder();
+    attachQeListeners();
+    document.getElementById('quick-edit-panel').classList.add('open');
+  } catch (e) {
+    console.error('[buckhorn] openQuickEdit error:', e);
+    toast('Error opening editor: ' + e.message, 'err');
+  }
 }
 
 function closeQuickEdit(revert) {
@@ -2433,6 +2438,8 @@ window.addEventListener('message', function(e) {
         const photoSlotMap = {
           'sec-hero': { slot: 'hero', gallery: null },
           'sec-lodge': { slot: null, gallery: 'lodgeGallery' },
+          'sec-wt-gallery': { slot: null, gallery: 'whitetailGallery' },
+          'sec-ex-gallery': { slot: null, gallery: 'exoticsGallery' },
         };
         const target = photoSlotMap[sectionId] || { slot: 'hero', gallery: null };
         pendingPhotoTarget = { slot: target.slot, gallery: target.gallery, idx: null };
