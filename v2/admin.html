@@ -230,8 +230,99 @@ textarea { resize: vertical; min-height: 80px; }
   border-radius: 4px; padding: 5px 12px; font-size: 12px; cursor: pointer;
 }
 .visual-toolbar button:hover { border-color: var(--brass); color: var(--brass); }
-#preview-iframe { flex: 1; border: none; background: white; }
+.visual-body { flex: 1; display: flex; overflow: hidden; position: relative; }
+#preview-iframe { flex: 1; border: none; background: white; min-width: 0; }
 .preview-loading { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--brown); }
+
+/* ---- QUICK EDIT PANEL ---- */
+#quick-edit-panel {
+  width: 0;
+  overflow: hidden;
+  background: white;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.25s ease;
+  flex-shrink: 0;
+}
+#quick-edit-panel.open {
+  width: 340px;
+}
+.qe-header {
+  padding: 14px 16px;
+  background: var(--parchment);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.qe-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--brown);
+}
+.qe-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--brown);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+.qe-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+.qe-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+.qe-field { margin-bottom: 14px; }
+.qe-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brown);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 4px;
+}
+.qe-body input[type=text],
+.qe-body input[type=tel],
+.qe-body input[type=email],
+.qe-body input[type=number],
+.qe-body textarea,
+.qe-body select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-size: 13px;
+  background: var(--bone);
+  color: var(--ink);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.qe-body input:focus,
+.qe-body textarea:focus,
+.qe-body select:focus { border-color: var(--brass); background: white; }
+.qe-body textarea { resize: vertical; min-height: 80px; }
+.qe-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+.qe-table th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--brown); padding: 4px 4px 6px; border-bottom: 1px solid var(--border); text-align: left; }
+.qe-table td { padding: 4px; border-bottom: 1px solid rgba(74,59,46,0.08); }
+.qe-table input { padding: 4px 6px; font-size: 12px; }
+.qe-add-btn { background: none; border: 1px dashed var(--border); color: var(--brown); border-radius: 3px; padding: 4px 10px; font-size: 11px; cursor: pointer; margin-top: 6px; width: 100%; }
+.qe-add-btn:hover { border-color: var(--brass); color: var(--brass); }
+.qe-del-btn { background: none; border: none; color: var(--error); cursor: pointer; font-size: 12px; padding: 0 2px; }
 
 /* ---- MODALS ---- */
 .modal-backdrop {
@@ -464,9 +555,24 @@ footer a:hover { text-decoration: underline; }
       <button id="refresh-preview-btn">↺ Refresh Preview</button>
       <button id="share-preview-btn">Share Link</button>
       <span style="margin-left:auto;font-size:11px;color:var(--brown)" id="preview-url-display"></span>
+      <span style="font-size:11px;color:var(--brass);margin-left:8px" id="qe-hint">Click any section to edit</span>
     </div>
-    <div id="preview-loading" class="preview-loading"><div class="spinner"></div></div>
-    <iframe id="preview-iframe" style="display:none"></iframe>
+    <div class="visual-body">
+      <div id="preview-loading" class="preview-loading"><div class="spinner"></div></div>
+      <iframe id="preview-iframe" style="display:none"></iframe>
+      <!-- Quick Edit Panel -->
+      <div id="quick-edit-panel">
+        <div class="qe-header">
+          <span class="qe-title" id="qe-title">Edit</span>
+          <button class="qe-close" id="qe-close">✕</button>
+        </div>
+        <div class="qe-body" id="qe-body"></div>
+        <div class="qe-footer">
+          <button class="btn btn-secondary" id="qe-cancel">Cancel</button>
+          <button class="btn btn-primary" id="qe-save">Save &amp; Refresh</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <footer>
@@ -2040,6 +2146,243 @@ async function loadPreview() {
 
 document.getElementById('refresh-preview-btn').addEventListener('click', loadPreview);
 
+/* ============================================================
+   QUICK EDIT PANEL
+   ============================================================ */
+const QE_SECTION_MAP = {
+  'sec-ranch':     { title: 'Ranch Info',       builder: buildQeRanch },
+  'sec-hero':      { title: 'Hero',             builder: buildQeHero },
+  'sec-contact':   { title: 'Contact',          builder: buildQeContact },
+  'sec-pricing':   { title: 'Pricing',          builder: buildQePricing },
+  'sec-corporate': { title: 'Corporate',        builder: buildQeCorporate },
+  'sec-terms':     { title: 'Terms',            builder: buildQeTerms },
+  'sec-lodge':     { title: 'Lodge',            builder: buildQeLodge },
+  'sec-trophies':  { title: 'Trophy Gallery',   builder: buildQeTrophies },
+};
+
+let qeCurrentSection = null;
+let qeSnapshot = null; // draft snapshot for cancel
+
+function openQuickEdit(sectionId) {
+  const def = QE_SECTION_MAP[sectionId];
+  if (!def) return;
+  qeCurrentSection = sectionId;
+  qeSnapshot = deepClone(draft);
+  document.getElementById('qe-title').textContent = def.title;
+  document.getElementById('qe-body').innerHTML = def.builder();
+  attachQeListeners();
+  document.getElementById('quick-edit-panel').classList.add('open');
+}
+
+function closeQuickEdit(revert) {
+  if (revert && qeSnapshot) {
+    draft = qeSnapshot;
+  }
+  qeSnapshot = null;
+  qeCurrentSection = null;
+  document.getElementById('quick-edit-panel').classList.remove('open');
+}
+
+document.getElementById('qe-close').addEventListener('click', () => closeQuickEdit(true));
+document.getElementById('qe-cancel').addEventListener('click', () => { closeQuickEdit(true); });
+document.getElementById('qe-save').addEventListener('click', () => {
+  closeQuickEdit(false);
+  scheduleSave();
+  loadPreview();
+  toast('Saved — refreshing preview…');
+});
+
+// Listen for messages from the preview iframe
+window.addEventListener('message', function(e) {
+  if (!e.data) return;
+  if (e.data.type === 'bhr-nav') {
+    if (currentTab === 'visual') {
+      openQuickEdit(e.data.section);
+    } else {
+      switchTab('form');
+      setTimeout(function() {
+        var el = document.getElementById('fsec-' + e.data.section);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  }
+});
+
+function attachQeListeners() {
+  const body = document.getElementById('qe-body');
+  body.querySelectorAll('[data-qe-path]').forEach(el => {
+    const ev = el.type === 'checkbox' ? 'change' : 'input';
+    el.addEventListener(ev, () => {
+      const val = el.type === 'checkbox' ? el.checked
+        : el.type === 'number' ? (el.value === '' ? null : Number(el.value))
+        : el.value;
+      setPath(draft, el.dataset.qePath, val);
+    });
+  });
+  body.querySelectorAll('[data-qe-array]').forEach(el => {
+    const ev = el.type === 'checkbox' ? 'change' : 'input';
+    el.addEventListener(ev, () => {
+      const arrPath = el.dataset.qeArray;
+      const idx = Number(el.dataset.qeIdx);
+      const field = el.dataset.qeField;
+      const arr = arrPath.includes('.') ? getPath(draft, arrPath) : draft[arrPath];
+      if (!arr || !arr[idx]) return;
+      const row = arr[idx];
+      if (field.includes('.')) {
+        const parts = field.split('.');
+        let cur = row;
+        for (let i = 0; i < parts.length - 1; i++) cur = cur[parts[i]];
+        cur[parts[parts.length-1]] = el.type === 'checkbox' ? el.checked
+          : el.type === 'number' ? (el.value === '' ? null : Number(el.value))
+          : el.value;
+      } else {
+        row[field] = el.type === 'checkbox' ? el.checked
+          : el.type === 'number' ? (el.value === '' ? null : Number(el.value))
+          : el.value;
+      }
+    });
+  });
+  body.querySelectorAll('[data-qe-del]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const arrPath = btn.dataset.qeDel;
+      const idx = Number(btn.dataset.qeDelIdx);
+      const arr = arrPath.includes('.') ? getPath(draft, arrPath) : draft[arrPath];
+      if (arr) { arr.splice(idx, 1); }
+      openQuickEdit(qeCurrentSection); // re-render panel
+    });
+  });
+  body.querySelectorAll('[data-qe-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fn = btn.dataset.qeAdd;
+      if (fn === 'whitetailTier') {
+        draft.whitetailTiers.push({ id: 'wt-' + Date.now(), scoreRange: { value: '', type: 'text' }, fee: { value: null, type: 'money' } });
+      } else if (fn === 'exotic') {
+        draft.exotics.push({ id: 'ex-' + Date.now(), animal: { value: '', type: 'text' }, sci: { value: '', type: 'text' }, fee: { value: null, type: 'money' }, onRequest: false, note: { value: '', type: 'text' } });
+      } else if (fn === 'wingshooting') {
+        draft.wingshooting.push({ id: 'ws-' + Date.now(), hunt: { value: '', type: 'text' }, season: { value: '', type: 'text' }, fee: { value: null, type: 'money' }, unit: '/hunter', note: { value: '', type: 'text' } });
+      }
+      openQuickEdit(qeCurrentSection);
+    });
+  });
+}
+
+function qeField(label, inputHtml) {
+  return `<div class="qe-field"><label class="qe-label">${label}</label>${inputHtml}</div>`;
+}
+function qeText(path, value, placeholder) {
+  return `<input type="text" data-qe-path="${path}" value="${esc(value || '')}" placeholder="${esc(placeholder || '')}">`;
+}
+function qeTextarea(path, value, rows) {
+  return `<textarea data-qe-path="${path}" rows="${rows||4}">${esc(value || '')}</textarea>`;
+}
+function qeMoney(path, value) {
+  return `<div class="money-wrap"><span>$</span><input type="number" data-qe-path="${path}" value="${value != null ? value : ''}" style="padding-left:26px"></div>`;
+}
+
+function buildQeRanch() {
+  const r = draft.ranch;
+  return [
+    qeField('Ranch Name', qeText('ranch.name.value', r.name.value)),
+    qeField('Tagline', qeText('ranch.tagline.value', r.tagline.value)),
+    qeField('Location', qeText('ranch.location.value', r.location.value)),
+    qeField('Acreage', qeText('ranch.acreage.value', r.acreage.value)),
+    qeField('About', qeTextarea('ranch.about.value', r.about.value, 5)),
+  ].join('');
+}
+
+function buildQeHero() {
+  const r = draft.ranch;
+  return [
+    qeField('Ranch Name', qeText('ranch.name.value', r.name.value)),
+    qeField('Tagline', qeText('ranch.tagline.value', r.tagline.value)),
+    qeField('Location', qeText('ranch.location.value', r.location.value)),
+    `<p class="tip" style="margin-top:8px">To change the hero photo, use the Form tab → Photos &amp; Slots.</p>`,
+  ].join('');
+}
+
+function buildQeContact() {
+  const c = draft.contact;
+  return [
+    qeField('Contact Name', qeText('contact.name.value', c.name.value)),
+    qeField('Phone', qeText('contact.phone.value', c.phone.value)),
+    qeField('Email', `<input type="email" data-qe-path="contact.email.value" value="${esc(c.email.value || '')}">`),
+  ].join('');
+}
+
+function buildQeCorporate() {
+  const co = draft.corporate;
+  return [
+    qeField('Body', qeTextarea('corporate.body.value', co.body.value, 4)),
+    `<label class="qe-label">Details</label>`,
+    co.details.map((d, i) => `<div style="display:flex;gap:6px;margin-bottom:6px"><input type="text" data-qe-array="corporate.details" data-qe-idx="${i}" data-qe-field="value" value="${esc(d.value)}"><button class="qe-del-btn" data-qe-del="corporate.details" data-qe-del-idx="${i}">✕</button></div>`).join(''),
+  ].join('');
+}
+
+function buildQeTerms() {
+  return qeField('Terms Text', qeTextarea('terms.body.value', draft.terms.body.value, 6));
+}
+
+function buildQeLodge() {
+  const l = draft.lodging;
+  return [
+    qeField('Per Hunter Rate', qeMoney('lodging.hunterRate.value', l.hunterRate.value)),
+    qeField('Guest Rate', qeMoney('lodging.guestRate.value', l.guestRate.value)),
+    qeField('Inclusion Note', qeText('lodging.inclusionNote.value', l.inclusionNote.value)),
+    `<p class="tip">To manage lodge photos, use the Form tab → Photos &amp; Slots.</p>`,
+  ].join('');
+}
+
+function buildQeTrophies() {
+  return `<p class="tip">To manage trophy photos and tabs, use the Form tab → Photos &amp; Slots.</p>`;
+}
+
+function buildQePricing() {
+  const l = draft.lodging;
+  let html = '';
+  html += '<div style="font-size:12px;font-weight:600;color:var(--brown);margin-bottom:8px">Lodging</div>';
+  html += qeField('Per Hunter Rate', qeMoney('lodging.hunterRate.value', l.hunterRate.value));
+  html += qeField('Guest Rate', qeMoney('lodging.guestRate.value', l.guestRate.value));
+  html += qeField('Inclusion Note', qeText('lodging.inclusionNote.value', l.inclusionNote.value));
+
+  html += '<div style="font-size:12px;font-weight:600;color:var(--brown);margin:14px 0 6px">Whitetail Tiers</div>';
+  html += '<table class="qe-table"><thead><tr><th>Score Range</th><th>Fee</th><th></th></tr></thead><tbody>';
+  draft.whitetailTiers.forEach((t, i) => {
+    html += `<tr>
+      <td><input type="text" data-qe-array="whitetailTiers" data-qe-idx="${i}" data-qe-field="scoreRange.value" value="${esc(t.scoreRange.value)}"></td>
+      <td><div class="money-wrap"><span style="left:8px;position:absolute;top:50%;transform:translateY(-50%);font-size:12px;pointer-events:none">$</span><input type="number" data-qe-array="whitetailTiers" data-qe-idx="${i}" data-qe-field="fee.value" value="${t.fee.value != null ? t.fee.value : ''}" style="padding-left:20px"></div></td>
+      <td><button class="qe-del-btn" data-qe-del="whitetailTiers" data-qe-del-idx="${i}">✕</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  html += '<button class="qe-add-btn" data-qe-add="whitetailTier">+ Add Tier</button>';
+
+  html += '<div style="font-size:12px;font-weight:600;color:var(--brown);margin:14px 0 6px">Exotics</div>';
+  html += '<table class="qe-table"><thead><tr><th>Animal</th><th>Fee</th><th></th></tr></thead><tbody>';
+  draft.exotics.forEach((ex, i) => {
+    html += `<tr>
+      <td><input type="text" data-qe-array="exotics" data-qe-idx="${i}" data-qe-field="animal.value" value="${esc(ex.animal.value)}"></td>
+      <td><div class="money-wrap" style="position:relative"><span style="left:8px;position:absolute;top:50%;transform:translateY(-50%);font-size:12px;pointer-events:none">$</span><input type="number" data-qe-array="exotics" data-qe-idx="${i}" data-qe-field="fee.value" value="${ex.fee.value != null ? ex.fee.value : ''}" style="padding-left:20px"></div></td>
+      <td><button class="qe-del-btn" data-qe-del="exotics" data-qe-del-idx="${i}">✕</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  html += '<button class="qe-add-btn" data-qe-add="exotic">+ Add Exotic</button>';
+
+  html += '<div style="font-size:12px;font-weight:600;color:var(--brown);margin:14px 0 6px">Wingshooting</div>';
+  html += '<table class="qe-table"><thead><tr><th>Hunt</th><th>Fee</th><th></th></tr></thead><tbody>';
+  draft.wingshooting.forEach((ws, i) => {
+    html += `<tr>
+      <td><input type="text" data-qe-array="wingshooting" data-qe-idx="${i}" data-qe-field="hunt.value" value="${esc(ws.hunt.value)}"></td>
+      <td><div class="money-wrap" style="position:relative"><span style="left:8px;position:absolute;top:50%;transform:translateY(-50%);font-size:12px;pointer-events:none">$</span><input type="number" data-qe-array="wingshooting" data-qe-idx="${i}" data-qe-field="fee.value" value="${ws.fee.value != null ? ws.fee.value : ''}" style="padding-left:20px"></div></td>
+      <td><button class="qe-del-btn" data-qe-del="wingshooting" data-qe-del-idx="${i}">✕</button></td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  html += '<button class="qe-add-btn" data-qe-add="wingshooting">+ Add Hunt</button>';
+
+  return html;
+}
+
 document.getElementById('share-preview-btn').addEventListener('click', () => {
   if (!previewUrl) { toast('No preview URL — click Refresh first', 'err'); return; }
   navigator.clipboard.writeText(previewUrl).then(() => toast('Preview link copied!')).catch(() => {
@@ -2214,14 +2557,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-window.addEventListener('message', function(e) {
-  if (!e.data || e.data.type !== 'bhr-nav') return;
-  switchTab('form');
-  setTimeout(function() {
-    var el = document.getElementById('fsec-' + e.data.section);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 80);
-});
+// bhr-nav message handler is now set up inside the Quick Edit Panel section above
 
 /* ============================================================
    TIMMY DEV MODE TOGGLE
