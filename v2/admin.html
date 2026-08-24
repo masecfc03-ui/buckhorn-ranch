@@ -992,6 +992,8 @@ function buildSlotsFields() {
   const heroPhoto = draft.photos.find(p => p.photoId === s.hero.photoId);
   const trophyPhotos = (s.trophyGallery.photoIds || []).map(id => draft.photos.find(p => p.photoId === id)).filter(Boolean);
   const lodgePhotos = (s.lodgeGallery.photoIds || []).map(id => draft.photos.find(p => p.photoId === id)).filter(Boolean);
+  const wtPhotos = ((s.whitetailGallery && s.whitetailGallery.photoIds) || []).map(id => draft.photos.find(p => p.photoId === id)).filter(Boolean);
+  const exPhotos = ((s.exoticsGallery && s.exoticsGallery.photoIds) || []).map(id => draft.photos.find(p => p.photoId === id)).filter(Boolean);
 
   const heroPreview = heroPhoto
     ? `<div class="slot-preview"><img src="img/${heroPhoto.photoId}-480.webp" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="hero">✕ Remove</button></div>`
@@ -999,6 +1001,8 @@ function buildSlotsFields() {
 
   const trophyMulti = `<div class="multi-slot" id="multi-trophy">${trophyPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="trophyGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
   const lodgeMulti = `<div class="multi-slot" id="multi-lodge">${lodgePhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="lodgeGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const wtMulti = `<div class="multi-slot" id="multi-wt">${wtPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="whitetailGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const exMulti = `<div class="multi-slot" id="multi-ex">${exPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="exoticsGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
 
   return `
     <div class="field-row" style="flex-direction:column;gap:16px">
@@ -1017,6 +1021,16 @@ function buildSlotsFields() {
         ${lodgeMulti}
         <button class="pick-photo-btn" data-pickslot="lodgeGallery">Add Lodge Photo</button>
       </div>
+      <div class="field-group">
+        <label>Whitetail Score Gallery</label>
+        ${wtMulti}
+        <button class="pick-photo-btn" data-pickslot="whitetailGallery">Add Whitetail Photo</button>
+      </div>
+      <div class="field-group">
+        <label>Exotics Score Gallery</label>
+        ${exMulti}
+        <button class="pick-photo-btn" data-pickslot="exoticsGallery">Add Exotics Photo</button>
+      </div>
     </div>
     <div style="margin-top:12px">
       <button class="manage-photos-btn" data-addfn="openPhotoLibrary">Manage All Photos</button>
@@ -1026,14 +1040,16 @@ function buildSlotsFields() {
 
 function buildSectionsToggle() {
   const sectionLabels = {
-    'sec-hero': 'Hero Banner',
-    'sec-ranch': 'Ranch / About',
-    'sec-trophies': 'Trophy Gallery',
-    'sec-lodge': 'Lodge Gallery',
-    'sec-corporate': 'Corporate / Group Hunts',
-    'sec-pricing': 'Pricing Tables',
-    'sec-terms': 'Terms & Conditions',
-    'sec-contact': 'Contact'
+    'sec-hero':       'Hero Banner',
+    'sec-ranch':      'Ranch / About',
+    'sec-trophies':   'Trophy Gallery',
+    'sec-wt-gallery': 'Whitetail Score Gallery',
+    'sec-ex-gallery': 'Exotics Score Gallery',
+    'sec-lodge':      'Lodge Gallery',
+    'sec-corporate':  'Corporate / Group Hunts',
+    'sec-pricing':    'Pricing Tables',
+    'sec-terms':      'Terms & Conditions',
+    'sec-contact':    'Contact'
   };
   return draft.sections.map(sec => `
     <div class="toggle-row">
@@ -1297,8 +1313,8 @@ function renderPhotoGrid() {
         draft.photos = draft.photos.filter(p => p.photoId !== pid);
         // Remove from all slots
         if (draft.slots.hero.photoId === pid) draft.slots.hero.photoId = '';
-        ['trophyGallery','lodgeGallery'].forEach(k => {
-          if (draft.slots[k].photoIds) draft.slots[k].photoIds = draft.slots[k].photoIds.filter(id => id !== pid);
+        ['trophyGallery','lodgeGallery','whitetailGallery','exoticsGallery'].forEach(k => {
+          if (draft.slots[k] && draft.slots[k].photoIds) draft.slots[k].photoIds = draft.slots[k].photoIds.filter(id => id !== pid);
         });
         renderPhotoGrid();
         renderForm();
@@ -1485,6 +1501,8 @@ async function sendChat() {
 
   const systemPrompt = `You are Timmy, the ranch manager assistant for Buckhorn Ranch. You help update the ranch website content. You have access to the current site content and propose structured changes.
 
+The site has two scored trophy galleries: "whitetailGallery" (whitetail bucks with SCI/B&C score captions) and "exoticsGallery" (exotic animals with score or species captions). Use addGalleryPhoto/removeGalleryPhoto to manage which photos appear in each gallery. Use setPhotoCaption to set the score text shown under each photo (e.g. "162 SCI Typical Whitetail"). Photo IDs come from the photos array in the current content. Sections "sec-wt-gallery" (Whitetail Score Gallery) and "sec-ex-gallery" (Exotics Score Gallery) can be toggled with toggleSection.
+
 Current content (JSON):
 ${JSON.stringify(draft, null, 2)}
 
@@ -1497,7 +1515,11 @@ When asked to make changes, respond with a JSON block in this exact format:
     { "op": "removeRow", "path": "exotics", "id": "ex-03" },
     { "op": "moveRow", "path": "whitetailTiers", "id": "wt-01", "direction": "up" },
     { "op": "setSlot", "slot": "hero", "photoId": "photo-abc" },
-    { "op": "toggleSection", "sectionId": "sec-corporate", "visible": true }
+    { "op": "toggleSection", "sectionId": "sec-corporate", "visible": true },
+    { "op": "addGalleryPhoto", "gallery": "whitetailGallery", "photoId": "photo-abc123" },
+    { "op": "removeGalleryPhoto", "gallery": "whitetailGallery", "photoId": "photo-abc123" },
+    { "op": "setPhotoCaption", "photoId": "photo-abc123", "caption": "162 SCI Typical Whitetail" },
+    { "op": "addGalleryPhoto", "gallery": "exoticsGallery", "photoId": "photo-xyz789" }
   ]
 }
 
@@ -1635,6 +1657,9 @@ function describeChange(change) {
     case 'moveRow': return `Move <code>${change.id}</code> ${change.direction} in <code>${change.path}</code>`;
     case 'setSlot': return `Set <code>${change.slot}</code> slot photo`;
     case 'toggleSection': return `${change.visible ? 'Show' : 'Hide'} section <code>${change.sectionId}</code>`;
+    case 'addGalleryPhoto': return `Add photo to <code>${change.gallery}</code>`;
+    case 'removeGalleryPhoto': return `Remove photo from <code>${change.gallery}</code>`;
+    case 'setPhotoCaption': return `Set caption on photo <code>${change.photoId}</code>`;
     default: return JSON.stringify(change);
   }
 }
@@ -1688,6 +1713,30 @@ function applySingleChange(change) {
       case 'toggleSection': {
         const sec = draft.sections.find(s => s.id === change.sectionId);
         if (sec) sec.visible = change.visible;
+        break;
+      }
+      case 'addGalleryPhoto': {
+        const slot = draft.slots[change.gallery];
+        if (slot && Array.isArray(slot.photoIds)) {
+          if (!slot.photoIds.includes(change.photoId)) slot.photoIds.push(change.photoId);
+        }
+        break;
+      }
+      case 'removeGalleryPhoto': {
+        const slot = draft.slots[change.gallery];
+        if (slot && Array.isArray(slot.photoIds)) {
+          const idx = slot.photoIds.indexOf(change.photoId);
+          if (idx >= 0) slot.photoIds.splice(idx, 1);
+        }
+        break;
+      }
+      case 'setPhotoCaption': {
+        const photo = (draft.photos || []).find(p => p.photoId === change.photoId || p.id === change.photoId);
+        if (photo) {
+          photo.caption = change.caption;
+          if (!photo.metadata) photo.metadata = {};
+          photo.metadata.caption = change.caption;
+        }
         break;
       }
     }

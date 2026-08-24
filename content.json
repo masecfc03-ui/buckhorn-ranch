@@ -85,14 +85,18 @@
   ],
   "slots": {
     "hero":          { "photoId": "hero.jpg" },
-    "trophyGallery": { "photoIds": ["IMG_2631.jpeg", "IMG_4696.jpeg", "IMG_6733.jpeg", "IMG_8271.jpeg", "IMG_2735.jpeg", "IMG_0682.jpeg"] },
-    "lodgeGallery":  { "photoIds": ["lodge-01.jpg", "lodge-02.jpg", "lodge-03.jpg", "lodge-04.jpg", "lodge-05.jpg", "lodge-06.jpg", "lodge-07.jpg"] }
+    "trophyGallery":    { "photoIds": ["IMG_2631.jpeg", "IMG_4696.jpeg", "IMG_6733.jpeg", "IMG_8271.jpeg", "IMG_2735.jpeg", "IMG_0682.jpeg"] },
+    "lodgeGallery":     { "photoIds": ["lodge-01.jpg", "lodge-02.jpg", "lodge-03.jpg", "lodge-04.jpg", "lodge-05.jpg", "lodge-06.jpg", "lodge-07.jpg"] },
+    "whitetailGallery": { "photoIds": [] },
+    "exoticsGallery":   { "photoIds": [] }
   },
   "sections": [
     { "id": "sec-hero",      "type": "hero",        "visible": true },
     { "id": "sec-ranch",     "type": "textSection", "visible": true },
-    { "id": "sec-trophies",  "type": "gallery",     "visible": true },
-    { "id": "sec-lodge",     "type": "gallery",     "visible": true },
+    { "id": "sec-trophies",   "type": "gallery",       "visible": true },
+    { "id": "sec-wt-gallery", "type": "scoredGallery", "visible": true },
+    { "id": "sec-ex-gallery", "type": "scoredGallery", "visible": true },
+    { "id": "sec-lodge",      "type": "gallery",       "visible": true },
     { "id": "sec-corporate", "type": "textSection", "visible": true },
     { "id": "sec-pricing",   "type": "pricing",     "visible": true },
     { "id": "sec-terms",     "type": "terms",       "visible": true },

@@ -657,6 +657,54 @@
       background: var(--bone);
     }
 
+    /* ── SCORED GALLERIES ───────────────────────────────────── */
+    .scored-gallery-scroll {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding: 0 24px 24px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      cursor: grab;
+    }
+    .scored-gallery-scroll:active { cursor: grabbing; }
+    .scored-gallery-scroll::-webkit-scrollbar { height: 6px; }
+    .scored-gallery-scroll::-webkit-scrollbar-track { background: var(--parchment); }
+    .scored-gallery-scroll::-webkit-scrollbar-thumb { background: var(--brass); border-radius: 3px; }
+    .scored-card {
+      flex: 0 0 260px;
+      scroll-snap-align: start;
+      background: white;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 200ms;
+      border: 1px solid var(--parchment);
+    }
+    .scored-card:hover { box-shadow: 0 4px 20px rgba(43,34,27,0.18); }
+    .scored-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    .scored-card .score-label {
+      font-family: var(--heading-font);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--ink);
+      padding: 10px 12px 4px;
+      text-align: center;
+    }
+    .scored-card .score-sub {
+      font-size: 11px;
+      color: var(--brass);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      padding-bottom: 10px;
+    }
+
     /* ── LIGHTBOX ────────────────────────────────────────────── */
     #lightbox {
       position: fixed;
@@ -1077,6 +1125,56 @@
     '</section>';
   }
 
+  /* 5a. WHITETAIL SCORED GALLERY */
+  function buildWtGallery(data) {
+    var photoIds  = (data.slots && data.slots.whitetailGallery && data.slots.whitetailGallery.photoIds) || [];
+    var allPhotos = data.photos || [];
+    if (photoIds.length === 0) return '';
+    var cards = '';
+    photoIds.forEach(function(pid, i) {
+      var photo = findPhoto(allPhotos, pid);
+      var caption = (photo && photo.caption) ? escape(photo.caption) : '';
+      var pos = photoObjectPos(photo);
+      cards +=
+        '<div class="scored-card" data-lb-set="wt-gallery" data-lb-index="' + i + '" role="button" tabindex="0" aria-label="' + caption + '">' +
+          '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="260px" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
+          '<div class="score-label">' + caption + '</div>' +
+          '<div class="score-sub">Whitetail</div>' +
+        '</div>';
+    });
+    return '<section id="sec-wt-gallery">' +
+      '<span class="section-label fade-up">Trophy Room</span>' +
+      '<h2 class="heading-reveal">Whitetail Bucks</h2>' +
+      '<span class="brass-rule rule-reveal"></span>' +
+      '<div class="scored-gallery-scroll" id="wt-gallery-scroll">' + cards + '</div>' +
+    '</section>';
+  }
+
+  /* 5b. EXOTICS SCORED GALLERY */
+  function buildExGallery(data) {
+    var photoIds  = (data.slots && data.slots.exoticsGallery && data.slots.exoticsGallery.photoIds) || [];
+    var allPhotos = data.photos || [];
+    if (photoIds.length === 0) return '';
+    var cards = '';
+    photoIds.forEach(function(pid, i) {
+      var photo = findPhoto(allPhotos, pid);
+      var caption = (photo && photo.caption) ? escape(photo.caption) : '';
+      var pos = photoObjectPos(photo);
+      cards +=
+        '<div class="scored-card" data-lb-set="ex-gallery" data-lb-index="' + i + '" role="button" tabindex="0" aria-label="' + caption + '">' +
+          '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="260px" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
+          '<div class="score-label">' + caption + '</div>' +
+          '<div class="score-sub">Exotics</div>' +
+        '</div>';
+    });
+    return '<section id="sec-ex-gallery">' +
+      '<span class="section-label fade-up">Trophy Room</span>' +
+      '<h2 class="heading-reveal">Exotics</h2>' +
+      '<span class="brass-rule rule-reveal"></span>' +
+      '<div class="scored-gallery-scroll" id="ex-gallery-scroll">' + cards + '</div>' +
+    '</section>';
+  }
+
   /* 5. CORPORATE */
   function buildCorporate(data) {
     var corp    = data.corporate || {};
@@ -1254,14 +1352,16 @@
      FULL PAGE RENDER
   ──────────────────────────────────────────────────────────── */
   var SECTION_BUILDERS = {
-    'sec-hero':      buildHero,
-    'sec-ranch':     buildRanch,
-    'sec-trophies':  buildTrophies,
-    'sec-lodge':     buildLodge,
-    'sec-corporate': buildCorporate,
-    'sec-pricing':   buildPricing,
-    'sec-terms':     buildTerms,
-    'sec-contact':   buildContact
+    'sec-hero':       buildHero,
+    'sec-ranch':      buildRanch,
+    'sec-trophies':   buildTrophies,
+    'sec-wt-gallery': buildWtGallery,
+    'sec-ex-gallery': buildExGallery,
+    'sec-lodge':      buildLodge,
+    'sec-corporate':  buildCorporate,
+    'sec-pricing':    buildPricing,
+    'sec-terms':      buildTerms,
+    'sec-contact':    buildContact
   };
 
   function render(data) {
@@ -1305,6 +1405,13 @@
     setupTabs();
     setupLightbox(data);
     setupAudio(data);
+
+    /* Drag-to-scroll for scored gallery strips */
+    var wtScroll = document.getElementById('wt-gallery-scroll');
+    var exScroll = document.getElementById('ex-gallery-scroll');
+    if (wtScroll) enableDragScroll(wtScroll);
+    if (exScroll) enableDragScroll(exScroll);
+
     if (window.__BHR_PREVIEW__) attachPreviewHooks();
   }
 
@@ -1363,6 +1470,21 @@
   }
 
   /* ────────────────────────────────────────────────────────────
+     DRAG-TO-SCROLL
+  ──────────────────────────────────────────────────────────── */
+  function enableDragScroll(el) {
+    var isDown = false, startX, scrollLeft;
+    el.addEventListener('mousedown', function(e) { isDown = true; startX = e.pageX - el.offsetLeft; scrollLeft = el.scrollLeft; });
+    el.addEventListener('mouseleave', function() { isDown = false; });
+    el.addEventListener('mouseup', function() { isDown = false; });
+    el.addEventListener('mousemove', function(e) {
+      if (!isDown) return;
+      e.preventDefault();
+      el.scrollLeft = scrollLeft - (e.pageX - el.offsetLeft - startX);
+    });
+  }
+
+  /* ────────────────────────────────────────────────────────────
      LIGHTBOX
   ──────────────────────────────────────────────────────────── */
   var lbData = { sets: {}, currentSet: null, currentIdx: 0 };
@@ -1386,6 +1508,30 @@
     /* Lodge set */
     var lodgeIds = (slots.lodgeGallery && slots.lodgeGallery.photoIds) || [];
     lbData.sets['lodge'] = lodgeIds.map(function (pid) {
+      var photo = findPhoto(photos, pid);
+      return {
+        id: pid,
+        caption: (photo && photo.caption) ? photo.caption : pid,
+        x: photo ? photo.x : 0.5,
+        y: photo ? photo.y : 0.5
+      };
+    });
+
+    /* Whitetail gallery set */
+    var wtIds = (slots.whitetailGallery && slots.whitetailGallery.photoIds) || [];
+    lbData.sets['wt-gallery'] = wtIds.map(function (pid) {
+      var photo = findPhoto(photos, pid);
+      return {
+        id: pid,
+        caption: (photo && photo.caption) ? photo.caption : pid,
+        x: photo ? photo.x : 0.5,
+        y: photo ? photo.y : 0.5
+      };
+    });
+
+    /* Exotics gallery set */
+    var exIds = (slots.exoticsGallery && slots.exoticsGallery.photoIds) || [];
+    lbData.sets['ex-gallery'] = exIds.map(function (pid) {
       var photo = findPhoto(photos, pid);
       return {
         id: pid,
