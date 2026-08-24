@@ -894,7 +894,7 @@
 
   /* Resolve a single src URL for a photoId at a given preferred width */
   function photoSrc(photoId, width) {
-    if (isLegacyPhoto(photoId)) return photoId;
+    if (isLegacyPhoto(photoId)) return 'img/' + photoId;
     return 'img/' + photoId + '-' + (width || 960) + '.webp';
   }
 
