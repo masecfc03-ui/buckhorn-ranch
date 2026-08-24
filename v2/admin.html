@@ -468,6 +468,21 @@ footer a:hover { text-decoration: underline; }
 .multi-slot-item img { width: 50px; height: 38px; object-fit: cover; border-radius: 3px; border: 1px solid var(--border); }
 .multi-slot-item button { position: absolute; top: -4px; right: -4px; background: var(--error); color: white; border: none; border-radius: 50%; width: 14px; height: 14px; font-size: 10px; line-height: 14px; cursor: pointer; padding: 0; }
 .tip { font-size: 11px; color: var(--brown); margin-top: 4px; font-style: italic; }
+    /* Animal gallery form section */
+    .ag-form-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+    .ag-form-tab { padding: 5px 12px; border: 1px solid var(--brass); background: none; border-radius: 20px; font-size: 12px; color: var(--brass); cursor: pointer; transition: all 0.15s; }
+    .ag-form-tab.active { background: var(--brass); color: #fff; }
+    .ag-form-panel { display: none; }
+    .ag-form-panel.active { display: block; }
+    .ag-form-photo-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; min-height: 20px; }
+    .ag-form-photo-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: var(--bone); border-radius: 4px; border: 1px solid rgba(74,59,46,0.1); cursor: grab; }
+    .ag-form-photo-item.drag-over { border: 2px dashed var(--brass); background: rgba(168,133,75,0.08); }
+    .ag-form-photo-item img { width: 52px; height: 52px; object-fit: cover; border-radius: 3px; flex-shrink: 0; pointer-events: none; }
+    .ag-form-drag-handle { color: var(--brass-dim); font-size: 14px; cursor: grab; flex-shrink: 0; user-select: none; }
+    .ag-form-caption { flex: 1; min-width: 0; font-size: 12px; border: 1px solid rgba(74,59,46,0.2); border-radius: 3px; padding: 4px 6px; background: #fff; color: var(--brown); }
+    .ag-form-rm { background: none; border: none; color: #c0392b; cursor: pointer; font-size: 14px; flex-shrink: 0; padding: 2px 4px; }
+    .ag-form-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .ag-form-type-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--brown); margin: 12px 0 6px; }
 .section-id-badge { font-size: 10px; font-family: monospace; color: var(--brass); background: rgba(168,133,75,0.1); padding: 1px 5px; border-radius: 3px; margin-left: 6px; }
 </style>
 </head>
@@ -1211,6 +1226,56 @@ function buildSlotsFields() {
     </div>
   `;
 
+  /* ---- Animal Gallery ---- */
+  const animals = draft.animalGallery || [];
+  const wtAnimals = animals.filter(a => a.type === 'whitetail');
+  const exAnimals = animals.filter(a => a.type === 'exotic');
+  const allAnimalsSorted = [...wtAnimals, ...exAnimals];
+
+  function buildAnimalFormPanel(a) {
+    const photos = (a.photoIds || []).map(pid => {
+      const ph = (draft.photos || []).find(p => (p.id || p.photoId) === pid);
+      const src = photoSrcAdmin(pid, 120);
+      const caption = ph ? (ph.caption || '') : '';
+      return `<div class="ag-form-photo-item" draggable="true" data-ag-drag-animal="${escHtml(a.id)}" data-ag-drag-pid="${escHtml(pid)}">
+        <span class="ag-form-drag-handle" title="Drag to reorder">⠿</span>
+        <img src="${escHtml(src)}" onerror="this.style.opacity='0.3'" alt="">
+        <input class="ag-form-caption" type="text" placeholder="Date / hunter / score…" value="${esc(caption)}" data-ag-caption-animal="${escHtml(a.id)}" data-ag-caption-pid="${escHtml(pid)}">
+        <button class="ag-form-rm" data-ag-rm-animal="${escHtml(a.id)}" data-ag-rm-pid="${escHtml(pid)}" title="Remove photo">✕</button>
+      </div>`;
+    }).join('');
+
+    return `<div class="ag-form-panel" data-ag-panel="${escHtml(a.id)}">
+      <div class="ag-form-photo-list" data-ag-list="${escHtml(a.id)}">${photos || '<p style="font-size:12px;color:var(--brass-dim);margin:0 0 6px">No photos yet — add from library or upload.</p>'}</div>
+      <div class="ag-form-actions">
+        <button class="pick-photo-btn" data-ag-pick="${escHtml(a.id)}">+ Add from Library</button>
+      </div>
+    </div>`;
+  }
+
+  let animalGalleryHtml = `<div class="field-group" style="margin-top:20px"><label>Animal Gallery</label>`;
+  if (allAnimalsSorted.length === 0) {
+    animalGalleryHtml += `<p class="tip">No animals configured yet. Add them in the Animal Gallery quick-edit panel.</p>`;
+  } else {
+    animalGalleryHtml += `<div class="ag-form-tabs">`;
+    if (wtAnimals.length) animalGalleryHtml += `<span class="ag-form-type-label" style="margin:0;align-self:center">Whitetail:</span>`;
+    wtAnimals.forEach((a, i) => {
+      const isFirst = i === 0 && wtAnimals.length > 0;
+      animalGalleryHtml += `<button class="ag-form-tab${isFirst ? ' active' : ''}" data-ag-tab="${escHtml(a.id)}">${esc(a.name.value || 'Unnamed')}</button>`;
+    });
+    if (exAnimals.length) animalGalleryHtml += `<span class="ag-form-type-label" style="margin:0;align-self:center;${wtAnimals.length ? 'margin-left:8px' : ''}">Exotics:</span>`;
+    exAnimals.forEach(a => {
+      animalGalleryHtml += `<button class="ag-form-tab" data-ag-tab="${escHtml(a.id)}">${esc(a.name.value || 'Unnamed')}</button>`;
+    });
+    animalGalleryHtml += `</div>`;
+    animalGalleryHtml += allAnimalsSorted.map((a, i) => {
+      const panel = buildAnimalFormPanel(a);
+      // Make first panel active
+      return panel.replace('class="ag-form-panel"', `class="ag-form-panel${i === 0 ? ' active' : ''}"`);
+    }).join('');
+  }
+  animalGalleryHtml += `</div>`;
+
   /* ---- Custom Galleries ---- */
   const cgs = draft.customGalleries || [];
   let cgHtml = `<div style="margin-top:16px"><div class="form-section-header" style="background:var(--parchment);padding:8px 16px;font-size:14px;color:var(--brown);font-weight:600">Custom Galleries</div>`;
@@ -1240,7 +1305,7 @@ function buildSlotsFields() {
   });
   cgHtml += `<div style="padding:12px 16px;display:flex;align-items:center;gap:8px"><input type="text" id="new-gallery-name" placeholder="New gallery name…" style="width:200px"><button class="add-row-btn" style="width:auto;padding:6px 14px;margin-top:0" id="create-gallery-btn">+ Create Gallery</button></div></div>`;
 
-  return slotHtml + cgHtml;
+  return slotHtml + animalGalleryHtml + cgHtml;
 }
 
 function buildSectionsToggle() {
@@ -1482,6 +1547,92 @@ function attachFormListeners() {
       toast('Gallery "' + name + '" created');
     });
   }
+
+  /* ── Animal gallery form listeners ───────────────────────────── */
+
+  // Tab switching
+  document.querySelectorAll('[data-ag-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const animalId = btn.dataset.agTab;
+      document.querySelectorAll('[data-ag-tab]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('[data-ag-panel]').forEach(p => p.classList.remove('active'));
+      const panel = document.querySelector(`[data-ag-panel="${CSS.escape(animalId)}"]`);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // Pick photo from library for an animal
+  document.querySelectorAll('[data-ag-pick]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pendingPhotoTarget = { animalId: btn.dataset.agPick };
+      openPhotoPicker();
+    });
+  });
+
+  // Remove photo from animal
+  document.querySelectorAll('[data-ag-rm-animal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const animalId = btn.dataset.agRmAnimal;
+      const pid = btn.dataset.agRmPid;
+      const animal = (draft.animalGallery || []).find(a => a.id === animalId);
+      if (!animal) return;
+      pushUndo();
+      animal.photoIds = (animal.photoIds || []).filter(p => p !== pid);
+      scheduleSave();
+      pushContentToPreview();
+      renderForm();
+    });
+  });
+
+  // Caption editing per photo
+  document.querySelectorAll('[data-ag-caption-pid]').forEach(input => {
+    input.addEventListener('input', () => {
+      const pid = input.dataset.agCaptionPid;
+      const ph = (draft.photos || []).find(p => (p.id || p.photoId) === pid);
+      if (ph) { ph.caption = input.value; scheduleSave(); }
+    });
+  });
+
+  // Drag-to-reorder within an animal's photo list
+  let agDragPid = null;
+  let agDragAnimalId = null;
+  document.querySelectorAll('[data-ag-drag-pid]').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      agDragPid = item.dataset.agDragPid;
+      agDragAnimalId = item.dataset.agDragAnimal;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => item.style.opacity = '0.4', 0);
+    });
+    item.addEventListener('dragend', () => {
+      item.style.opacity = '';
+      document.querySelectorAll('.ag-form-photo-item').forEach(el => el.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      document.querySelectorAll('.ag-form-photo-item').forEach(el => el.classList.remove('drag-over'));
+      item.classList.add('drag-over');
+    });
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      const targetPid = item.dataset.agDragPid;
+      if (!agDragPid || agDragPid === targetPid || agDragAnimalId !== item.dataset.agDragAnimal) return;
+      const animal = (draft.animalGallery || []).find(a => a.id === agDragAnimalId);
+      if (!animal || !animal.photoIds) return;
+      pushUndo();
+      const fromIdx = animal.photoIds.indexOf(agDragPid);
+      const toIdx = animal.photoIds.indexOf(targetPid);
+      if (fromIdx < 0 || toIdx < 0) return;
+      animal.photoIds.splice(fromIdx, 1);
+      animal.photoIds.splice(toIdx, 0, agDragPid);
+      agDragPid = null;
+      scheduleSave();
+      pushContentToPreview();
+      renderForm();
+    });
+  });
 }
 
 function addWhitetailTier() {
@@ -2869,6 +3020,16 @@ function applyPickedPhoto(photoId) {
       scheduleSave();
       pushContentToPreview();
       openQuickEdit(qeCurrentSection);
+    }
+  } else if (t.animalId != null) {
+    pushUndo();
+    const animal = (draft.animalGallery || []).find(a => a.id === t.animalId);
+    if (animal) {
+      if (!animal.photoIds) animal.photoIds = [];
+      animal.photoIds.push(photoId);
+      scheduleSave();
+      pushContentToPreview();
+      renderForm();
     }
   } else if (t.gallery) {
     const slotKey = t.gallery;
