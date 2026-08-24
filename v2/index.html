@@ -985,14 +985,18 @@
       bgHtml = '<div class="hero-placeholder"></div>';
     }
 
-    var locLine = location + (acreage ? ' · ' + acreage + ' Acres' : '');
+    /* Raw (unescaped) text values for contenteditable elements */
+    var ranchNameRaw = v(data.ranch.name) || 'Buckhorn Ranch';
+    var locationRaw  = v(data.ranch.location) || '';
+    var taglineRaw   = v(data.ranch.tagline) || '';
+    var locLineRaw   = locationRaw + (acreage ? ' · ' + acreage + ' Acres' : '');
 
     return '<section id="sec-hero">' +
-      '<div id="hero-bg">' + bgHtml + '</div>' +
+      '<div id="hero-bg" data-photo-slot="hero">' + bgHtml + '</div>' +
       '<div class="hero-content">' +
-        '<h1>' + ranchName.toUpperCase() + '</h1>' +
-        (locLine ? '<p class="hero-loc">' + escape(locLine) + '</p>' : '') +
-        (tagline ? '<p class="hero-tag">' + tagline + '</p>' : '') +
+        '<h1 data-edit-path="ranch.name.value" style="text-transform:uppercase">' + escape(ranchNameRaw) + '</h1>' +
+        (locLineRaw ? '<p class="hero-loc" data-edit-path="ranch.location.value">' + escape(locLineRaw) + '</p>' : '') +
+        (taglineRaw ? '<p class="hero-tag" data-edit-path="ranch.tagline.value">' + escape(taglineRaw) + '</p>' : '') +
       '</div>' +
     '</section>';
   }
@@ -1007,7 +1011,7 @@
         '<span class="section-label fade-up">The Ranch</span>' +
         '<h2 class="heading-reveal">' + escape(acreage ? acreage + ' Acres. One Property.' : 'The Ranch') + '</h2>' +
         '<span class="brass-rule rule-reveal"></span>' +
-        (about ? '<p class="fade-up">' + about + '</p>' : '') +
+        (about ? '<p class="fade-up" data-edit-path="ranch.about.value" data-edit-multiline="true">' + about + '</p>' : '') +
         (acreage ? '<span class="acreage-note fade-up">' + escape(acreage) + ' acres · Arbuckle Mountains, Oklahoma</span>' : '') +
       '</div>' +
     '</section>';
@@ -1032,7 +1036,7 @@
           var delay   = (i * 80) + 'ms';
           gridItems +=
             '<div class="trophy-item stagger-item" data-lb-set="' + lbSet + '" data-lb-index="' + i + '" style="transition-delay:' + delay + '" role="button" tabindex="0" aria-label="View ' + caption + '">' +
-              '<div class="trophy-img-wrap">' +
+              '<div class="trophy-img-wrap" data-photo-gallery-wrap data-photo-gallery="' + escape(slotKey) + '" data-photo-idx="' + i + '">' +
                 '<img' +
                 ' src="' + escape(photoSrc(pid, 480)) + '"' +
                 ' srcset="' + escape(photoSrcset(pid)) + '"' +
@@ -1067,7 +1071,7 @@
           var pos     = photoObjectPos(photo);
           gridItems2 +=
             '<div class="trophy-item stagger-item" data-lb-set="' + lbSet2 + '" data-lb-index="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
-              '<div class="trophy-img-wrap">' +
+              '<div class="trophy-img-wrap" data-photo-gallery-wrap data-photo-gallery="' + escape(tab.id) + '" data-photo-idx="' + i + '">' +
                 '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
               '</div>' +
               '<p class="trophy-caption">' + caption + '</p>' +
@@ -1101,7 +1105,7 @@
           var pos     = photoObjectPos(photo);
           gridItems +=
             '<div class="trophy-item stagger-item" data-lb-set="trophies-fallback" data-lb-index="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
-              '<div class="trophy-img-wrap">' +
+              '<div class="trophy-img-wrap" data-photo-gallery-wrap data-photo-gallery="trophyGallery" data-photo-idx="' + i + '">' +
                 '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
               '</div>' +
               '<p class="trophy-caption">' + caption + '</p>' +
@@ -1164,7 +1168,7 @@
         var caption = (photo && photo.caption) ? escape(photo.caption) : 'Lodge';
         var pos     = photoObjectPos(photo);
         gridItems +=
-          '<div class="lodge-img-wrap stagger-item fade-in" data-lb-set="lodge" data-lb-index="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
+          '<div class="lodge-img-wrap stagger-item fade-in" data-lb-set="lodge" data-lb-index="' + i + '" data-photo-gallery-wrap data-photo-gallery="lodgeGallery" data-photo-idx="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
             '<img' +
             ' src="' + escape(photoSrc(pid, 480)) + '"' +
             ' srcset="' + escape(photoSrcset(pid)) + '"' +
@@ -1214,7 +1218,7 @@
       var caption = (photo && photo.caption) ? escape(photo.caption) : '';
       var pos = photoObjectPos(photo);
       cards +=
-        '<div class="scored-card" data-lb-set="wt-gallery" data-lb-index="' + i + '" role="button" tabindex="0" aria-label="' + caption + '">' +
+        '<div class="scored-card" data-lb-set="wt-gallery" data-lb-index="' + i + '" data-photo-gallery-wrap data-photo-gallery="whitetailGallery" data-photo-idx="' + i + '" role="button" tabindex="0" aria-label="' + caption + '">' +
           '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="260px" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
           '<div class="score-label">' + caption + '</div>' +
           '<div class="score-sub">Whitetail</div>' +
@@ -1239,7 +1243,7 @@
       var caption = (photo && photo.caption) ? escape(photo.caption) : '';
       var pos = photoObjectPos(photo);
       cards +=
-        '<div class="scored-card" data-lb-set="ex-gallery" data-lb-index="' + i + '" role="button" tabindex="0" aria-label="' + caption + '">' +
+        '<div class="scored-card" data-lb-set="ex-gallery" data-lb-index="' + i + '" data-photo-gallery-wrap data-photo-gallery="exoticsGallery" data-photo-idx="' + i + '" role="button" tabindex="0" aria-label="' + caption + '">' +
           '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="260px" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
           '<div class="score-label">' + caption + '</div>' +
           '<div class="score-sub">Exotics</div>' +
@@ -1298,7 +1302,7 @@
         '<span class="section-label fade-up">Groups &amp; Corporate</span>' +
         '<h2 class="heading-reveal">Corporate Hunts</h2>' +
         '<span class="brass-rule rule-reveal"></span>' +
-        (body ? '<p class="corp-body fade-up">' + body + '</p>' : '') +
+        (body ? '<p class="corp-body fade-up" data-edit-path="corporate.body.value" data-edit-multiline="true">' + body + '</p>' : '') +
         listHtml +
       '</div>' +
     '</section>';
@@ -1811,6 +1815,130 @@
       }
     });
   }
+
+  /* ────────────────────────────────────────────────────────────
+     WYSIWYG EDIT MODE
+  ──────────────────────────────────────────────────────────── */
+  var editModeStyleEl = null;
+  var pendingDropTarget = null;
+
+  function enableEditMode() {
+    document.body.classList.add('bhr-editing');
+
+    /* Inject edit-mode styles */
+    if (!editModeStyleEl) {
+      editModeStyleEl = document.createElement('style');
+      editModeStyleEl.textContent = [
+        '.bhr-editing [data-edit-path]{outline:2px dashed rgba(168,133,75,0.35);outline-offset:3px;cursor:text;border-radius:2px;transition:background 0.15s,outline-color 0.15s;}',
+        '.bhr-editing [data-edit-path]:hover,.bhr-editing [data-edit-path]:focus{outline-color:#a8854b;background:rgba(168,133,75,0.07);}',
+        '.bhr-editing [data-photo-slot],.bhr-editing [data-photo-gallery-wrap]{position:relative;cursor:pointer;}',
+        '.bhr-editing [data-photo-slot]::after,.bhr-editing [data-photo-gallery-wrap]::after{content:"📷 Change Photo";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.42);color:#fff;font-family:system-ui,sans-serif;font-size:13px;letter-spacing:0.04em;opacity:0;transition:opacity 0.15s;pointer-events:none;z-index:5;}',
+        '.bhr-editing [data-photo-slot]:hover::after,.bhr-editing [data-photo-gallery-wrap]:hover::after,[data-photo-slot].bhr-drag-over,[data-photo-gallery-wrap].bhr-drag-over{opacity:1!important;outline:3px solid #a8854b;}'
+      ].join('');
+      document.head.appendChild(editModeStyleEl);
+    }
+
+    /* Make data-edit-path elements contenteditable */
+    document.querySelectorAll('[data-edit-path]').forEach(function(el) {
+      el.contentEditable = 'true';
+      el.setAttribute('spellcheck', 'false');
+
+      /* Blur → send field change */
+      el.addEventListener('blur', function onBlur() {
+        window.parent.postMessage({
+          type: 'bhr-field-change',
+          path: el.dataset.editPath,
+          value: el.innerText.trim()
+        }, '*');
+      });
+
+      /* Enter on single-line fields: blur instead of newline */
+      el.addEventListener('keydown', function onKey(e) {
+        if (e.key === 'Enter' && !el.dataset.editMultiline) {
+          e.preventDefault();
+          el.blur();
+        }
+      });
+    });
+
+    /* Photo slot / gallery click handlers */
+    document.querySelectorAll('[data-photo-slot]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation(); /* prevent bhr-nav bubble */
+        window.parent.postMessage({
+          type: 'bhr-photo-click',
+          slot: el.dataset.photoSlot,
+          gallery: null,
+          idx: null
+        }, '*');
+      });
+    });
+
+    document.querySelectorAll('[data-photo-gallery-wrap]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        window.parent.postMessage({
+          type: 'bhr-photo-click',
+          slot: null,
+          gallery: el.dataset.photoGallery,
+          idx: el.dataset.photoIdx != null ? Number(el.dataset.photoIdx) : null
+        }, '*');
+      });
+    });
+  }
+
+  function disableEditMode() {
+    document.body.classList.remove('bhr-editing');
+    document.querySelectorAll('[data-edit-path]').forEach(function(el) {
+      el.contentEditable = 'false';
+    });
+  }
+
+  /* Listen for messages from admin parent */
+  window.addEventListener('message', function(e) {
+    if (!e.data) return;
+
+    if (e.data.type === 'bhr-edit-mode') {
+      if (e.data.enabled) {
+        enableEditMode();
+      } else {
+        disableEditMode();
+      }
+      return;
+    }
+
+    if (e.data.type === 'bhr-drag-hover') {
+      /* Find nearest photo slot under pointer */
+      var x = e.data.x * window.innerWidth;
+      var y = e.data.y * window.innerHeight;
+      var el = document.elementFromPoint(x, y);
+      var slot = el && (el.closest('[data-photo-slot]') || el.closest('[data-photo-gallery-wrap]'));
+
+      /* Clear previous highlight */
+      if (pendingDropTarget && pendingDropTarget !== slot) {
+        pendingDropTarget.classList.remove('bhr-drag-over');
+      }
+      if (slot) {
+        slot.classList.add('bhr-drag-over');
+        pendingDropTarget = slot;
+      }
+      return;
+    }
+
+    if (e.data.type === 'bhr-photo-drag') {
+      if (!pendingDropTarget) return;
+      var target = pendingDropTarget;
+      pendingDropTarget = null;
+      target.classList.remove('bhr-drag-over');
+      window.parent.postMessage({
+        type: 'bhr-drop-target',
+        slot: target.dataset.photoSlot || null,
+        gallery: target.dataset.photoGallery || null,
+        idx: target.dataset.photoIdx != null ? Number(target.dataset.photoIdx) : null
+      }, '*');
+      return;
+    }
+  });
 
   /* ---- PREVIEW CLICK HOOKS (admin visual tab) ---- */
   function attachPreviewHooks() {

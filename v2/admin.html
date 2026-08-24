@@ -560,6 +560,7 @@ footer a:hover { text-decoration: underline; }
     <div class="visual-body">
       <div id="preview-loading" class="preview-loading"><div class="spinner"></div></div>
       <iframe id="preview-iframe" style="display:none"></iframe>
+      <div id="drag-capture-overlay" style="display:none;position:absolute;inset:0;z-index:10;"></div>
       <!-- Quick Edit Panel -->
       <div id="quick-edit-panel">
         <div class="qe-header">
@@ -584,6 +585,17 @@ footer a:hover { text-decoration: underline; }
 
 <!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
+
+<!-- PHOTO PICKER (WYSIWYG inline click / drag-drop) -->
+<div id="photo-picker-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:8px;padding:24px;max-width:780px;width:94vw;max-height:80vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <strong style="font-size:15px;color:#2B221B">Select Photo</strong>
+      <button id="photo-picker-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:#666">✕</button>
+    </div>
+    <div id="photo-picker-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;"></div>
+  </div>
+</div>
 
 <!-- PHOTO LIBRARY MODAL -->
 <div class="modal-backdrop hidden" id="photo-modal">
@@ -1515,7 +1527,7 @@ function renderPhotoGrid() {
       (draft.slots[currentPhotoSlot].photoId === p.photoId) ||
       ((draft.slots[currentPhotoSlot].photoIds || []).includes(p.photoId))
     );
-    return `<div class="photo-card ${selected ? 'selected' : ''}" data-photoid="${p.photoId}">
+    return `<div class="photo-card ${selected ? 'selected' : ''}" data-photoid="${p.photoId}" draggable="true" data-drag-photoid="${p.photoId}">
       <img src="img/${p.photoId}-480.webp" onerror="this.src=''" alt="">
       <button class="photo-delete" data-deletephoto="${p.photoId}">🗑</button>
       <div class="photo-caption"><input type="text" placeholder="Caption…" value="${esc(caption)}" data-captionfor="${p.photoId}"></div>
@@ -2132,6 +2144,10 @@ async function loadPreview() {
       iframe.onload = () => {
         loading.style.display = 'none';
         iframe.style.display = '';
+        // Signal iframe to enter WYSIWYG edit mode
+        setTimeout(() => {
+          iframe.contentWindow.postMessage({ type: 'bhr-edit-mode', enabled: true }, '*');
+        }, 400);
       };
       iframe.onerror = () => {
         loading.innerHTML = '<div style="color:var(--error)">Preview failed to load.</div>';
@@ -2218,6 +2234,50 @@ window.addEventListener('message', function(e) {
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 80);
     }
+    return;
+  }
+
+  if (e.data.type === 'bhr-field-change') {
+    // Inline text edit committed — update draft without reload
+    pushUndo();
+    setPath(draft, e.data.path, e.data.value);
+    scheduleSave();
+    toast('Saved');
+    return;
+  }
+
+  if (e.data.type === 'bhr-photo-click') {
+    pendingPhotoTarget = { slot: e.data.slot, gallery: e.data.gallery, idx: e.data.idx };
+    openPhotoPicker();
+    return;
+  }
+
+  if (e.data.type === 'bhr-drop-target') {
+    // Photo dragged from library onto iframe slot
+    if (!draggingPhotoId) return;
+    const photoId = draggingPhotoId;
+    draggingPhotoId = null;
+    document.getElementById('drag-capture-overlay').style.display = 'none';
+    if (e.data.slot === 'hero') {
+      applySingleChange({ op: 'setSlot', slot: 'hero', photoId });
+      toast('Hero photo updated');
+      loadPreview();
+    } else if (e.data.gallery) {
+      const slotKey = e.data.gallery;
+      const slotObj = draft.slots[slotKey];
+      if (slotObj && slotObj.photoIds && e.data.idx != null && e.data.idx < slotObj.photoIds.length) {
+        pushUndo();
+        slotObj.photoIds[e.data.idx] = photoId;
+        scheduleSave();
+        toast('Photo updated');
+        loadPreview();
+      } else {
+        applySingleChange({ op: 'addGalleryPhoto', gallery: slotKey, photoId });
+        toast('Photo added to gallery');
+        loadPreview();
+      }
+    }
+    return;
   }
 });
 
@@ -2617,6 +2677,117 @@ document.getElementById('save-passcode-btn').addEventListener('click', async () 
   } catch (e) {
     errEl.textContent = e.message || 'Failed to update passcode.';
   }
+});
+
+/* ============================================================
+   WYSIWYG PHOTO PICKER
+   ============================================================ */
+let pendingPhotoTarget = null;
+
+function isLegacyPhotoAdmin(id) {
+  return /\.(jpg|jpeg|png|gif)$/i.test(id) && !id.startsWith('photo-');
+}
+
+function openPhotoPicker() {
+  const grid = document.getElementById('photo-picker-grid');
+  const allPhotos = draft.photos || [];
+  grid.innerHTML = allPhotos.map(p => {
+    const pid = p.photoId || p.id;
+    const src = isLegacyPhotoAdmin(pid) ? `img/${pid}` : `img/${pid}-480.webp`;
+    return `<div class="pp-thumb" data-photoid="${escHtml(pid)}" style="cursor:pointer;border-radius:4px;overflow:hidden;border:2px solid transparent;transition:border-color 0.15s;">
+      <img src="${escHtml(src)}" style="width:100%;height:100px;object-fit:cover;display:block;" onerror="this.src=''">
+      <div style="font-size:10px;padding:3px 4px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(pid)}</div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.pp-thumb').forEach(el => {
+    el.addEventListener('click', () => applyPickedPhoto(el.dataset.photoid));
+    el.addEventListener('mouseenter', () => el.style.borderColor = '#a8854b');
+    el.addEventListener('mouseleave', () => el.style.borderColor = 'transparent');
+  });
+  document.getElementById('photo-picker-overlay').style.display = 'flex';
+}
+
+function applyPickedPhoto(photoId) {
+  document.getElementById('photo-picker-overlay').style.display = 'none';
+  if (!pendingPhotoTarget) return;
+  const t = pendingPhotoTarget;
+  pendingPhotoTarget = null;
+  if (t.slot === 'hero') {
+    applySingleChange({ op: 'setSlot', slot: 'hero', photoId });
+    toast('Hero photo updated');
+    loadPreview();
+  } else if (t.gallery) {
+    const slotKey = t.gallery;
+    const slotObj = draft.slots[slotKey];
+    if (slotObj && slotObj.photoIds && t.idx != null && t.idx < slotObj.photoIds.length) {
+      pushUndo();
+      slotObj.photoIds[t.idx] = photoId;
+      scheduleSave();
+      toast('Photo updated');
+      loadPreview();
+    } else {
+      applySingleChange({ op: 'addGalleryPhoto', gallery: slotKey, photoId });
+      toast('Photo added to gallery');
+      loadPreview();
+    }
+  }
+}
+
+document.getElementById('photo-picker-close').addEventListener('click', () => {
+  document.getElementById('photo-picker-overlay').style.display = 'none';
+  pendingPhotoTarget = null;
+});
+
+// Close picker on backdrop click
+document.getElementById('photo-picker-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('photo-picker-overlay')) {
+    document.getElementById('photo-picker-overlay').style.display = 'none';
+    pendingPhotoTarget = null;
+  }
+});
+
+/* ============================================================
+   DRAG FROM LIBRARY TO VISUAL IFRAME
+   ============================================================ */
+let draggingPhotoId = null;
+
+// Capture dragstart on library thumbnails (data-drag-photoid)
+document.addEventListener('dragstart', e => {
+  const th = e.target.closest('[data-drag-photoid]');
+  if (!th) return;
+  draggingPhotoId = th.dataset.dragPhotoid;
+  if (currentTab === 'visual') {
+    document.getElementById('drag-capture-overlay').style.display = 'block';
+  }
+});
+
+document.addEventListener('dragend', () => {
+  draggingPhotoId = null;
+  const overlay = document.getElementById('drag-capture-overlay');
+  if (overlay) overlay.style.display = 'none';
+});
+
+const _dragOverlay = document.getElementById('drag-capture-overlay');
+_dragOverlay.addEventListener('dragover', e => {
+  e.preventDefault();
+  const rect = _dragOverlay.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+  const iframe = document.getElementById('preview-iframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({ type: 'bhr-drag-hover', x, y }, '*');
+  }
+});
+
+_dragOverlay.addEventListener('drop', e => {
+  e.preventDefault();
+  if (!draggingPhotoId) return;
+  const iframe = document.getElementById('preview-iframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({ type: 'bhr-photo-drag', photoId: draggingPhotoId }, '*');
+  }
+  _dragOverlay.style.display = 'none';
+  // draggingPhotoId is cleared in the bhr-drop-target handler
 });
 </script>
 </body>
