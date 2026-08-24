@@ -738,7 +738,7 @@
     .ag-panel.active { display: block; }
     .ag-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; max-width: 960px; margin: 0 auto; }
     .ag-card { position: relative; aspect-ratio: 3/4; border-radius: 4px; overflow: hidden; cursor: pointer; background: var(--brown); }
-    .ag-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease); }
+    .ag-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; transition: transform 0.4s var(--ease); }
     .ag-card:hover img { transform: scale(1.05); }
     .ag-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px 14px 14px; background: linear-gradient(to bottom, transparent, rgba(20,14,10,0.78)); color: #fff; }
     .ag-card-name { font-family: var(--heading-font); font-size: 18px; font-weight: 500; display: block; }
@@ -1065,8 +1065,7 @@
     var taglineRaw   = v(data.ranch.tagline) || '';
     var locLineRaw   = locationRaw + (acreage ? ' · ' + acreage + ' Acres' : '');
 
-    var logoSrc = (data.branding && data.branding.logoUrl) || 'img/Buckhorn-Brand-and-Name---White.jpg';
-    var logoHtml = '<div class="hero-logo"><img src="' + escape(logoSrc) + '" alt="' + ranchName + '" onerror="this.style.display=\'none\'"></div>';
+    var logoHtml = '';
 
     return '<section id="sec-hero">' +
       '<div id="hero-bg" data-photo-slot="hero">' + bgHtml + '</div>' +
@@ -1433,7 +1432,7 @@
     var ranchName  = v(data.ranch && data.ranch.name) || 'Buckhorn Ranch';
     var seasonYear = v(data.meta && data.meta.seasonYear) || '';
     return '<footer>' +
-      '<img class="footer-logo" src="img/Buckhorn-Brand-and-Name---Black.jpg" alt="' + escape(ranchName) + '" onerror="this.style.display=\'none\'">' +
+      '' alt="' + escape(ranchName) + '" onerror="this.style.display=\'none\'">' +
       escape(ranchName) +
       (seasonYear ? ' &nbsp;·&nbsp; Season ' + escape(seasonYear) : '') +
     '</footer>';
