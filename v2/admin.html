@@ -704,6 +704,23 @@ footer a:hover { text-decoration: underline; }
 let draft = null;
 let undoStack = [];
 const MAX_UNDO = 200;
+
+// Normalize photo objects so both .id and .photoId always exist
+function normalizeDraft(d) {
+  if (!d) return d;
+  (d.photos || []).forEach(p => {
+    if (!p.photoId && p.id) p.photoId = p.id;
+    if (!p.id && p.photoId) p.id = p.photoId;
+  });
+  return d;
+}
+
+// Return correct src for a photo id: legacy files serve direct, new WebP use rendition path
+function photoSrcAdmin(id, width) {
+  if (!id) return '';
+  if (/\.(jpg|jpeg|png|gif)$/i.test(id)) return `img/${id}`;
+  return `img/${id}-${width || 480}.webp`;
+}
 let saveTimer = null;
 let currentTab = 'timmy';
 let chatHistory = [];   // Anthropic messages format
@@ -826,7 +843,7 @@ async function initApp() {
   try {
     const res = await api('GET', '/api/draft');
     if (res.status === 401) { showLogin(); return; }
-    draft = await res.json();
+    draft = normalizeDraft(await res.json());
     showApp();
     renderForm();
     loadChatHistory();
@@ -840,7 +857,7 @@ async function initApp() {
   try {
     const res = await api('GET', '/api/draft');
     if (res.ok) {
-      draft = await res.json();
+      draft = normalizeDraft(await res.json());
       showApp();
       renderForm();
       loadChatHistory();
@@ -872,7 +889,7 @@ document.getElementById('undo-btn').addEventListener('click', applyUndo);
 
 function applyUndo() {
   if (!undoStack.length) return;
-  draft = undoStack.pop();
+  draft = normalizeDraft(undoStack.pop());
   updateUndoBtn();
   renderForm();
   scheduleSave();
@@ -1142,13 +1159,13 @@ function buildSlotsFields() {
   const exPhotos = ((s.exoticsGallery && s.exoticsGallery.photoIds) || []).map(id => draft.photos.find(p => p.photoId === id)).filter(Boolean);
 
   const heroPreview = heroPhoto
-    ? `<div class="slot-preview"><img src="img/${heroPhoto.photoId}-480.webp" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="hero">✕ Remove</button></div>`
+    ? `<div class="slot-preview"><img src="${photoSrcAdmin(heroPhoto.photoId, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="hero">✕ Remove</button></div>`
     : `<p class="tip">No photo selected</p>`;
 
-  const trophyMulti = `<div class="multi-slot" id="multi-trophy">${trophyPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="trophyGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
-  const lodgeMulti = `<div class="multi-slot" id="multi-lodge">${lodgePhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="lodgeGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
-  const wtMulti = `<div class="multi-slot" id="multi-wt">${wtPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="whitetailGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
-  const exMulti = `<div class="multi-slot" id="multi-ex">${exPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="exoticsGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const trophyMulti = `<div class="multi-slot" id="multi-trophy">${trophyPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.style.display='none'"><button data-removemulti="trophyGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const lodgeMulti = `<div class="multi-slot" id="multi-lodge">${lodgePhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.style.display='none'"><button data-removemulti="lodgeGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const wtMulti = `<div class="multi-slot" id="multi-wt">${wtPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.style.display='none'"><button data-removemulti="whitetailGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const exMulti = `<div class="multi-slot" id="multi-ex">${exPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.style.display='none'"><button data-removemulti="exoticsGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
 
   const slotHtml = `
     <div class="field-row" style="flex-direction:column;gap:16px">
@@ -1528,7 +1545,7 @@ function renderPhotoGrid() {
       ((draft.slots[currentPhotoSlot].photoIds || []).includes(p.photoId))
     );
     return `<div class="photo-card ${selected ? 'selected' : ''}" data-photoid="${p.photoId}" draggable="true" data-drag-photoid="${p.photoId}">
-      <img src="img/${p.photoId}-480.webp" onerror="this.src=''" alt="">
+      <img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.src=''" alt="">
       <button class="photo-delete" data-deletephoto="${p.photoId}">🗑</button>
       <div class="photo-caption"><input type="text" placeholder="Caption…" value="${esc(caption)}" data-captionfor="${p.photoId}"></div>
     </div>`;
@@ -2563,7 +2580,7 @@ async function openHistoryModal() {
         try {
           const vData = await apiJson('GET', '/api/versions/' + encodeURIComponent(btn.dataset.vkey));
           pushUndo();
-          draft = vData.content || vData.draft || vData;
+          draft = normalizeDraft(vData.content || vData.draft || vData);
           draft.meta.schemaVersion = 1;
           renderForm();
           scheduleSave();
@@ -2693,7 +2710,7 @@ function openPhotoPicker() {
   const allPhotos = draft.photos || [];
   grid.innerHTML = allPhotos.map(p => {
     const pid = p.photoId || p.id;
-    const src = isLegacyPhotoAdmin(pid) ? `img/${pid}` : `img/${pid}-480.webp`;
+    const src = photoSrcAdmin(pid, 480);
     return `<div class="pp-thumb" data-photoid="${escHtml(pid)}" style="cursor:pointer;border-radius:4px;overflow:hidden;border:2px solid transparent;transition:border-color 0.15s;">
       <img src="${escHtml(src)}" style="width:100%;height:100px;object-fit:cover;display:block;" onerror="this.src=''">
       <div style="font-size:10px;padding:3px 4px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(pid)}</div>
