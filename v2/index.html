@@ -826,8 +826,14 @@
     return str.slice(0, len).replace(/\s+\S*$/, '') + '…';
   }
 
-  /* Build srcset + object-position for a photo entry */
+  /* Returns true for legacy raw filenames like hero.jpg, lodge-01.jpg */
+  function isLegacyPhoto(photoId) {
+    return /\.(jpe?g|png|gif|webp)$/i.test(photoId);
+  }
+
+  /* Build srcset string; legacy photos return empty (no renditions) */
   function photoSrcset(photoId) {
+    if (isLegacyPhoto(photoId)) return '';
     var base = 'img/' + photoId;
     return (
       base + '-480.webp 480w, ' +
@@ -835,6 +841,12 @@
       base + '-1600.webp 1600w, ' +
       base + '-2400.webp 2400w'
     );
+  }
+
+  /* Resolve a single src URL for a photoId at a given preferred width */
+  function photoSrc(photoId, width) {
+    if (isLegacyPhoto(photoId)) return photoId;
+    return 'img/' + photoId + '-' + (width || 960) + '.webp';
   }
 
   function photoObjectPos(photo) {
@@ -914,7 +926,7 @@
     if (heroPhotoId) {
       var pos = photoObjectPos(heroPhoto);
       bgHtml = '<img' +
-        ' src="img/' + escape(heroPhotoId) + '-960.webp"' +
+        ' src="' + escape(photoSrc(heroPhotoId, 960)) + '"' +
         ' srcset="' + escape(photoSrcset(heroPhotoId)) + '"' +
         ' sizes="100vw"' +
         ' alt="' + ranchName + ' hero"' +
@@ -969,7 +981,7 @@
           '<div class="trophy-item stagger-item" data-lb-set="trophies" data-lb-index="' + i + '" style="transition-delay:' + delay + '" role="button" tabindex="0" aria-label="View ' + caption + '">' +
             '<div class="trophy-img-wrap">' +
               '<img' +
-              ' src="img/' + escape(pid) + '-480.webp"' +
+              ' src="' + escape(photoSrc(pid, 480)) + '"' +
               ' srcset="' + escape(photoSrcset(pid)) + '"' +
               ' sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw"' +
               ' alt="' + caption + '"' +
@@ -1027,7 +1039,7 @@
         gridItems +=
           '<div class="lodge-img-wrap stagger-item fade-in" data-lb-set="lodge" data-lb-index="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
             '<img' +
-            ' src="img/' + escape(pid) + '-480.webp"' +
+            ' src="' + escape(photoSrc(pid, 480)) + '"' +
             ' srcset="' + escape(photoSrcset(pid)) + '"' +
             ' sizes="(max-width:600px) 100vw, (max-width:769px) 50vw, 33vw"' +
             ' alt="' + caption + '"' +
@@ -1405,14 +1417,14 @@
     img.style.objectPosition = pos;
     img.alt = entry.caption || '';
 
-    var newSrc = 'img/' + entry.id + '-1600.webp';
+    var newSrc = photoSrc(entry.id, 1600);
     img.src = newSrc;
     img.onload = function () {
       img.classList.add('lb-visible');
     };
     img.onerror = function () {
       /* try lower res */
-      img.src = 'img/' + entry.id + '-960.webp';
+      img.src = photoSrc(entry.id, 960);
     };
     cap.textContent = entry.caption || '';
   }

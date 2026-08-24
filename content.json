@@ -7,10 +7,10 @@
   },
   "ranch": {
     "name":     { "value": "Buckhorn Ranch",          "type": "text",     "label": "Ranch name" },
-    "tagline":  { "value": "Whitetail. Exotics. Wingshooting.", "type": "text", "label": "Tagline" },
+    "tagline":  { "value": "",                         "type": "text",     "label": "Tagline" },
     "location": { "value": "Sulphur, Oklahoma",        "type": "text",     "label": "Location line" },
-    "about":    { "value": "Free-range and managed acreage in the Arbuckle Mountains. Guided hunts only — from the moment you arrive, the ranch handles everything. Morning calls, field prep, meals cooked on site, and trophies scored and packaged for shipment. Bucks scoring above 280 SCI have come off this property.", "type": "longtext", "label": "The Ranch intro", "maxWords": 90 },
-    "acreage":  { "value": "1,750",                    "type": "text",     "label": "Acreage" }
+    "about":    { "value": "Buckhorn Ranch sits on 1,700 high-fenced acres in the Arbuckle Mountains outside Sulphur, Oklahoma. From the moment you arrive at the gate, we handle everything — morning calls, field prep, meals cooked on site, and trophies scored and packaged for shipment.", "type": "longtext", "label": "The Ranch intro", "maxWords": 90 },
+    "acreage":  { "value": "1,700",                    "type": "text",     "label": "Acreage" }
   },
   "contact": {
     "name":  { "value": "",               "type": "text",  "label": "Contact name" },
@@ -53,26 +53,40 @@
     { "id": "ws-02", "hunt": { "value": "Quail",         "type": "text" }, "season": { "value": "January through mid-March", "type": "dateRange" }, "fee": { "value": 1500, "type": "money" }, "unit": "/gun",    "note": { "value": "Released birds, dogs and handler included.", "type": "text" } }
   ],
   "corporate": {
-    "body": { "value": "Full ranch buyout available. Non-hunting guests welcome. Chef-prepared meals, covered porch and common space for evening conversation, cell service and wifi at the lodge. Invoicing and W9 on request. Roughly two hours from Dallas, ninety minutes from Oklahoma City.", "type": "longtext", "label": "Corporate section", "maxWords": 70 },
+    "body": { "value": "Full ranch buyout available. Non-hunting guests welcome. Chef-prepared meals, Starlink wifi at the lodge. Invoicing and W9 on request.", "type": "longtext", "label": "Corporate section", "maxWords": 70 },
     "details": [
       { "id": "cd-01", "value": "Full ranch buyout available",         "type": "text" },
       { "id": "cd-02", "value": "Non-hunting guests $400",            "type": "text" },
       { "id": "cd-03", "value": "Chef-prepared meals",                 "type": "text" },
-      { "id": "cd-04", "value": "Covered porch and common area",       "type": "text" },
-      { "id": "cd-05", "value": "Cell service and wifi at the lodge",  "type": "text" },
-      { "id": "cd-06", "value": "Invoicing and W9 on request",         "type": "text" },
-      { "id": "cd-07", "value": "~2 hrs from Dallas, ~90 min from OKC", "type": "text" }
+      { "id": "cd-05", "value": "Starlink Wifi provided at the Lodge", "type": "text" },
+      { "id": "cd-06", "value": "Invoicing and W9 on request",         "type": "text" }
     ],
     "capacity": { "value": "", "type": "number", "label": "Capacity, guns" }
   },
   "terms": {
     "body": { "value": "Included: field preparation of any trophy for shipment, lodging, accommodations, food and beverages. Not included: Oklahoma license and tag fees, transportation to the lodge, gratuity. A wounded animal is charged the same as a kill and we will do our best to recover it. Whitetail season runs October through December and dates are subject to availability. Exotics are available year round. Deposits lock in price.", "type": "longtext", "label": "Terms", "protected": true }
   },
-  "photos": [],
+  "photos": [
+    { "id": "hero.jpg",                  "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "IMG_2631.jpeg",             "caption": "Canada Goose",        "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "IMG_4696.jpeg",             "caption": "Mallard Drake",       "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "IMG_6733.jpeg",             "caption": "Waterfowl Hunt",      "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "IMG_8271.jpeg",             "caption": "Night Hunt",          "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "IMG_2735.jpeg",             "caption": "Evening on the Lake", "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "IMG_0682.jpeg",             "caption": "Sunset",              "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "lodge-01.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "lodge-02.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "lodge-03.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "lodge-04.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "lodge-05.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "lodge-06.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "lodge-07.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
+    { "id": "Buckhorn-Deer---White.jpg", "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" }
+  ],
   "slots": {
-    "hero":         { "photoId": "" },
-    "trophyGallery": { "photoIds": [] },
-    "lodgeGallery":  { "photoIds": [] }
+    "hero":          { "photoId": "hero.jpg" },
+    "trophyGallery": { "photoIds": ["IMG_2631.jpeg", "IMG_4696.jpeg", "IMG_6733.jpeg", "IMG_8271.jpeg", "IMG_2735.jpeg", "IMG_0682.jpeg"] },
+    "lodgeGallery":  { "photoIds": ["lodge-01.jpg", "lodge-02.jpg", "lodge-03.jpg", "lodge-04.jpg", "lodge-05.jpg", "lodge-06.jpg", "lodge-07.jpg"] }
   },
   "sections": [
     { "id": "sec-hero",      "type": "hero",        "visible": true },
