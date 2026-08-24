@@ -408,12 +408,19 @@ footer a:hover { text-decoration: underline; }
       <button class="hdr-btn" id="history-btn">History</button>
       <button class="hdr-btn" id="preview-btn">Preview ↗</button>
       <button class="hdr-btn primary" id="publish-btn">Publish</button>
+      <button class="hdr-btn" id="settings-btn" title="Settings">⚙</button>
       <button class="hdr-btn" id="logout-btn">Logout</button>
     </div>
   </header>
 
   <!-- TIMMY MODE -->
   <div class="mode-panel active" id="mode-timmy">
+    <div class="visual-toolbar" id="timmy-mode-bar">
+      <span style="font-size:12px;color:var(--brown)">Mode:</span>
+      <button class="hdr-btn" id="timmy-content-btn" style="background:rgba(168,133,75,0.2);color:var(--brass)">Content</button>
+      <button class="hdr-btn" id="timmy-dev-btn">Dev</button>
+      <span style="font-size:11px;color:var(--brown);margin-left:8px" id="timmy-mode-label">Content edits only</span>
+    </div>
     <div class="chat-toolbar">
       <span style="color:var(--brown);font-size:12px">Timmy · Ranch Manager AI</span>
       <div style="display:flex;gap:8px;align-items:center">
@@ -552,6 +559,26 @@ footer a:hover { text-decoration: underline; }
   </div>
 </div>
 
+<!-- PASSCODE MODAL -->
+<div class="modal-backdrop hidden" id="passcode-modal">
+  <div class="modal" style="max-width:380px">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:20px;margin-bottom:16px">Change Passcode</h3>
+    <div class="field-group" style="margin-bottom:12px">
+      <label>New Passcode</label>
+      <input type="password" id="new-passcode-input" placeholder="Enter new passcode" style="width:100%">
+    </div>
+    <div class="field-group" style="margin-bottom:16px">
+      <label>Confirm Passcode</label>
+      <input type="password" id="confirm-passcode-input" placeholder="Confirm new passcode" style="width:100%">
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="hdr-btn" id="cancel-passcode-btn">Cancel</button>
+      <button class="hdr-btn primary" id="save-passcode-btn">Save</button>
+    </div>
+    <div id="passcode-error" style="color:var(--error);font-size:12px;margin-top:8px;min-height:16px"></div>
+  </div>
+</div>
+
 <script>
 /* ============================================================
    STATE
@@ -562,6 +589,7 @@ const MAX_UNDO = 200;
 let saveTimer = null;
 let currentTab = 'timmy';
 let chatHistory = [];   // Anthropic messages format
+let timmyDevMode = false;
 let currentPhotoSlot = null; // {type:'single'|'multi', key:'hero'|'trophyGallery'|'lodgeGallery'}
 let previewUrl = null;
 
@@ -1664,7 +1692,8 @@ NOTES:
   };
 
   try {
-    const res = await api('POST', '/api/timmy', payload);
+    const endpoint = timmyDevMode ? '/api/timmy-dev' : '/api/timmy';
+    const res = await api('POST', endpoint, payload);
     loadingBubble.remove();
 
     if (res.status === 402) {
@@ -1684,6 +1713,23 @@ NOTES:
     const rawContent = data.content?.[0]?.text || data.content || '';
     chatHistory.push({ role: 'assistant', content: rawContent });
     displayTimmyResponse(rawContent, true);
+
+    if (timmyDevMode && data.patchResults && data.patchResults.length > 0) {
+      const committed = data.patchResults.filter(r => r.op === 'commit' && r.ok).map(r => r.path);
+      const failed = data.patchResults.filter(r => !r.ok).map(r => r.path);
+      if (committed.length > 0) {
+        const div = document.createElement('div');
+        div.style.cssText = 'margin:8px 0;padding:10px 14px;background:rgba(168,133,75,0.12);border-radius:6px;border-left:3px solid var(--brass);font-size:12px;';
+        div.innerHTML = `<strong>Files updated:</strong> ${committed.map(p => `<code>${escHtml(p)}</code>`).join(', ')}<br><span style="color:var(--brown)">Changes are live — refresh the Visual tab to see them.</span>`;
+        document.getElementById('chat-messages').appendChild(div);
+      }
+      if (failed.length > 0) {
+        const div = document.createElement('div');
+        div.style.cssText = 'margin:8px 0;padding:10px 14px;background:rgba(200,50,50,0.08);border-radius:6px;border-left:3px solid #c23232;font-size:12px;';
+        div.innerHTML = `<strong>Some patches failed:</strong> ${failed.map(p => `<code>${escHtml(p)}</code>`).join(', ')}<br><span style="color:var(--brown)">Try rephrasing your request or be more specific.</span>`;
+        document.getElementById('chat-messages').appendChild(div);
+      }
+    }
 
   } catch (e) {
     loadingBubble.remove();
@@ -2175,6 +2221,53 @@ window.addEventListener('message', function(e) {
     var el = document.getElementById('fsec-' + e.data.section);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 80);
+});
+
+/* ============================================================
+   TIMMY DEV MODE TOGGLE
+   ============================================================ */
+document.getElementById('timmy-content-btn').addEventListener('click', () => {
+  timmyDevMode = false;
+  document.getElementById('timmy-content-btn').style.background = 'rgba(168,133,75,0.2)';
+  document.getElementById('timmy-content-btn').style.color = 'var(--brass)';
+  document.getElementById('timmy-dev-btn').style.background = '';
+  document.getElementById('timmy-dev-btn').style.color = '';
+  document.getElementById('timmy-mode-label').textContent = 'Content edits only';
+});
+document.getElementById('timmy-dev-btn').addEventListener('click', () => {
+  timmyDevMode = true;
+  document.getElementById('timmy-dev-btn').style.background = 'rgba(168,133,75,0.2)';
+  document.getElementById('timmy-dev-btn').style.color = 'var(--brass)';
+  document.getElementById('timmy-content-btn').style.background = '';
+  document.getElementById('timmy-content-btn').style.color = '';
+  document.getElementById('timmy-mode-label').textContent = 'Can edit code, design, layout';
+});
+
+/* ============================================================
+   SETTINGS / PASSCODE MODAL
+   ============================================================ */
+document.getElementById('settings-btn').addEventListener('click', () => {
+  document.getElementById('passcode-modal').classList.remove('hidden');
+  document.getElementById('new-passcode-input').value = '';
+  document.getElementById('confirm-passcode-input').value = '';
+  document.getElementById('passcode-error').textContent = '';
+});
+document.getElementById('cancel-passcode-btn').addEventListener('click', () => {
+  closeModal('passcode-modal');
+});
+document.getElementById('save-passcode-btn').addEventListener('click', async () => {
+  const np = document.getElementById('new-passcode-input').value;
+  const cp = document.getElementById('confirm-passcode-input').value;
+  const errEl = document.getElementById('passcode-error');
+  if (!np || np.length < 4) { errEl.textContent = 'Passcode must be at least 4 characters.'; return; }
+  if (np !== cp) { errEl.textContent = 'Passcodes do not match.'; return; }
+  try {
+    await apiJson('POST', '/api/change-passcode', { newPasscode: np });
+    closeModal('passcode-modal');
+    toast('Passcode updated!');
+  } catch (e) {
+    errEl.textContent = e.message || 'Failed to update passcode.';
+  }
 });
 </script>
 </body>

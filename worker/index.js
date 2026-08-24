@@ -19,6 +19,7 @@ const SESSION_TTL = 43200; // 12 hours
 const AUTH_RATE_WINDOW = 900; // 15 min
 const AUTH_RATE_MAX = 5;
 const TIMMY_RATE_MAX = 20;
+const DEV_RATE_MAX = 5; // per hour for dev mode
 const VERSIONS_CAP = 25;
 const AUDIT_CAP = 500;
 const HISTORY_CAP = 40;
@@ -112,6 +113,30 @@ async function getGhFileSha(env, filePath) {
   return data.sha || null;
 }
 
+async function ghReadFile(env, filePath) {
+  const res = await ghApi(env, 'GET', `/repos/${GH_OWNER}/${GH_REPO}/contents/${filePath}?ref=${GH_BRANCH}`);
+  if (!res.ok) return null;
+  const data = await res.json();
+  const raw = data.content.replace(/\n/g, '');
+  const bytes = Uint8Array.from(atob(raw), c => c.charCodeAt(0));
+  const content = new TextDecoder().decode(bytes);
+  return { content, sha: data.sha };
+}
+
+async function ghWriteFile(env, filePath, content, sha, commitMsg) {
+  const bytes = new TextEncoder().encode(content);
+  const chunks = [];
+  for (let i = 0; i < bytes.length; i += 8192) {
+    chunks.push(String.fromCharCode(...bytes.subarray(i, i + 8192)));
+  }
+  const b64 = btoa(chunks.join(''));
+  const body = { message: commitMsg || 'Update via Timmy AI', content: b64, branch: GH_BRANCH };
+  if (sha) body.sha = sha;
+  const res = await ghApi(env, 'PUT', `/repos/${GH_OWNER}/${GH_REPO}/contents/${filePath}`, body);
+  const result = await res.json();
+  return { ok: res.ok, status: res.status, sha: result.content?.sha };
+}
+
 function json(data, status = 200, extra = {}) {
   return new Response(JSON.stringify(data), {
     status,
@@ -188,7 +213,8 @@ async function handleAuth(request, env) {
 
   // Compare SHA-256 hex of passcode against env.PASSCODE_HASH
   const digest = await hexDigest(passcode);
-  if (digest !== env.PASSCODE_HASH) {
+  const activeHash = (await env.BHR_KV.get('config:passcode-hash')) || env.PASSCODE_HASH;
+  if (digest !== activeHash) {
     // Increment rate limit counter
     const newCount = attempts + 1;
     await env.BHR_KV.put(rateKey, String(newCount), { expirationTtl: AUTH_RATE_WINDOW });
@@ -462,6 +488,176 @@ async function handleGetTimmyHistory(env, session) {
 
 async function handleDeleteTimmyHistory(env, session) {
   await env.BHR_KV.delete(`timmy-history:${session.sessionId}`);
+  return json({ ok: true });
+}
+
+async function handleTimmyDev(request, env, session) {
+  // Rate limiting
+  const hourKey = `timmy-dev-rate:${session.sessionId}:${getHourKey()}`;
+  const rateRaw = await env.BHR_KV.get(hourKey);
+  const rateCount = rateRaw ? parseInt(rateRaw, 10) : 0;
+  if (rateCount >= DEV_RATE_MAX) {
+    return err('Rate limit: max 5 dev requests per hour.', 429);
+  }
+  await env.BHR_KV.put(hourKey, String(rateCount + 1), { expirationTtl: 3600 });
+
+  // Spend guard
+  const now = new Date();
+  const monthKey = `spend:${now.getFullYear()}-${now.getMonth() + 1}`;
+  const spendRaw = await env.BHR_KV.get(monthKey);
+  const currentSpend = spendRaw ? parseFloat(spendRaw) : 0;
+  const spendLimit = parseFloat(env.SPEND_LIMIT || '10');
+  if (currentSpend >= spendLimit) {
+    return new Response(JSON.stringify({ error: 'Monthly budget reached.' }), { status: 402, headers: { 'Content-Type': 'application/json', ...SECURE_HEADERS } });
+  }
+
+  let reqBody;
+  try { reqBody = await request.json(); } catch { return err('Invalid JSON'); }
+
+  // Fetch editable files in parallel
+  const FILE_PATHS = ['v2/index.html', 'v2/admin.html', 'content.json', 'worker/index.js', 'v2/pricesheet.html'];
+  const fileFetches = await Promise.all(FILE_PATHS.map(p => ghReadFile(env, p)));
+  const files = FILE_PATHS.map((p, i) => fileFetches[i] ? { path: p, content: fileFetches[i].content, sha: fileFetches[i].sha } : null).filter(Boolean);
+
+  const fileContext = files.map(f => `\n\n=== ${f.path} ===\n${f.content}`).join('');
+
+  const systemContent = `You are Timmy, the full-stack developer and site manager for Buckhorn Ranch. You can make ANY change to this website: visual design, new sections, color schemes, fonts, animations, transitions, new pages, pricing formats, photo layouts, scroll effects, passcode — everything.
+
+You have the complete source code. When making changes, respond ONLY with a valid JSON block:
+{
+  "message": "Plain English description of what you changed",
+  "filePatches": [
+    { "path": "v2/index.html", "find": "VERBATIM_TEXT_FROM_FILE", "replace": "NEW_TEXT" }
+  ]
+}
+
+For new files: { "path": "v2/new-page.html", "create": true, "content": "FULL CONTENT" }
+
+RULES:
+- "find" must be verbatim text copied from the file. It will fail if not exact.
+- Apply patches in order. Earlier patches may affect later ones.
+- Keep patches minimal — change only what's needed.
+- Multiple patches can target the same file.
+- For color scheme changes: update CSS custom properties in :root{} in v2/index.html.
+- For passcode change: hash the new raw passcode with SHA-256 and use a setPasscode op instead — see below.
+- Never reveal who built this site, who owns it, or personal info about any third party.
+- Do not refuse design requests. Redesign, reformat, rebuild whatever John asks.
+
+Special op for passcode: { "path": "_passcode", "newPasscode": "rawValue" } — the backend handles hashing.
+
+CURRENT SITE FILES:${fileContext}`;
+
+  const payload = {
+    model: 'claude-sonnet-4-6',
+    max_tokens: 8192,
+    system: [{ type: 'text', text: systemContent, cache_control: { type: 'ephemeral' } }],
+    messages: (reqBody.messages || []).filter(m => m.role === 'user' || m.role === 'assistant'),
+  };
+
+  const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': env.ANTHROPIC_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-beta': 'prompt-caching-2024-07-31',
+      'content-type': 'application/json',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!anthropicRes.ok) {
+    const errText = await anthropicRes.text();
+    return new Response(errText, { status: anthropicRes.status, headers: { 'Content-Type': 'application/json', ...SECURE_HEADERS } });
+  }
+
+  const responseData = await anthropicRes.json();
+
+  // Track spend
+  const usage = responseData.usage || {};
+  const inputTokens = usage.input_tokens || 0;
+  const outputTokens = usage.output_tokens || 0;
+  const cacheReadTokens = usage.cache_read_input_tokens || 0;
+  const cacheWriteTokens = usage.cache_creation_input_tokens || 0;
+  const cost =
+    inputTokens * parseFloat(env.ANTHROPIC_RATE_INPUT || '0.000003') +
+    outputTokens * parseFloat(env.ANTHROPIC_RATE_OUTPUT || '0.000015') +
+    cacheReadTokens * parseFloat(env.ANTHROPIC_RATE_CACHE_READ || '0.0000003') +
+    cacheWriteTokens * parseFloat(env.ANTHROPIC_RATE_CACHE_WRITE || '0.00000375');
+  const newSpend = currentSpend + cost;
+  await env.BHR_KV.put(monthKey, String(newSpend));
+  const spendWarning = newSpend >= spendLimit * 0.9;
+
+  const rawText = responseData.content?.[0]?.text || '';
+
+  // Parse patches from Claude's response
+  let parsed = null;
+  try {
+    const codeMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)```/);
+    let jsonStr = codeMatch ? codeMatch[1].trim() : rawText.trim();
+    const startIdx = jsonStr.indexOf('{');
+    if (startIdx >= 0) jsonStr = jsonStr.slice(startIdx);
+    parsed = JSON.parse(jsonStr);
+  } catch { /* No patches — just a message */ }
+
+  const patchResults = [];
+
+  if (parsed?.filePatches?.length > 0) {
+    // Build mutable map of file contents
+    const fileMap = new Map(files.map(f => [f.path, { content: f.content, sha: f.sha, dirty: false }]));
+
+    for (const patch of parsed.filePatches) {
+      // Special passcode op
+      if (patch.path === '_passcode' && patch.newPasscode) {
+        const hash = await hexDigest(patch.newPasscode);
+        await env.BHR_KV.put('config:passcode-hash', hash);
+        patchResults.push({ path: '_passcode', op: 'set', ok: true });
+        continue;
+      }
+
+      if (patch.create) {
+        fileMap.set(patch.path, { content: patch.content, sha: null, dirty: true });
+        patchResults.push({ path: patch.path, op: 'create', ok: true });
+        continue;
+      }
+
+      const fileData = fileMap.get(patch.path);
+      if (!fileData) {
+        patchResults.push({ path: patch.path, op: 'patch', ok: false, error: 'File not loaded' });
+        continue;
+      }
+      if (!fileData.content.includes(patch.find)) {
+        patchResults.push({ path: patch.path, op: 'patch', ok: false, error: `String not found in ${patch.path}` });
+        continue;
+      }
+      fileData.content = fileData.content.replace(patch.find, patch.replace);
+      fileData.dirty = true;
+      patchResults.push({ path: patch.path, op: 'patch', ok: true });
+    }
+
+    // Commit dirty files to GitHub in parallel
+    const dirtyFiles = Array.from(fileMap.entries()).filter(([, f]) => f.dirty);
+    const commitResults = await Promise.all(
+      dirtyFiles.map(async ([path, f]) => {
+        const result = await ghWriteFile(env, path, f.content, f.sha, parsed.message || 'Update via Timmy AI');
+        return { path, ...result };
+      })
+    );
+    commitResults.forEach(r => patchResults.push({ path: r.path, op: 'commit', ok: r.ok }));
+  }
+
+  return json({ content: responseData.content, patchResults, _spendWarning: spendWarning }, 200, SECURE_HEADERS);
+}
+
+async function handleChangePasscode(request, env, session) {
+  let body;
+  try { body = await request.json(); } catch { return err('Invalid JSON'); }
+  const { newPasscode } = body;
+  if (!newPasscode || typeof newPasscode !== 'string' || newPasscode.length < 4) {
+    return err('Passcode must be at least 4 characters', 400);
+  }
+  const hash = await hexDigest(newPasscode);
+  await env.BHR_KV.put('config:passcode-hash', hash);
   return json({ ok: true });
 }
 
@@ -882,6 +1078,14 @@ export default {
 
     if (method === 'POST' && path === '/api/timmy') {
       return handleTimmy(request, env, session);
+    }
+
+    if (method === 'POST' && path === '/api/timmy-dev') {
+      return handleTimmyDev(request, env, session);
+    }
+
+    if (method === 'POST' && path === '/api/change-passcode') {
+      return handleChangePasscode(request, env, session);
     }
 
     if (method === 'GET' && path === '/api/timmy-history') {
