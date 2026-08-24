@@ -938,7 +938,12 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('mode-' + tab).classList.add('active');
-  if (tab === 'visual') loadPreview();
+  if (tab === 'visual') {
+    // Flush any pending debounced save before loading preview so KV is current
+    clearTimeout(saveTimer);
+    saveTimer = null;
+    doSave().then(loadPreview);
+  }
 }
 
 /* ============================================================
@@ -1605,7 +1610,7 @@ function selectPhotoFromLibrary(photoId) {
   }
   renderPhotoGrid();
   renderForm();
-  scheduleSave();
+  doSave();
   toast('Photo assigned to slot');
 }
 
