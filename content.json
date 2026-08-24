@@ -6,106 +6,958 @@
     "publishedSummary": ""
   },
   "ranch": {
-    "name":     { "value": "Buckhorn Ranch",          "type": "text",     "label": "Ranch name" },
-    "tagline":  { "value": "",                         "type": "text",     "label": "Tagline" },
-    "location": { "value": "Sulphur, Oklahoma",        "type": "text",     "label": "Location line" },
-    "about":    { "value": "Buckhorn Ranch sits on 1,700 high-fenced acres in the Arbuckle Mountains outside Sulphur, Oklahoma. From the moment you arrive at the gate, we handle everything — morning calls, field prep, meals cooked on site, and trophies scored and packaged for shipment.", "type": "longtext", "label": "The Ranch intro", "maxWords": 90 },
-    "acreage":  { "value": "1,700",                    "type": "text",     "label": "Acreage" }
+    "name": {
+      "value": "Buckhorn Ranch",
+      "type": "text",
+      "label": "Ranch name"
+    },
+    "tagline": {
+      "value": "",
+      "type": "text",
+      "label": "Tagline"
+    },
+    "location": {
+      "value": "Sulphur, Oklahoma",
+      "type": "text",
+      "label": "Location line"
+    },
+    "about": {
+      "value": "Buckhorn Ranch sits on 1,700 high-fenced acres in the Arbuckle Mountains outside Sulphur, Oklahoma. From the moment you arrive at the gate, we handle everything \u2014 morning calls, field prep, meals cooked on site, and trophies scored and packaged for shipment.",
+      "type": "longtext",
+      "label": "The Ranch intro",
+      "maxWords": 90
+    },
+    "acreage": {
+      "value": "1,700",
+      "type": "text",
+      "label": "Acreage"
+    }
   },
   "contact": {
-    "name":  { "value": "",               "type": "text",  "label": "Contact name" },
-    "phone": { "value": "(214) 558-7987", "type": "phone", "label": "Phone" },
-    "email": { "value": "",               "type": "email", "label": "Email" }
+    "name": {
+      "value": "",
+      "type": "text",
+      "label": "Contact name"
+    },
+    "phone": {
+      "value": "(214) 558-7987",
+      "type": "phone",
+      "label": "Phone"
+    },
+    "email": {
+      "value": "",
+      "type": "email",
+      "label": "Email"
+    }
   },
   "lodging": {
-    "hunterRate":    { "value": 1500,  "type": "money",  "label": "Per hunter, 2 nights 3 days" },
-    "guestRate":     { "value": 400,   "type": "money",  "label": "Non hunting guest" },
-    "inclusionNote": { "value": "Lodging is included when trophy fees reach $6,000 or greater.", "type": "text", "label": "Inclusion note" },
-    "sleeps":        { "value": "",    "type": "number", "label": "Lodge sleeps" }
+    "hunterRate": {
+      "value": 1500,
+      "type": "money",
+      "label": "Per hunter, 2 nights 3 days"
+    },
+    "guestRate": {
+      "value": 400,
+      "type": "money",
+      "label": "Non hunting guest"
+    },
+    "inclusionNote": {
+      "value": "Lodging is included when trophy fees reach $6,000 or greater.",
+      "type": "text",
+      "label": "Inclusion note"
+    },
+    "sleeps": {
+      "value": "",
+      "type": "number",
+      "label": "Lodge sleeps"
+    }
   },
   "whitetailTiers": [
-    { "id": "wt-01", "scoreRange": { "value": "Up to 129",  "type": "text" }, "fee": { "value": 3000,  "type": "money" } },
-    { "id": "wt-02", "scoreRange": { "value": "130–139",    "type": "text" }, "fee": { "value": 4000,  "type": "money" } },
-    { "id": "wt-03", "scoreRange": { "value": "140–149",    "type": "text" }, "fee": { "value": 5000,  "type": "money" } },
-    { "id": "wt-04", "scoreRange": { "value": "150–159",    "type": "text" }, "fee": { "value": 6000,  "type": "money" } },
-    { "id": "wt-05", "scoreRange": { "value": "160–169",    "type": "text" }, "fee": { "value": 7000,  "type": "money" } },
-    { "id": "wt-06", "scoreRange": { "value": "170–179",    "type": "text" }, "fee": { "value": 8500,  "type": "money" } },
-    { "id": "wt-07", "scoreRange": { "value": "180–189",    "type": "text" }, "fee": { "value": 9500,  "type": "money" } },
-    { "id": "wt-08", "scoreRange": { "value": "190–199",    "type": "text" }, "fee": { "value": 12000, "type": "money" } },
-    { "id": "wt-09", "scoreRange": { "value": "200–219",    "type": "text" }, "fee": { "value": 14000, "type": "money" } },
-    { "id": "wt-10", "scoreRange": { "value": "220–239",    "type": "text" }, "fee": { "value": 16000, "type": "money" } },
-    { "id": "wt-11", "scoreRange": { "value": "240–279",    "type": "text" }, "fee": { "value": 18000, "type": "money" } },
-    { "id": "wt-12", "scoreRange": { "value": "280–300+",   "type": "text" }, "fee": { "value": 20000, "type": "money" } }
+    {
+      "id": "wt-01",
+      "scoreRange": {
+        "value": "Up to 129",
+        "type": "text"
+      },
+      "fee": {
+        "value": 3000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-02",
+      "scoreRange": {
+        "value": "130\u2013139",
+        "type": "text"
+      },
+      "fee": {
+        "value": 4000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-03",
+      "scoreRange": {
+        "value": "140\u2013149",
+        "type": "text"
+      },
+      "fee": {
+        "value": 5000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-04",
+      "scoreRange": {
+        "value": "150\u2013159",
+        "type": "text"
+      },
+      "fee": {
+        "value": 6000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-05",
+      "scoreRange": {
+        "value": "160\u2013169",
+        "type": "text"
+      },
+      "fee": {
+        "value": 7000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-06",
+      "scoreRange": {
+        "value": "170\u2013179",
+        "type": "text"
+      },
+      "fee": {
+        "value": 8500,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-07",
+      "scoreRange": {
+        "value": "180\u2013189",
+        "type": "text"
+      },
+      "fee": {
+        "value": 9500,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-08",
+      "scoreRange": {
+        "value": "190\u2013199",
+        "type": "text"
+      },
+      "fee": {
+        "value": 12000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-09",
+      "scoreRange": {
+        "value": "200\u2013219",
+        "type": "text"
+      },
+      "fee": {
+        "value": 14000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-10",
+      "scoreRange": {
+        "value": "220\u2013239",
+        "type": "text"
+      },
+      "fee": {
+        "value": 16000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-11",
+      "scoreRange": {
+        "value": "240\u2013279",
+        "type": "text"
+      },
+      "fee": {
+        "value": 18000,
+        "type": "money"
+      }
+    },
+    {
+      "id": "wt-12",
+      "scoreRange": {
+        "value": "280\u2013300+",
+        "type": "text"
+      },
+      "fee": {
+        "value": 20000,
+        "type": "money"
+      }
+    }
   ],
   "exotics": [
-    { "id": "ex-01", "animal": { "value": "Bison Bull",          "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": null,  "type": "money" }, "onRequest": true,  "note": { "value": "",                              "type": "text" } },
-    { "id": "ex-02", "animal": { "value": "Gemsbok",             "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 8000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
-    { "id": "ex-03", "animal": { "value": "Fallow Deer",         "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 7000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
-    { "id": "ex-04", "animal": { "value": "Red Stag",            "type": "text" }, "sci": { "value": "250–299", "type": "text" }, "fee": { "value": 7000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
-    { "id": "ex-05", "animal": { "value": "Red Stag",            "type": "text" }, "sci": { "value": "300–349", "type": "text" }, "fee": { "value": 10000, "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
-    { "id": "ex-06", "animal": { "value": "Red Stag",            "type": "text" }, "sci": { "value": "350+",    "type": "text" }, "fee": { "value": 15000, "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
-    { "id": "ex-07", "animal": { "value": "Scimitar Oryx",       "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 6000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
-    { "id": "ex-08", "animal": { "value": "Zebra",               "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 6000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
-    { "id": "ex-09", "animal": { "value": "Red Deer Cow",        "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 1500,  "type": "money" }, "onRequest": false, "note": { "value": "Best tasting meat on the ranch.", "type": "text" } }
+    {
+      "id": "ex-01",
+      "animal": {
+        "value": "Bison Bull",
+        "type": "text"
+      },
+      "sci": {
+        "value": "",
+        "type": "text"
+      },
+      "fee": {
+        "value": null,
+        "type": "money"
+      },
+      "onRequest": true,
+      "note": {
+        "value": "",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ex-02",
+      "animal": {
+        "value": "Gemsbok",
+        "type": "text"
+      },
+      "sci": {
+        "value": "",
+        "type": "text"
+      },
+      "fee": {
+        "value": 8000,
+        "type": "money"
+      },
+      "onRequest": false,
+      "note": {
+        "value": "",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ex-03",
+      "animal": {
+        "value": "Fallow Deer",
+        "type": "text"
+      },
+      "sci": {
+        "value": "",
+        "type": "text"
+      },
+      "fee": {
+        "value": 7000,
+        "type": "money"
+      },
+      "onRequest": false,
+      "note": {
+        "value": "",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ex-04",
+      "animal": {
+        "value": "Red Stag",
+        "type": "text"
+      },
+      "sci": {
+        "value": "250\u2013299",
+        "type": "text"
+      },
+      "fee": {
+        "value": 7000,
+        "type": "money"
+      },
+      "onRequest": false,
+      "note": {
+        "value": "",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ex-05",
+      "animal": {
+        "value": "Red Stag",
+        "type": "text"
+      },
+      "sci": {
+        "value": "300\u2013349",
+        "type": "text"
+      },
+      "fee": {
+        "value": 10000,
+        "type": "money"
+      },
+      "onRequest": false,
+      "note": {
+        "value": "",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ex-06",
+      "animal": {
+        "value": "Red Stag",
+        "type": "text"
+      },
+      "sci": {
+        "value": "350+",
+        "type": "text"
+      },
+      "fee": {
+        "value": 15000,
+        "type": "money"
+      },
+      "onRequest": false,
+      "note": {
+        "value": "",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ex-07",
+      "animal": {
+        "value": "Scimitar Oryx",
+        "type": "text"
+      },
+      "sci": {
+        "value": "",
+        "type": "text"
+      },
+      "fee": {
+        "value": 6000,
+        "type": "money"
+      },
+      "onRequest": false,
+      "note": {
+        "value": "",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ex-08",
+      "animal": {
+        "value": "Zebra",
+        "type": "text"
+      },
+      "sci": {
+        "value": "",
+        "type": "text"
+      },
+      "fee": {
+        "value": 6000,
+        "type": "money"
+      },
+      "onRequest": false,
+      "note": {
+        "value": "",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ex-09",
+      "animal": {
+        "value": "Red Deer Cow",
+        "type": "text"
+      },
+      "sci": {
+        "value": "",
+        "type": "text"
+      },
+      "fee": {
+        "value": 1500,
+        "type": "money"
+      },
+      "onRequest": false,
+      "note": {
+        "value": "Best tasting meat on the ranch.",
+        "type": "text"
+      }
+    }
   ],
   "wingshooting": [
-    { "id": "ws-01", "hunt": { "value": "Spring Turkey", "type": "text" }, "season": { "value": "April through May", "type": "dateRange" }, "fee": { "value": 1500, "type": "money" }, "unit": "/hunter", "note": { "value": "Shotgun only. Family and group specials available.", "type": "text" } },
-    { "id": "ws-02", "hunt": { "value": "Quail",         "type": "text" }, "season": { "value": "January through mid-March", "type": "dateRange" }, "fee": { "value": 1500, "type": "money" }, "unit": "/gun",    "note": { "value": "Released birds, dogs and handler included.", "type": "text" } }
+    {
+      "id": "ws-01",
+      "hunt": {
+        "value": "Spring Turkey",
+        "type": "text"
+      },
+      "season": {
+        "value": "April through May",
+        "type": "dateRange"
+      },
+      "fee": {
+        "value": 1500,
+        "type": "money"
+      },
+      "unit": "/hunter",
+      "note": {
+        "value": "Shotgun only. Family and group specials available.",
+        "type": "text"
+      }
+    },
+    {
+      "id": "ws-02",
+      "hunt": {
+        "value": "Quail",
+        "type": "text"
+      },
+      "season": {
+        "value": "January through mid-March",
+        "type": "dateRange"
+      },
+      "fee": {
+        "value": 1500,
+        "type": "money"
+      },
+      "unit": "/gun",
+      "note": {
+        "value": "Released birds, dogs and handler included.",
+        "type": "text"
+      }
+    }
   ],
   "corporate": {
-    "body": { "value": "Full ranch buyout available. Non-hunting guests welcome. Chef-prepared meals, Starlink wifi at the lodge. Invoicing and W9 on request.", "type": "longtext", "label": "Corporate section", "maxWords": 70 },
+    "body": {
+      "value": "Full ranch buyout available. Non-hunting guests welcome. Chef-prepared meals, Starlink wifi at the lodge. Invoicing and W9 on request.",
+      "type": "longtext",
+      "label": "Corporate section",
+      "maxWords": 70
+    },
     "details": [
-      { "id": "cd-01", "value": "Full ranch buyout available",         "type": "text" },
-      { "id": "cd-02", "value": "Non-hunting guests $400",            "type": "text" },
-      { "id": "cd-03", "value": "Chef-prepared meals",                 "type": "text" },
-      { "id": "cd-05", "value": "Starlink Wifi provided at the Lodge", "type": "text" },
-      { "id": "cd-06", "value": "Invoicing and W9 on request",         "type": "text" }
+      {
+        "id": "cd-01",
+        "value": "Full ranch buyout available",
+        "type": "text"
+      },
+      {
+        "id": "cd-02",
+        "value": "Non-hunting guests $400",
+        "type": "text"
+      },
+      {
+        "id": "cd-03",
+        "value": "Chef-prepared meals",
+        "type": "text"
+      },
+      {
+        "id": "cd-05",
+        "value": "Starlink Wifi provided at the Lodge",
+        "type": "text"
+      },
+      {
+        "id": "cd-06",
+        "value": "Invoicing and W9 on request",
+        "type": "text"
+      }
     ],
-    "capacity": { "value": "", "type": "number", "label": "Capacity, guns" }
+    "capacity": {
+      "value": "",
+      "type": "number",
+      "label": "Capacity, guns"
+    }
   },
   "terms": {
-    "body": { "value": "Included: field preparation of any trophy for shipment, lodging, accommodations, food and beverages. Not included: Oklahoma license and tag fees, transportation to the lodge, gratuity. A wounded animal is charged the same as a kill and we will do our best to recover it. Whitetail season runs October through December and dates are subject to availability. Exotics are available year round. Deposits lock in price.", "type": "longtext", "label": "Terms", "protected": true }
+    "body": {
+      "value": "Included: field preparation of any trophy for shipment, lodging, accommodations, food and beverages. Not included: Oklahoma license and tag fees, transportation to the lodge, gratuity. A wounded animal is charged the same as a kill and we will do our best to recover it. Whitetail season runs October through December and dates are subject to availability. Exotics are available year round. Deposits lock in price.",
+      "type": "longtext",
+      "label": "Terms",
+      "protected": true
+    }
   },
   "photos": [
-    { "id": "hero.jpg",                  "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "IMG_2631.jpeg",             "caption": "Canada Goose",        "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "IMG_4696.jpeg",             "caption": "Mallard Drake",       "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "IMG_6733.jpeg",             "caption": "Waterfowl Hunt",      "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "IMG_8271.jpeg",             "caption": "Night Hunt",          "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "IMG_2735.jpeg",             "caption": "Evening on the Lake", "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "IMG_0682.jpeg",             "caption": "Sunset",              "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "lodge-01.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "lodge-02.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "lodge-03.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "lodge-04.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "lodge-05.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "lodge-06.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "lodge-07.jpg",              "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" },
-    { "id": "Buckhorn-Deer---White.jpg", "caption": "",                    "x": 0.5, "y": 0.5, "uploadedAt": "" }
+    {
+      "id": "hero.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_2631.jpeg",
+      "caption": "Canada Goose",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_4696.jpeg",
+      "caption": "Mallard Drake",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_6733.jpeg",
+      "caption": "Waterfowl Hunt",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_8271.jpeg",
+      "caption": "Night Hunt",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_2735.jpeg",
+      "caption": "Evening on the Lake",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_0682.jpeg",
+      "caption": "Sunset",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "lodge-01.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "lodge-02.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "lodge-03.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "lodge-04.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "lodge-05.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "lodge-06.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "lodge-07.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Deer---White.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand---Black.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand---Orange.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand---White.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand-Circle---Black.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand-Circle---Orange.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand-Circle---White.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand-and-Name---Black.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand-and-Name---Orange.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Brand-and-Name---White.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Deer---Black.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Deer---Orange.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Deer-Circle---Black.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Deer-Circle---Orange.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "Buckhorn-Deer-Circle---White.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "E8B327A9-5164-4633-B8FB-2356589AC2BF.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "FullSizeRender.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_0489.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_0587.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_0792.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_0868.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_0889.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_0909.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_0955.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_1067.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_1749.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_3679.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_4798.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_4928.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_5041.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_6285.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "IMG_8273.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "_K4A3973.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "logo.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "trophy-01.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "trophy-02.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "trophy-03.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "trophy-04.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "trophy-05.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    },
+    {
+      "id": "trophy-06.jpg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": ""
+    }
   ],
   "slots": {
-    "hero":          { "photoId": "hero.jpg" },
-    "trophyGallery":    { "photoIds": ["IMG_2631.jpeg", "IMG_4696.jpeg", "IMG_6733.jpeg", "IMG_8271.jpeg", "IMG_2735.jpeg", "IMG_0682.jpeg"] },
-    "lodgeGallery":     { "photoIds": ["lodge-01.jpg", "lodge-02.jpg", "lodge-03.jpg", "lodge-04.jpg", "lodge-05.jpg", "lodge-06.jpg", "lodge-07.jpg"] },
-    "whitetailGallery": { "photoIds": [] },
-    "exoticsGallery":   { "photoIds": [] }
+    "hero": {
+      "photoId": "hero.jpg"
+    },
+    "trophyGallery": {
+      "photoIds": [
+        "IMG_2631.jpeg",
+        "IMG_4696.jpeg",
+        "IMG_6733.jpeg",
+        "IMG_8271.jpeg",
+        "IMG_2735.jpeg",
+        "IMG_0682.jpeg"
+      ]
+    },
+    "lodgeGallery": {
+      "photoIds": [
+        "lodge-01.jpg",
+        "lodge-02.jpg",
+        "lodge-03.jpg",
+        "lodge-04.jpg",
+        "lodge-05.jpg",
+        "lodge-06.jpg",
+        "lodge-07.jpg"
+      ]
+    },
+    "whitetailGallery": {
+      "photoIds": []
+    },
+    "exoticsGallery": {
+      "photoIds": []
+    }
   },
   "sections": [
-    { "id": "sec-hero",      "type": "hero",        "visible": true },
-    { "id": "sec-ranch",     "type": "textSection", "visible": true },
-    { "id": "sec-trophies",   "type": "gallery",       "visible": true },
-    { "id": "sec-wt-gallery", "type": "scoredGallery", "visible": true },
-    { "id": "sec-ex-gallery", "type": "scoredGallery", "visible": true },
-    { "id": "sec-lodge",      "type": "gallery",       "visible": true },
-    { "id": "sec-corporate", "type": "textSection", "visible": true },
-    { "id": "sec-pricing",   "type": "pricing",     "visible": true },
-    { "id": "sec-terms",     "type": "terms",       "visible": true },
-    { "id": "sec-contact",   "type": "contact",     "visible": true }
+    {
+      "id": "sec-hero",
+      "type": "hero",
+      "visible": true
+    },
+    {
+      "id": "sec-ranch",
+      "type": "textSection",
+      "visible": true
+    },
+    {
+      "id": "sec-trophies",
+      "type": "gallery",
+      "visible": true
+    },
+    {
+      "id": "sec-wt-gallery",
+      "type": "scoredGallery",
+      "visible": true
+    },
+    {
+      "id": "sec-ex-gallery",
+      "type": "scoredGallery",
+      "visible": true
+    },
+    {
+      "id": "sec-lodge",
+      "type": "gallery",
+      "visible": true
+    },
+    {
+      "id": "sec-corporate",
+      "type": "textSection",
+      "visible": true
+    },
+    {
+      "id": "sec-pricing",
+      "type": "pricing",
+      "visible": true
+    },
+    {
+      "id": "sec-terms",
+      "type": "terms",
+      "visible": true
+    },
+    {
+      "id": "sec-contact",
+      "type": "contact",
+      "visible": true
+    }
   ],
-  "audio": { "enabled": true, "file": "audio/ambient.mp3" },
+  "audio": {
+    "enabled": true,
+    "file": "audio/ambient.mp3"
+  },
   "trophyTabs": [
-    { "id": "tt-01", "label": "Trophy Animals", "type": "gallery", "slot": "trophyGallery" },
-    { "id": "tt-02", "label": "Ranch History",  "type": "text" }
+    {
+      "id": "tt-01",
+      "label": "Trophy Animals",
+      "type": "gallery",
+      "slot": "trophyGallery"
+    },
+    {
+      "id": "tt-02",
+      "label": "Ranch History",
+      "type": "text"
+    }
   ],
   "customGalleries": [],
   "theme": {
