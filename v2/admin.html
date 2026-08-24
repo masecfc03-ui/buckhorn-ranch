@@ -2246,18 +2246,24 @@ document.getElementById('qe-close').addEventListener('click', () => closeQuickEd
 document.getElementById('qe-cancel').addEventListener('click', () => { closeQuickEdit(true); });
 document.getElementById('qe-save').addEventListener('click', () => {
   closeQuickEdit(false);
-  scheduleSave();
-  loadPreview();
-  toast('Saved — refreshing preview…');
+  clearTimeout(saveTimer);
+  saveTimer = null;
+  doSave().then(() => { pushContentToPreview(); toast('Saved'); });
 });
 
 // Listen for messages from the preview iframe
 window.addEventListener('message', function(e) {
   if (!e.data) return;
   if (e.data.type === 'bhr-nav') {
-    // In visual tab: stay put — edit mode handles inline editing directly
-    // In other tabs: jump to the relevant form section
-    if (currentTab !== 'visual') {
+    if (currentTab === 'visual') {
+      // Map nav section name → QE key and open the quick edit panel
+      const navToQe = {
+        ranch: 'sec-ranch', corporate: 'sec-corporate', whitetail: 'sec-pricing',
+        terms: 'sec-terms', contact: 'sec-contact',
+      };
+      const qeKey = navToQe[e.data.section];
+      if (qeKey) openQuickEdit(qeKey);
+    } else {
       switchTab('form');
       const formSecId = (e.data.section || '').replace('sec-', '');
       setTimeout(function() {

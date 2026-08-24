@@ -1958,15 +1958,19 @@
   });
 
   /* ---- PREVIEW CLICK HOOKS (admin visual tab) ---- */
+  var _previewHooksAttached = false;
   function attachPreviewHooks() {
     var sectionMap = {
       'sec-hero': 'photos', 'sec-ranch': 'ranch', 'sec-trophies': 'photos',
       'sec-lodge': 'photos', 'sec-corporate': 'corporate', 'sec-pricing': 'whitetail',
       'sec-terms': 'terms', 'sec-contact': 'contact'
     };
-    var style = document.createElement('style');
-    style.textContent = '[data-bhr-jump]{cursor:pointer;position:relative;}[data-bhr-jump]:hover::after{content:"✏️ Edit";position:absolute;top:8px;right:12px;background:rgba(168,133,75,0.9);color:#fff;font-size:12px;font-family:system-ui,sans-serif;padding:3px 8px;border-radius:3px;pointer-events:none;z-index:9999;}';
-    document.head.appendChild(style);
+    if (!_previewHooksAttached) {
+      var style = document.createElement('style');
+      style.textContent = '[data-bhr-jump]{cursor:pointer;position:relative;}[data-bhr-jump]:hover::after{content:"✏️ Edit";position:absolute;top:8px;right:12px;background:rgba(168,133,75,0.9);color:#fff;font-size:12px;font-family:system-ui,sans-serif;padding:3px 8px;border-radius:3px;pointer-events:none;z-index:9999;}';
+      document.head.appendChild(style);
+      _previewHooksAttached = true;
+    }
     document.querySelectorAll('section[id]').forEach(function(sec) {
       var target = sectionMap[sec.id];
       if (!target) return;
