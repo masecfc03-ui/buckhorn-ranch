@@ -1389,8 +1389,8 @@ function blobToBase64(blob) {
 async function loadChatHistory() {
   try {
     const data = await apiJson('GET', '/api/timmy-history');
-    if (data && Array.isArray(data.messages)) {
-      chatHistory = data.messages;
+    if (Array.isArray(data) && data.length > 0) {
+      chatHistory = data;
       renderChatHistory();
     }
   } catch { /* ignore */ }
@@ -1823,7 +1823,7 @@ async function openHistoryModal() {
         try {
           const vData = await apiJson('GET', '/api/versions/' + encodeURIComponent(btn.dataset.vkey));
           pushUndo();
-          draft = vData.draft || vData;
+          draft = vData.content || vData.draft || vData;
           draft.meta.schemaVersion = 1;
           renderForm();
           scheduleSave();

@@ -847,7 +847,16 @@
   /* Get photo record by id */
   function findPhoto(photos, id) {
     for (var i = 0; i < photos.length; i++) {
-      if (photos[i].id === id) return photos[i];
+      if (photos[i].id === id || photos[i].photoId === id) {
+        var p = photos[i];
+        var meta = p.metadata || {};
+        return {
+          id: p.id || p.photoId,
+          caption: p.caption || meta.caption || '',
+          x: p.x != null ? p.x : (meta.x != null ? meta.x : 0.5),
+          y: p.y != null ? p.y : (meta.y != null ? meta.y : 0.5),
+        };
+      }
     }
     return null;
   }
