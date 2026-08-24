@@ -103,6 +103,11 @@
     { "id": "sec-contact",   "type": "contact",     "visible": true }
   ],
   "audio": { "enabled": true, "file": "audio/ambient.mp3" },
+  "trophyTabs": [
+    { "id": "tt-01", "label": "Trophy Animals", "type": "gallery", "slot": "trophyGallery" },
+    { "id": "tt-02", "label": "Ranch History",  "type": "text" }
+  ],
+  "customGalleries": [],
   "theme": {
     "headingFont": "cormorant"
   }

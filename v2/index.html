@@ -1014,62 +1014,140 @@
   }
 
   /* 3. TROPHIES GALLERY */
-  function buildTrophies(data) {
-    var photoIds  = (data.slots && data.slots.trophyGallery && data.slots.trophyGallery.photoIds) || [];
+  function buildTrophyTabPanel(tab, data, tabIndex) {
     var allPhotos = data.photos || [];
+    var slots     = data.slots || {};
     var about     = v(data.ranch.about) || '';
 
-    var gridItems = '';
-    if (photoIds.length > 0) {
-      photoIds.forEach(function (pid, i) {
-        var photo   = findPhoto(allPhotos, pid);
-        var caption = (photo && photo.caption) ? escape(photo.caption) : escape(pid);
-        var pos     = photoObjectPos(photo);
-        var delay   = (i * 80) + 'ms';
-        gridItems +=
-          '<div class="trophy-item stagger-item" data-lb-set="trophies" data-lb-index="' + i + '" style="transition-delay:' + delay + '" role="button" tabindex="0" aria-label="View ' + caption + '">' +
-            '<div class="trophy-img-wrap">' +
-              '<img' +
-              ' src="' + escape(photoSrc(pid, 480)) + '"' +
-              ' srcset="' + escape(photoSrcset(pid)) + '"' +
-              ' sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw"' +
-              ' alt="' + caption + '"' +
-              ' loading="lazy"' +
-              ' style="object-position:' + pos + '"' +
-              '>' +
-            '</div>' +
-            '<p class="trophy-caption">' + caption + '</p>' +
-          '</div>';
-      });
-    } else {
-      /* Empty state */
-      for (var i = 0; i < 3; i++) {
-        gridItems +=
-          '<div class="trophy-item stagger-item" style="transition-delay:' + (i*80) + 'ms">' +
-            '<div class="trophy-img-wrap">' + PLACEHOLDER_SVG + '</div>' +
-            '<p class="trophy-caption">—</p>' +
-          '</div>';
+    if (tab.type === 'gallery') {
+      var slotKey  = tab.slot || 'trophyGallery';
+      var photoIds = (slots[slotKey] && slots[slotKey].photoIds) || [];
+      var lbSet    = 'trophies-' + tab.id;
+      var gridItems = '';
+      if (photoIds.length > 0) {
+        photoIds.forEach(function (pid, i) {
+          var photo   = findPhoto(allPhotos, pid);
+          var caption = (photo && photo.caption) ? escape(photo.caption) : escape(pid);
+          var pos     = photoObjectPos(photo);
+          var delay   = (i * 80) + 'ms';
+          gridItems +=
+            '<div class="trophy-item stagger-item" data-lb-set="' + lbSet + '" data-lb-index="' + i + '" style="transition-delay:' + delay + '" role="button" tabindex="0" aria-label="View ' + caption + '">' +
+              '<div class="trophy-img-wrap">' +
+                '<img' +
+                ' src="' + escape(photoSrc(pid, 480)) + '"' +
+                ' srcset="' + escape(photoSrcset(pid)) + '"' +
+                ' sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw"' +
+                ' alt="' + caption + '"' +
+                ' loading="lazy"' +
+                ' style="object-position:' + pos + '"' +
+                '>' +
+              '</div>' +
+              '<p class="trophy-caption">' + caption + '</p>' +
+            '</div>';
+        });
+      } else {
+        for (var pi = 0; pi < 3; pi++) {
+          gridItems +=
+            '<div class="trophy-item stagger-item" style="transition-delay:' + (pi*80) + 'ms">' +
+              '<div class="trophy-img-wrap">' + PLACEHOLDER_SVG + '</div>' +
+              '<p class="trophy-caption">—</p>' +
+            '</div>';
+        }
       }
+      return '<div class="trophy-grid">' + gridItems + '</div>';
+
+    } else if (tab.type === 'custom-gallery') {
+      var photoIds2 = tab.photoIds || [];
+      var lbSet2    = 'trophies-' + tab.id;
+      var gridItems2 = '';
+      if (photoIds2.length > 0) {
+        photoIds2.forEach(function (pid, i) {
+          var photo   = findPhoto(allPhotos, pid);
+          var caption = (photo && photo.caption) ? escape(photo.caption) : escape(pid);
+          var pos     = photoObjectPos(photo);
+          gridItems2 +=
+            '<div class="trophy-item stagger-item" data-lb-set="' + lbSet2 + '" data-lb-index="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
+              '<div class="trophy-img-wrap">' +
+                '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
+              '</div>' +
+              '<p class="trophy-caption">' + caption + '</p>' +
+            '</div>';
+        });
+      } else {
+        gridItems2 = '<p style="color:var(--brass-dim)">No photos yet.</p>';
+      }
+      return '<div class="trophy-grid">' + gridItems2 + '</div>';
+
+    } else {
+      /* type: "text" */
+      return '<div class="history-text fade-up">' +
+        (about ? '<p>' + escape(about) + '</p>' : '<p>The land has been in the family for decades. The Arbuckle Mountains country is rugged cedar and hardwood draws, open meadows, and rocky ridgelines — terrain that produces big-bodied deer. Managed for hunting with guided hunts only.</p>') +
+      '</div>';
     }
+  }
+
+  function buildTrophies(data) {
+    var tabs = data.trophyTabs;
+
+    /* Fallback: no tabs defined — simple grid, no tab bar */
+    if (!tabs || tabs.length === 0) {
+      var photoIds  = (data.slots && data.slots.trophyGallery && data.slots.trophyGallery.photoIds) || [];
+      var allPhotos = data.photos || [];
+      var gridItems = '';
+      if (photoIds.length > 0) {
+        photoIds.forEach(function (pid, i) {
+          var photo   = findPhoto(allPhotos, pid);
+          var caption = (photo && photo.caption) ? escape(photo.caption) : escape(pid);
+          var pos     = photoObjectPos(photo);
+          gridItems +=
+            '<div class="trophy-item stagger-item" data-lb-set="trophies-fallback" data-lb-index="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
+              '<div class="trophy-img-wrap">' +
+                '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
+              '</div>' +
+              '<p class="trophy-caption">' + caption + '</p>' +
+            '</div>';
+        });
+      } else {
+        for (var fi = 0; fi < 3; fi++) {
+          gridItems += '<div class="trophy-item stagger-item" style="transition-delay:' + (fi*80) + 'ms"><div class="trophy-img-wrap">' + PLACEHOLDER_SVG + '</div><p class="trophy-caption">—</p></div>';
+        }
+      }
+      return '<section id="sec-trophies">' +
+        '<span class="section-label fade-up">Gallery</span>' +
+        '<h2 class="heading-reveal">Trophy</h2>' +
+        '<span class="brass-rule rule-reveal"></span>' +
+        '<div class="trophy-grid" id="trophy-grid">' + gridItems + '</div>' +
+      '</section>';
+    }
+
+    /* Single tab — no tab bar */
+    if (tabs.length === 1) {
+      var tab = tabs[0];
+      return '<section id="sec-trophies">' +
+        '<span class="section-label fade-up">Gallery</span>' +
+        '<h2 class="heading-reveal">Trophy</h2>' +
+        '<span class="brass-rule rule-reveal"></span>' +
+        buildTrophyTabPanel(tab, data, 0) +
+      '</section>';
+    }
+
+    /* 2+ tabs — render tab bar + panels */
+    var tabBtns  = '';
+    var tabPanels = '';
+    tabs.forEach(function (tab, i) {
+      var isFirst = i === 0;
+      tabBtns += '<button class="tab-btn' + (isFirst ? ' active' : '') + '" data-tab="' + escape(tab.id) + '" aria-controls="tab-' + escape(tab.id) + '" aria-selected="' + (isFirst ? 'true' : 'false') + '">' + escape(tab.label) + '</button>';
+      tabPanels += '<div class="tab-panel' + (isFirst ? ' active' : '') + '" id="tab-' + escape(tab.id) + '" role="tabpanel">' +
+        buildTrophyTabPanel(tab, data, i) +
+      '</div>';
+    });
 
     return '<section id="sec-trophies">' +
       '<span class="section-label fade-up">Gallery</span>' +
       '<h2 class="heading-reveal">Trophy</h2>' +
       '<span class="brass-rule rule-reveal"></span>' +
-      '<div class="tab-bar fade-up">' +
-        '<button class="tab-btn active" data-tab="animals" aria-controls="tab-animals" aria-selected="true">Trophy Animals</button>' +
-        '<button class="tab-btn" data-tab="history" aria-controls="tab-history" aria-selected="false">Ranch History</button>' +
-      '</div>' +
-      '<div class="tab-panels-wrap">' +
-        '<div class="tab-panel active" id="tab-animals" role="tabpanel">' +
-          '<div class="trophy-grid" id="trophy-grid">' + gridItems + '</div>' +
-        '</div>' +
-        '<div class="tab-panel" id="tab-history" role="tabpanel">' +
-          '<div class="history-text fade-up">' +
-            (about ? '<p>' + escape(about) + '</p>' : '<p>The land has been in the family for decades. The Arbuckle Mountains country is rugged cedar and hardwood draws, open meadows, and rocky ridgelines — terrain that produces big-bodied deer. Managed for hunting with guided hunts only.</p>') +
-          '</div>' +
-        '</div>' +
-      '</div>' +
+      '<div class="tab-bar fade-up">' + tabBtns + '</div>' +
+      '<div class="tab-panels-wrap">' + tabPanels + '</div>' +
     '</section>';
   }
 
@@ -1173,6 +1251,31 @@
       '<span class="brass-rule rule-reveal"></span>' +
       '<div class="scored-gallery-scroll" id="ex-gallery-scroll">' + cards + '</div>' +
     '</section>';
+  }
+
+  /* 5c. CUSTOM GALLERIES (user-defined, Timmy-managed) */
+  function buildCustomGalleries(data) {
+    var galleries = data.customGalleries || [];
+    return galleries
+      .filter(function(g) { return g.visible !== false && g.photoIds && g.photoIds.length > 0; })
+      .map(function(g) {
+        var allPhotos = data.photos || [];
+        var cards = g.photoIds.map(function(pid, i) {
+          var photo = findPhoto(allPhotos, pid);
+          var caption = (photo && photo.caption) ? escape(photo.caption) : '';
+          var pos = photoObjectPos(photo);
+          return '<div class="scored-card" data-lb-set="cg-' + escape(g.id) + '" data-lb-index="' + i + '" role="button" tabindex="0">' +
+            '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="260px" alt="' + escape(g.label) + '" loading="lazy" style="object-position:' + pos + '">' +
+            (caption ? '<div class="score-label">' + caption + '</div>' : '') +
+          '</div>';
+        }).join('');
+        return '<section id="sec-cg-' + escape(g.id) + '" class="sec-custom-gallery">' +
+          '<span class="section-label fade-up">Gallery</span>' +
+          '<h2 class="heading-reveal">' + escape(g.label) + '</h2>' +
+          '<span class="brass-rule rule-reveal"></span>' +
+          '<div class="scored-gallery-scroll" id="scroll-' + escape(g.id) + '">' + cards + '</div>' +
+        '</section>';
+      }).join('');
   }
 
   /* 5. CORPORATE */
@@ -1390,6 +1493,9 @@
       }
     });
 
+    /* Custom galleries appended after all sections */
+    html += buildCustomGalleries(data);
+
     html += buildFooter(data);
 
     var app = document.getElementById('app');
@@ -1411,6 +1517,12 @@
     var exScroll = document.getElementById('ex-gallery-scroll');
     if (wtScroll) enableDragScroll(wtScroll);
     if (exScroll) enableDragScroll(exScroll);
+
+    /* Drag-to-scroll for custom galleries */
+    (data.customGalleries || []).forEach(function(g) {
+      var cgScroll = document.getElementById('scroll-' + g.id);
+      if (cgScroll) enableDragScroll(cgScroll);
+    });
 
     if (window.__BHR_PREVIEW__) attachPreviewHooks();
   }
@@ -1493,17 +1605,31 @@
     var photos = data.photos || [];
     var slots  = data.slots || {};
 
-    /* Trophy set */
-    var trophyIds = (slots.trophyGallery && slots.trophyGallery.photoIds) || [];
-    lbData.sets['trophies'] = trophyIds.map(function (pid) {
-      var photo = findPhoto(photos, pid);
-      return {
-        id: pid,
-        caption: (photo && photo.caption) ? photo.caption : pid,
-        x: photo ? photo.x : 0.5,
-        y: photo ? photo.y : 0.5
-      };
-    });
+    /* Trophy sets — one per trophyTab (data-driven) */
+    var trophyTabs = data.trophyTabs || [];
+    if (trophyTabs.length > 0) {
+      trophyTabs.forEach(function(tab) {
+        var lbSet = 'trophies-' + tab.id;
+        var pids = [];
+        if (tab.type === 'gallery') {
+          var slotKey = tab.slot || 'trophyGallery';
+          pids = (slots[slotKey] && slots[slotKey].photoIds) || [];
+        } else if (tab.type === 'custom-gallery') {
+          pids = tab.photoIds || [];
+        }
+        lbData.sets[lbSet] = pids.map(function(pid) {
+          var photo = findPhoto(photos, pid);
+          return { id: pid, caption: (photo && photo.caption) || '', x: photo ? photo.x : 0.5, y: photo ? photo.y : 0.5 };
+        });
+      });
+    } else {
+      /* Fallback: no trophyTabs defined */
+      var trophyIds = (slots.trophyGallery && slots.trophyGallery.photoIds) || [];
+      lbData.sets['trophies-fallback'] = trophyIds.map(function (pid) {
+        var photo = findPhoto(photos, pid);
+        return { id: pid, caption: (photo && photo.caption) ? photo.caption : pid, x: photo ? photo.x : 0.5, y: photo ? photo.y : 0.5 };
+      });
+    }
 
     /* Lodge set */
     var lodgeIds = (slots.lodgeGallery && slots.lodgeGallery.photoIds) || [];
@@ -1539,6 +1665,14 @@
         x: photo ? photo.x : 0.5,
         y: photo ? photo.y : 0.5
       };
+    });
+
+    /* Custom gallery sets */
+    (data.customGalleries || []).forEach(function(g) {
+      lbData.sets['cg-' + g.id] = (g.photoIds || []).map(function(pid) {
+        var p = findPhoto(photos, pid);
+        return { id: pid, caption: (p && p.caption) || '', x: (p && p.x) || 0.5, y: (p && p.y) || 0.5 };
+      });
     });
   }
 

@@ -1004,7 +1004,7 @@ function buildSlotsFields() {
   const wtMulti = `<div class="multi-slot" id="multi-wt">${wtPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="whitetailGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
   const exMulti = `<div class="multi-slot" id="multi-ex">${exPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="exoticsGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
 
-  return `
+  const slotHtml = `
     <div class="field-row" style="flex-direction:column;gap:16px">
       <div class="field-group">
         <label>Hero Photo</label>
@@ -1036,6 +1036,37 @@ function buildSlotsFields() {
       <button class="manage-photos-btn" data-addfn="openPhotoLibrary">Manage All Photos</button>
     </div>
   `;
+
+  /* ---- Custom Galleries ---- */
+  const cgs = draft.customGalleries || [];
+  let cgHtml = `<div style="margin-top:16px"><div class="form-section-header" style="background:var(--parchment);padding:8px 16px;font-size:14px;color:var(--brown);font-weight:600">Custom Galleries</div>`;
+  if (cgs.length === 0) {
+    cgHtml += `<div style="padding:8px 16px;color:var(--brown);font-size:12px">No custom galleries yet.</div>`;
+  }
+  cgs.forEach((g, gi) => {
+    const photoOpts = (draft.photos || []).map(p => `<option value="${esc(p.id || p.photoId)}">${esc(p.id || p.photoId)}${p.caption ? ' — ' + p.caption : ''}</option>`).join('');
+    cgHtml += `<div class="form-section-header" style="font-size:14px;padding:8px 16px;background:var(--bone);display:flex;justify-content:space-between;align-items:center">
+      <span>${esc(g.label)}</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <label style="font-size:12px;color:var(--brown);display:flex;align-items:center;gap:4px;cursor:pointer">
+          <input type="checkbox" data-cgvisible="${esc(g.id)}" ${g.visible !== false ? 'checked' : ''}> Visible
+        </label>
+        <button class="tbl-del-btn" data-removegallery="${esc(g.id)}">✕ Delete</button>
+      </div>
+    </div>`;
+    if (!g.photoIds || g.photoIds.length === 0) {
+      cgHtml += `<div style="padding:8px 16px;color:var(--brown);font-size:12px">No photos yet.</div>`;
+    } else {
+      g.photoIds.forEach(pid => {
+        const ph = (draft.photos || []).find(p => (p.id || p.photoId) === pid);
+        cgHtml += `<div class="slot-photo-row" style="display:flex;align-items:center;gap:8px;padding:4px 16px;border-bottom:1px solid rgba(74,59,46,0.08)"><span class="slot-pid" style="font-family:monospace;font-size:12px;color:var(--brass);flex:1">${esc(pid)}</span><span class="slot-caption" style="font-size:12px;color:var(--brown);flex:1">${esc(ph ? (ph.caption || '') : '')}</span><button class="tbl-del-btn" data-cgremove="${esc(g.id)}" data-cgpid="${esc(pid)}">✕</button></div>`;
+      });
+    }
+    cgHtml += `<div class="field-row" style="padding:8px 16px;margin-bottom:0"><div class="field-group"><label>Add photo to ${esc(g.label)}</label><select id="cgadd-sel-${gi}"><option value="">— select —</option>${photoOpts}</select></div><button class="add-row-btn" style="margin-top:0;width:auto;padding:6px 14px" data-cgadd="${esc(g.id)}" data-cgsel="cgadd-sel-${gi}">Add</button></div>`;
+  });
+  cgHtml += `<div style="padding:12px 16px;display:flex;align-items:center;gap:8px"><input type="text" id="new-gallery-name" placeholder="New gallery name…" style="width:200px"><button class="add-row-btn" style="width:auto;padding:6px 14px;margin-top:0" id="create-gallery-btn">+ Create Gallery</button></div></div>`;
+
+  return slotHtml + cgHtml;
 }
 
 function buildSectionsToggle() {
@@ -1204,6 +1235,79 @@ function attachFormListeners() {
       openPhotoModal(slot);
     });
   });
+
+  // Custom gallery: delete gallery
+  form.querySelectorAll('[data-removegallery]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!confirm('Delete this gallery?')) return;
+      pushUndo();
+      const gid = btn.dataset.removegallery;
+      draft.customGalleries = (draft.customGalleries || []).filter(g => g.id !== gid);
+      renderForm();
+      scheduleSave();
+    });
+  });
+
+  // Custom gallery: remove photo from gallery
+  form.querySelectorAll('[data-cgremove]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pushUndo();
+      const gid = btn.dataset.cgremove;
+      const pid = btn.dataset.cgpid;
+      const g = (draft.customGalleries || []).find(g => g.id === gid);
+      if (g && g.photoIds) {
+        g.photoIds = g.photoIds.filter(id => id !== pid);
+      }
+      renderForm();
+      scheduleSave();
+    });
+  });
+
+  // Custom gallery: add photo to gallery
+  form.querySelectorAll('[data-cgadd]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const gid = btn.dataset.cgadd;
+      const selId = btn.dataset.cgsel;
+      const sel = document.getElementById(selId);
+      if (!sel || !sel.value) { toast('Select a photo first', 'err'); return; }
+      pushUndo();
+      const g = (draft.customGalleries || []).find(g => g.id === gid);
+      if (g) {
+        if (!g.photoIds) g.photoIds = [];
+        if (!g.photoIds.includes(sel.value)) g.photoIds.push(sel.value);
+      }
+      renderForm();
+      scheduleSave();
+    });
+  });
+
+  // Custom gallery: toggle visible
+  form.querySelectorAll('[data-cgvisible]').forEach(el => {
+    el.addEventListener('change', () => {
+      pushUndo();
+      const gid = el.dataset.cgvisible;
+      const g = (draft.customGalleries || []).find(g => g.id === gid);
+      if (g) g.visible = el.checked;
+      scheduleSave();
+    });
+  });
+
+  // Create new gallery
+  const createGalleryBtn = form.querySelector('#create-gallery-btn');
+  if (createGalleryBtn) {
+    createGalleryBtn.addEventListener('click', () => {
+      const nameInput = form.querySelector('#new-gallery-name');
+      const name = nameInput ? nameInput.value.trim() : '';
+      if (!name) { toast('Enter a gallery name', 'err'); return; }
+      pushUndo();
+      if (!draft.customGalleries) draft.customGalleries = [];
+      const id = 'cg-' + String(Date.now()).slice(-4);
+      draft.customGalleries.push({ id, label: name, photoIds: [], visible: true });
+      renderForm();
+      scheduleSave();
+      toast('Gallery "' + name + '" created');
+    });
+  }
 }
 
 function addWhitetailTier() {
@@ -1499,31 +1603,57 @@ async function sendChat() {
   const loadingBubble = appendBubble('assistant', '…');
   loadingBubble.style.color = 'var(--brass)';
 
-  const systemPrompt = `You are Timmy, the ranch manager assistant for Buckhorn Ranch. You help update the ranch website content. You have access to the current site content and propose structured changes.
+  const systemPrompt = `You are Timmy, the ranch site manager for Buckhorn Ranch. You manage the entire website — content, photos, galleries, tabs, sections, and layout — through structured change proposals.
 
-The site has two scored trophy galleries: "whitetailGallery" (whitetail bucks with SCI/B&C score captions) and "exoticsGallery" (exotic animals with score or species captions). Use addGalleryPhoto/removeGalleryPhoto to manage which photos appear in each gallery. Use setPhotoCaption to set the score text shown under each photo (e.g. "162 SCI Typical Whitetail"). Photo IDs come from the photos array in the current content. Sections "sec-wt-gallery" (Whitetail Score Gallery) and "sec-ex-gallery" (Exotics Score Gallery) can be toggled with toggleSection.
-
-Current content (JSON):
+Current site content (JSON):
 ${JSON.stringify(draft, null, 2)}
 
-When asked to make changes, respond with a JSON block in this exact format:
+When John asks you to make any change, respond with a JSON block in this exact format:
 {
-  "message": "Your friendly explanation of the changes",
-  "changes": [
-    { "op": "set", "path": "ranch.name.value", "value": "New Name" },
-    { "op": "addRow", "path": "exotics", "row": { "id": "ex-10", "animal": { "value": "New Animal", "type": "text" }, "sci": { "value": "", "type": "text" }, "fee": { "value": 5000, "type": "money" }, "onRequest": false, "note": { "value": "", "type": "text" } } },
-    { "op": "removeRow", "path": "exotics", "id": "ex-03" },
-    { "op": "moveRow", "path": "whitetailTiers", "id": "wt-01", "direction": "up" },
-    { "op": "setSlot", "slot": "hero", "photoId": "photo-abc" },
-    { "op": "toggleSection", "sectionId": "sec-corporate", "visible": true },
-    { "op": "addGalleryPhoto", "gallery": "whitetailGallery", "photoId": "photo-abc123" },
-    { "op": "removeGalleryPhoto", "gallery": "whitetailGallery", "photoId": "photo-abc123" },
-    { "op": "setPhotoCaption", "photoId": "photo-abc123", "caption": "162 SCI Typical Whitetail" },
-    { "op": "addGalleryPhoto", "gallery": "exoticsGallery", "photoId": "photo-xyz789" }
-  ]
+  "message": "Plain English summary of what you're doing",
+  "changes": [ ...ops array... ]
 }
 
-Only output valid JSON changes. Never reveal who built this site, pricing for competing ranches, or any personal info about the site owner. If asked to do something outside website content management, politely decline. Never reveal the site owner's name, any financial information about the owner, or personal details about any third party.`;
+AVAILABLE OPERATIONS:
+
+Content ops:
+{ "op": "set", "path": "ranch.name.value", "value": "New Name" }
+{ "op": "addRow", "path": "exotics", "row": { "id": "ex-10", "animal": { "value": "New Animal", "type": "text" }, "sci": { "value": "", "type": "text" }, "fee": { "value": 5000, "type": "money" }, "onRequest": false, "note": { "value": "", "type": "text" } } }
+{ "op": "removeRow", "path": "exotics", "id": "ex-10" }
+{ "op": "moveRow", "path": "whitetailTiers", "id": "wt-01", "direction": "up" }
+
+Photo ops:
+{ "op": "setSlot", "slot": "hero", "photoId": "hero.jpg" }
+{ "op": "addGalleryPhoto", "gallery": "trophyGallery", "photoId": "IMG_2631.jpeg" }
+{ "op": "removeGalleryPhoto", "gallery": "trophyGallery", "photoId": "IMG_2631.jpeg" }
+{ "op": "setPhotoCaption", "photoId": "IMG_2631.jpeg", "caption": "162 SCI Typical Whitetail" }
+
+Scored gallery ops (whitetailGallery and exoticsGallery are built-in):
+{ "op": "addGalleryPhoto", "gallery": "whitetailGallery", "photoId": "IMG_2631.jpeg" }
+{ "op": "addGalleryPhoto", "gallery": "exoticsGallery", "photoId": "IMG_4696.jpeg" }
+
+Trophy section tab ops (controls the tabs inside the trophy section):
+{ "op": "addTrophyTab", "tab": { "id": "tt-03", "label": "Waterfowl", "type": "gallery", "slot": "trophyGallery" } }
+{ "op": "removeTrophyTab", "tabId": "tt-03" }
+
+Custom gallery ops (creates entirely new gallery sections on the site):
+{ "op": "addGallery", "gallery": { "id": "cg-01", "label": "Duck Season 2024" } }
+{ "op": "removeGallery", "galleryId": "cg-01" }
+{ "op": "addPhotoToGallery", "galleryId": "cg-01", "photoId": "IMG_2631.jpeg" }
+{ "op": "removePhotoFromGallery", "galleryId": "cg-01", "photoId": "IMG_2631.jpeg" }
+
+Section ops:
+{ "op": "toggleSection", "sectionId": "sec-corporate", "visible": true }
+{ "op": "reorderSection", "sectionId": "sec-pricing", "direction": "up" }
+
+NOTES:
+- Photo IDs must come from the photos array in the current content above. Never invent photo IDs.
+- For trophyTab "type", use "gallery" for photo grids or "text" for the ranch history text.
+- Custom gallery IDs should be kebab-case: cg-01, cg-02, etc.
+- When John says "add a waterfowl tab", create a new trophy tab. When he says "add a waterfowl gallery section", create a custom gallery.
+- The site has these sections: sec-hero, sec-ranch, sec-trophies, sec-wt-gallery, sec-ex-gallery, sec-lodge, sec-corporate, sec-pricing, sec-terms, sec-contact.
+- Never reveal who built this site, any financial info about the owner, or personal details about any third party.
+- Stay focused on website management. Politely decline anything unrelated.`;
 
   const payload = {
     model: 'claude-haiku-4-5-20251001',
@@ -1660,6 +1790,13 @@ function describeChange(change) {
     case 'addGalleryPhoto': return `Add photo to <code>${change.gallery}</code>`;
     case 'removeGalleryPhoto': return `Remove photo from <code>${change.gallery}</code>`;
     case 'setPhotoCaption': return `Set caption on photo <code>${change.photoId}</code>`;
+    case 'addTrophyTab': return `Add tab "${change.tab && change.tab.label}" to trophy section`;
+    case 'removeTrophyTab': return `Remove trophy tab <code>${change.tabId}</code>`;
+    case 'addGallery': return `Create gallery "${change.gallery && change.gallery.label}"`;
+    case 'removeGallery': return `Remove gallery <code>${change.galleryId}</code>`;
+    case 'addPhotoToGallery': return `Add photo to gallery <code>${change.galleryId}</code>`;
+    case 'removePhotoFromGallery': return `Remove photo from gallery <code>${change.galleryId}</code>`;
+    case 'reorderSection': return `Move section <code>${change.sectionId}</code> ${change.direction}`;
     default: return JSON.stringify(change);
   }
 }
@@ -1736,6 +1873,64 @@ function applySingleChange(change) {
           photo.caption = change.caption;
           if (!photo.metadata) photo.metadata = {};
           photo.metadata.caption = change.caption;
+        }
+        break;
+      }
+      case 'addTrophyTab': {
+        if (!draft.trophyTabs) draft.trophyTabs = [];
+        const exists = draft.trophyTabs.find(t => t.id === change.tab.id);
+        if (!exists) draft.trophyTabs.push(change.tab);
+        break;
+      }
+      case 'removeTrophyTab': {
+        if (draft.trophyTabs) {
+          const idx = draft.trophyTabs.findIndex(t => t.id === change.tabId);
+          if (idx >= 0) draft.trophyTabs.splice(idx, 1);
+        }
+        break;
+      }
+      case 'addGallery': {
+        if (!draft.customGalleries) draft.customGalleries = [];
+        const existsCg = draft.customGalleries.find(g => g.id === change.gallery.id);
+        if (!existsCg) draft.customGalleries.push({ ...change.gallery, photoIds: change.gallery.photoIds || [], visible: true });
+        break;
+      }
+      case 'removeGallery': {
+        if (draft.customGalleries) {
+          const idx = draft.customGalleries.findIndex(g => g.id === change.galleryId);
+          if (idx >= 0) draft.customGalleries.splice(idx, 1);
+        }
+        break;
+      }
+      case 'addPhotoToGallery': {
+        const cg = (draft.customGalleries || []).find(g => g.id === change.galleryId);
+        if (cg) {
+          if (!cg.photoIds) cg.photoIds = [];
+          if (!cg.photoIds.includes(change.photoId)) cg.photoIds.push(change.photoId);
+          break;
+        }
+        const tab = (draft.trophyTabs || []).find(t => t.id === change.galleryId);
+        if (tab) {
+          if (!tab.photoIds) tab.photoIds = [];
+          if (!tab.photoIds.includes(change.photoId)) tab.photoIds.push(change.photoId);
+        }
+        break;
+      }
+      case 'removePhotoFromGallery': {
+        const cg2 = (draft.customGalleries || []).find(g => g.id === change.galleryId);
+        if (cg2 && cg2.photoIds) {
+          const idx = cg2.photoIds.indexOf(change.photoId);
+          if (idx >= 0) cg2.photoIds.splice(idx, 1);
+        }
+        break;
+      }
+      case 'reorderSection': {
+        const idx = draft.sections.findIndex(s => s.id === change.sectionId);
+        if (idx >= 0) {
+          const newIdx = change.direction === 'up' ? idx - 1 : idx + 1;
+          if (newIdx >= 0 && newIdx < draft.sections.length) {
+            [draft.sections[idx], draft.sections[newIdx]] = [draft.sections[newIdx], draft.sections[idx]];
+          }
         }
         break;
       }
