@@ -212,6 +212,21 @@
       padding: 0 24px clamp(60px, 8vw, 100px);
     }
 
+    .hero-logo {
+      margin-bottom: 28px;
+    }
+    .hero-logo img {
+      width: clamp(180px, 28vw, 320px);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.45));
+      opacity: 0;
+      transition: opacity 1000ms var(--ease) 100ms;
+    }
+    #sec-hero.loaded .hero-logo img {
+      opacity: 1;
+    }
+
     .hero-content h1 {
       font-family: var(--heading-font);
       font-size: clamp(42px, 7vw, 80px);
@@ -657,6 +672,15 @@
       background: var(--bone);
     }
 
+    /* Footer logo */
+    .footer-logo {
+      display: block;
+      margin: 0 auto 14px;
+      width: 120px;
+      height: auto;
+      opacity: 0.55;
+    }
+
     /* ── SCORED GALLERIES ───────────────────────────────────── */
     .scored-gallery-scroll {
       display: flex;
@@ -971,6 +995,9 @@
     var heroPhotoId = data.slots && data.slots.hero && data.slots.hero.photoId;
     var heroPhoto   = heroPhotoId ? findPhoto(data.photos || [], heroPhotoId) : null;
 
+    /* Logo — try white version first, fall back to orange */
+    var logoHtml = '<div class="hero-logo fade-in"><img src="img/Buckhorn-Brand-and-Name---White.jpg" alt="Buckhorn Ranch" onerror="this.src=\'img/Buckhorn-Brand-and-Name---Orange.jpg\'"></div>';
+
     var bgHtml;
     if (heroPhotoId) {
       var pos = photoObjectPos(heroPhoto);
@@ -994,7 +1021,8 @@
     return '<section id="sec-hero">' +
       '<div id="hero-bg" data-photo-slot="hero">' + bgHtml + '</div>' +
       '<div class="hero-content">' +
-        '<h1 data-edit-path="ranch.name.value" style="text-transform:uppercase">' + escape(ranchNameRaw) + '</h1>' +
+        logoHtml +
+      '<h1 data-edit-path="ranch.name.value" style="text-transform:uppercase">' + escape(ranchNameRaw) + '</h1>' +
         (locLineRaw ? '<p class="hero-loc" data-edit-path="ranch.location.value">' + escape(locLineRaw) + '</p>' : '') +
         (taglineRaw ? '<p class="hero-tag" data-edit-path="ranch.tagline.value">' + escape(taglineRaw) + '</p>' : '') +
       '</div>' +
@@ -1450,6 +1478,7 @@
     var ranchName  = v(data.ranch && data.ranch.name) || 'Buckhorn Ranch';
     var seasonYear = v(data.meta && data.meta.seasonYear) || '';
     return '<footer>' +
+      '<img class="footer-logo" src="img/Buckhorn-Brand-and-Name---Black.jpg" alt="' + escape(ranchName) + '" onerror="this.style.display=\'none\'">' +
       escape(ranchName) +
       (seasonYear ? ' &nbsp;·&nbsp; Season ' + escape(seasonYear) : '') +
     '</footer>';
