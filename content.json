@@ -960,6 +960,17 @@
     }
   ],
   "customGalleries": [],
+  "animalGallery": [
+    {"id":"ag-wt-1","type":"whitetail","name":{"value":"Whitetail Buck","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
+    {"id":"ag-wt-2","type":"whitetail","name":{"value":"Whitetail","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
+    {"id":"ag-ex-bison","type":"exotic","name":{"value":"Bison Bull","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
+    {"id":"ag-ex-gemsbok","type":"exotic","name":{"value":"Gemsbok","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
+    {"id":"ag-ex-fallow","type":"exotic","name":{"value":"Fallow Deer","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
+    {"id":"ag-ex-redstag","type":"exotic","name":{"value":"Red Stag","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
+    {"id":"ag-ex-scimitar","type":"exotic","name":{"value":"Scimitar Oryx","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
+    {"id":"ag-ex-zebra","type":"exotic","name":{"value":"Zebra","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
+    {"id":"ag-ex-reddeer","type":"exotic","name":{"value":"Red Deer","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]}
+  ],
   "theme": {
     "headingFont": "cormorant"
   }

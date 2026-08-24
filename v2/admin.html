@@ -712,6 +712,12 @@ function normalizeDraft(d) {
     if (!p.photoId && p.id) p.photoId = p.id;
     if (!p.id && p.photoId) p.id = p.photoId;
   });
+  if (!d.animalGallery) d.animalGallery = [];
+  d.animalGallery.forEach(function(a) {
+    if (!a.photoIds) a.photoIds = [];
+    if (!a.name) a.name = { value: '', type: 'text' };
+    if (!a.score) a.score = { value: '', type: 'text' };
+  });
   return d;
 }
 
@@ -1052,7 +1058,7 @@ function buildLodgingFields() {
       </div>
     </div>
     <div class="field-row">
-      <div class="field-group"><label>Lodging Inclusion Note</label><input type="text" data-path="lodging.inclusionNote.value" value="${esc(l.inclusionNote.value)}"></div>
+      <div class="field-group"><label>Lodging Inclusion Note</label><textarea data-path="lodging.inclusionNote.value" rows="3" style="resize:vertical">${esc(l.inclusionNote.value)}</textarea></div>
     </div>
   `;
 }
@@ -2333,6 +2339,15 @@ window.addEventListener('message', function(e) {
 
 function attachQeListeners() {
   const body = document.getElementById('qe-body');
+  /* Auto-resize textareas to fit content */
+  body.querySelectorAll('textarea').forEach(function(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+    ta.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    });
+  });
   body.querySelectorAll('[data-qe-path]').forEach(el => {
     const ev = el.type === 'checkbox' ? 'change' : 'input';
     el.addEventListener(ev, () => {
@@ -2383,6 +2398,12 @@ function attachQeListeners() {
         draft.exotics.push({ id: 'ex-' + Date.now(), animal: { value: '', type: 'text' }, sci: { value: '', type: 'text' }, fee: { value: null, type: 'money' }, onRequest: false, note: { value: '', type: 'text' } });
       } else if (fn === 'wingshooting') {
         draft.wingshooting.push({ id: 'ws-' + Date.now(), hunt: { value: '', type: 'text' }, season: { value: '', type: 'text' }, fee: { value: null, type: 'money' }, unit: '/hunter', note: { value: '', type: 'text' } });
+      } else if (fn === 'animalWhitetail') {
+        if (!draft.animalGallery) draft.animalGallery = [];
+        draft.animalGallery.push({ id: 'ag-wt-' + Date.now(), type: 'whitetail', name: { value: '', type: 'text' }, score: { value: '', type: 'text' }, photoIds: [] });
+      } else if (fn === 'animalExotic') {
+        if (!draft.animalGallery) draft.animalGallery = [];
+        draft.animalGallery.push({ id: 'ag-ex-' + Date.now(), type: 'exotic', name: { value: '', type: 'text' }, score: { value: '', type: 'text' }, photoIds: [] });
       }
       openQuickEdit(qeCurrentSection);
     });
@@ -2450,13 +2471,47 @@ function buildQeLodge() {
   return [
     qeField('Per Hunter Rate', qeMoney('lodging.hunterRate.value', l.hunterRate.value)),
     qeField('Guest Rate', qeMoney('lodging.guestRate.value', l.guestRate.value)),
-    qeField('Inclusion Note', qeText('lodging.inclusionNote.value', l.inclusionNote.value)),
+    qeField('Inclusion Note', qeTextarea('lodging.inclusionNote.value', l.inclusionNote.value, 3)),
     `<p class="tip">To manage lodge photos, use the Form tab → Photos &amp; Slots.</p>`,
   ].join('');
 }
 
 function buildQeTrophies() {
-  return `<p class="tip">To manage trophy photos and tabs, use the Form tab → Photos &amp; Slots.</p>`;
+  const animals = draft.animalGallery || [];
+  const wtAnimals = animals.filter(a => a.type === 'whitetail');
+  const exAnimals = animals.filter(a => a.type === 'exotic');
+
+  function buildAnimalList(list, type) {
+    if (!list.length) return `<p style="color:var(--brass-dim);font-size:12px">No ${type} animals yet.</p>`;
+    return list.map((a, globalIdx) => {
+      const idx = animals.indexOf(a);
+      const coverPhotoId = a.photoIds && a.photoIds[0];
+      const thumbHtml = coverPhotoId
+        ? `<img src="${photoSrcAdmin(coverPhotoId, 120)}" style="width:36px;height:36px;object-fit:cover;border-radius:2px;flex-shrink:0">`
+        : `<div style="width:36px;height:36px;background:var(--parchment);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px">🦌</div>`;
+      return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px;background:var(--parchment);border-radius:4px">
+        ${thumbHtml}
+        <div style="flex:1;min-width:0">
+          <input type="text" data-qe-array="animalGallery" data-qe-idx="${idx}" data-qe-field="name.value" value="${esc(a.name.value)}" style="width:100%;font-size:12px" placeholder="Animal name">
+          <input type="text" data-qe-array="animalGallery" data-qe-idx="${idx}" data-qe-field="score.value" value="${esc(a.score ? a.score.value : '')}" style="width:100%;font-size:11px;margin-top:3px;color:var(--brown)" placeholder="Score / caption">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <button class="qe-del-btn" data-qe-del="animalGallery" data-qe-del-idx="${idx}" title="Remove animal">✕</button>
+          <span style="font-size:10px;color:var(--brown)">${a.photoIds ? a.photoIds.length : 0} 📷</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  return `
+    <div style="font-size:11px;font-weight:600;color:var(--brown);margin:0 0 6px;text-transform:uppercase;letter-spacing:0.05em">Whitetail</div>
+    ${buildAnimalList(wtAnimals, 'whitetail')}
+    <button class="qe-add-btn" data-qe-add="animalWhitetail" style="margin-bottom:14px">+ Add Whitetail Animal</button>
+    <div style="font-size:11px;font-weight:600;color:var(--brown);margin:0 0 6px;text-transform:uppercase;letter-spacing:0.05em">Exotics</div>
+    ${buildAnimalList(exAnimals, 'exotic')}
+    <button class="qe-add-btn" data-qe-add="animalExotic">+ Add Exotic Animal</button>
+    <p class="tip" style="margin-top:12px">To assign photos to animals, use the Form tab → Animal Gallery.</p>
+  `;
 }
 
 function buildQePricing() {
@@ -2465,7 +2520,7 @@ function buildQePricing() {
   html += '<div style="font-size:12px;font-weight:600;color:var(--brown);margin-bottom:8px">Lodging</div>';
   html += qeField('Per Hunter Rate', qeMoney('lodging.hunterRate.value', l.hunterRate.value));
   html += qeField('Guest Rate', qeMoney('lodging.guestRate.value', l.guestRate.value));
-  html += qeField('Inclusion Note', qeText('lodging.inclusionNote.value', l.inclusionNote.value));
+  html += qeField('Inclusion Note', qeTextarea('lodging.inclusionNote.value', l.inclusionNote.value, 3));
 
   html += '<div style="font-size:12px;font-weight:600;color:var(--brown);margin:14px 0 6px">Whitetail Tiers</div>';
   html += '<table class="qe-table"><thead><tr><th>Score Range</th><th>Fee</th><th></th></tr></thead><tbody>';

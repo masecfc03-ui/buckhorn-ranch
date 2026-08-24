@@ -729,6 +729,46 @@
       padding-bottom: 10px;
     }
 
+    /* ── ANIMAL GALLERY ────────────────────────────────────── */
+    .ag-tabs { display: flex; justify-content: center; gap: 0; margin-bottom: 40px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; width: fit-content; margin-left: auto; margin-right: auto; }
+    .ag-tab { background: none; border: none; padding: 9px 28px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; font-family: system-ui, sans-serif; color: var(--brown); cursor: pointer; transition: background 0.15s, color 0.15s; }
+    .ag-tab.active { background: var(--ink); color: var(--bone); }
+    .ag-tab:not(.active):hover { background: var(--parchment); }
+    .ag-panel { display: none; }
+    .ag-panel.active { display: block; }
+    .ag-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; max-width: 960px; margin: 0 auto; }
+    .ag-card { position: relative; aspect-ratio: 3/4; border-radius: 4px; overflow: hidden; cursor: pointer; background: var(--brown); }
+    .ag-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease); }
+    .ag-card:hover img { transform: scale(1.05); }
+    .ag-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px 14px 14px; background: linear-gradient(to bottom, transparent, rgba(20,14,10,0.78)); color: #fff; }
+    .ag-card-name { font-family: var(--heading-font); font-size: 18px; font-weight: 500; display: block; }
+    .ag-card-score { font-size: 11px; letter-spacing: 0.1em; color: var(--brass-dim); display: block; margin-top: 2px; }
+    .ag-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--brown), #2B221B); color: rgba(255,255,255,0.25); font-size: 32px; }
+    /* Animal drawer (overlay) */
+    #animal-drawer { display: none; position: fixed; inset: 0; z-index: 3000; background: rgba(10,8,6,0.97); flex-direction: column; }
+    #animal-drawer.open { display: flex; }
+    .ad-header { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; gap: 16px; }
+    .ad-back { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 20px; padding: 4px 8px; }
+    .ad-back:hover { color: #fff; }
+    .ad-title { font-family: var(--heading-font); font-size: 22px; color: #fff; flex: 1; }
+    .ad-score { font-size: 13px; color: var(--brass-dim); letter-spacing: 0.08em; }
+    .ad-count { font-size: 12px; color: rgba(255,255,255,0.45); white-space: nowrap; }
+    .ad-main { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; min-height: 0; }
+    .ad-photo-wrap { max-width: 90vw; max-height: 100%; display: flex; align-items: center; justify-content: center; }
+    #ad-img { max-width: 100%; max-height: calc(100vh - 180px); object-fit: contain; cursor: zoom-in; border-radius: 2px; transition: opacity 0.2s; }
+    .ad-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 50%; width: 48px; height: 48px; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; z-index: 1; }
+    .ad-arrow:hover { background: rgba(255,255,255,0.2); }
+    .ad-prev { left: 16px; }
+    .ad-next { right: 16px; }
+    .ad-arrow:disabled { opacity: 0.2; cursor: default; }
+    .ad-footer { flex-shrink: 0; padding: 12px 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .ad-caption { color: rgba(255,255,255,0.7); font-size: 13px; text-align: center; margin-bottom: 10px; }
+    .ad-thumbs { display: flex; gap: 6px; overflow-x: auto; justify-content: center; scrollbar-width: none; }
+    .ad-thumbs::-webkit-scrollbar { display: none; }
+    .ad-thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 2px; cursor: pointer; opacity: 0.5; border: 2px solid transparent; transition: opacity 0.15s, border-color 0.15s; flex-shrink: 0; }
+    .ad-thumb.active { opacity: 1; border-color: var(--brass); }
+    .ad-thumb.placeholder { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); }
+
     /* ── LIGHTBOX ────────────────────────────────────────────── */
     #lightbox {
       position: fixed;
@@ -836,6 +876,29 @@
   <!-- Audio toggle (conditionally rendered by JS) -->
   <button id="audio-toggle" aria-label="Toggle ambient audio" aria-pressed="false" style="display:none">♪</button>
   <audio id="ambient-audio" loop preload="none" aria-hidden="true"></audio>
+
+  <!-- Animal Gallery Drawer -->
+  <div id="animal-drawer" role="dialog" aria-modal="true">
+    <div class="ad-header">
+      <button class="ad-back" id="ad-back" aria-label="Back to gallery">&#8592;</button>
+      <div style="flex:1;min-width:0">
+        <span class="ad-title" id="ad-title">Animal</span>
+        <span class="ad-score" id="ad-score"></span>
+      </div>
+      <span class="ad-count" id="ad-count"></span>
+    </div>
+    <div class="ad-main">
+      <button class="ad-arrow ad-prev" id="ad-prev" aria-label="Previous photo">&#8249;</button>
+      <div class="ad-photo-wrap">
+        <img id="ad-img" src="" alt="">
+      </div>
+      <button class="ad-arrow ad-next" id="ad-next" aria-label="Next photo">&#8250;</button>
+    </div>
+    <div class="ad-footer">
+      <p class="ad-caption" id="ad-caption"></p>
+      <div class="ad-thumbs" id="ad-thumbs"></div>
+    </div>
+  </div>
 
   <!-- Lightbox -->
   <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo lightbox">
@@ -1042,141 +1105,46 @@
     '</section>';
   }
 
-  /* 3. TROPHIES GALLERY */
-  function buildTrophyTabPanel(tab, data, tabIndex) {
+  /* 3. ANIMAL GALLERY */
+  function buildAnimalGallery(data) {
+    var animals = data.animalGallery || [];
     var allPhotos = data.photos || [];
-    var slots     = data.slots || {};
-    var about     = v(data.ranch.about) || '';
 
-    if (tab.type === 'gallery') {
-      var slotKey  = tab.slot || 'trophyGallery';
-      var photoIds = (slots[slotKey] && slots[slotKey].photoIds) || [];
-      var lbSet    = 'trophies-' + tab.id;
-      var gridItems = '';
-      if (photoIds.length > 0) {
-        photoIds.forEach(function (pid, i) {
-          var photo   = findPhoto(allPhotos, pid);
-          var caption = (photo && photo.caption) ? escape(photo.caption) : escape(pid);
-          var pos     = photoObjectPos(photo);
-          var delay   = (i * 80) + 'ms';
-          gridItems +=
-            '<div class="trophy-item stagger-item" data-lb-set="' + lbSet + '" data-lb-index="' + i + '" style="transition-delay:' + delay + '" role="button" tabindex="0" aria-label="View ' + caption + '">' +
-              '<div class="trophy-img-wrap" data-photo-gallery-wrap data-photo-gallery="' + escape(slotKey) + '" data-photo-idx="' + i + '">' +
-                '<img' +
-                ' src="' + escape(photoSrc(pid, 480)) + '"' +
-                ' srcset="' + escape(photoSrcset(pid)) + '"' +
-                ' sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw"' +
-                ' alt="' + caption + '"' +
-                ' loading="lazy"' +
-                ' style="object-position:' + pos + '"' +
-                '>' +
-              '</div>' +
-              '<p class="trophy-caption">' + caption + '</p>' +
-            '</div>';
-        });
-      } else {
-        for (var pi = 0; pi < 3; pi++) {
-          gridItems +=
-            '<div class="trophy-item stagger-item" style="transition-delay:' + (pi*80) + 'ms">' +
-              '<div class="trophy-img-wrap">' + PLACEHOLDER_SVG + '</div>' +
-              '<p class="trophy-caption">—</p>' +
-            '</div>';
-        }
-      }
-      return '<div class="trophy-grid">' + gridItems + '</div>';
+    var wtAnimals = animals.filter(function(a) { return a.type === 'whitetail'; });
+    var exAnimals = animals.filter(function(a) { return a.type === 'exotic'; });
 
-    } else if (tab.type === 'custom-gallery') {
-      var photoIds2 = tab.photoIds || [];
-      var lbSet2    = 'trophies-' + tab.id;
-      var gridItems2 = '';
-      if (photoIds2.length > 0) {
-        photoIds2.forEach(function (pid, i) {
-          var photo   = findPhoto(allPhotos, pid);
-          var caption = (photo && photo.caption) ? escape(photo.caption) : escape(pid);
-          var pos     = photoObjectPos(photo);
-          gridItems2 +=
-            '<div class="trophy-item stagger-item" data-lb-set="' + lbSet2 + '" data-lb-index="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
-              '<div class="trophy-img-wrap" data-photo-gallery-wrap data-photo-gallery="' + escape(tab.id) + '" data-photo-idx="' + i + '">' +
-                '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
-              '</div>' +
-              '<p class="trophy-caption">' + caption + '</p>' +
-            '</div>';
-        });
-      } else {
-        gridItems2 = '<p style="color:var(--brass-dim)">No photos yet.</p>';
-      }
-      return '<div class="trophy-grid">' + gridItems2 + '</div>';
-
-    } else {
-      /* type: "text" */
-      return '<div class="history-text fade-up">' +
-        (about ? '<p>' + escape(about) + '</p>' : '<p>The land has been in the family for decades. The Arbuckle Mountains country is rugged cedar and hardwood draws, open meadows, and rocky ridgelines — terrain that produces big-bodied deer. Managed for hunting with guided hunts only.</p>') +
-      '</div>';
+    function buildCards(list) {
+      if (!list.length) return '<p style="color:var(--brass-dim);text-align:center;padding:40px 0">No animals added yet.</p>';
+      return '<div class="ag-grid">' + list.map(function(animal) {
+        var coverPhotoId = (animal.photoIds && animal.photoIds[0]) || null;
+        var coverPhoto = coverPhotoId ? findPhoto(allPhotos, coverPhotoId) : null;
+        var imgHtml = coverPhoto
+          ? '<img src="' + escape(photoSrc(coverPhotoId, 480)) + '" srcset="' + escape(photoSrcset(coverPhotoId)) + '" sizes="(max-width:600px) 50vw, 240px" alt="' + escape(animal.name.value || '') + '" loading="lazy" style="object-position:' + photoObjectPos(coverPhoto) + '">'
+          : '<div class="ag-placeholder">🦌</div>';
+        var scoreHtml = (animal.score && animal.score.value) ? '<span class="ag-card-score">' + escape(animal.score.value) + '</span>' : '';
+        var hasPhotos = animal.photoIds && animal.photoIds.length > 0;
+        return '<div class="ag-card" role="button" tabindex="0" data-animal-id="' + escape(animal.id) + '" aria-label="View ' + escape(animal.name.value || 'animal') + ' gallery" ' + (hasPhotos ? '' : 'style="opacity:0.6"') + '>' +
+          imgHtml +
+          '<div class="ag-card-info">' +
+            '<span class="ag-card-name">' + escape(animal.name.value || '—') + '</span>' +
+            scoreHtml +
+          '</div>' +
+        '</div>';
+      }).join('') + '</div>';
     }
-  }
-
-  function buildTrophies(data) {
-    var tabs = data.trophyTabs;
-
-    /* Fallback: no tabs defined — simple grid, no tab bar */
-    if (!tabs || tabs.length === 0) {
-      var photoIds  = (data.slots && data.slots.trophyGallery && data.slots.trophyGallery.photoIds) || [];
-      var allPhotos = data.photos || [];
-      var gridItems = '';
-      if (photoIds.length > 0) {
-        photoIds.forEach(function (pid, i) {
-          var photo   = findPhoto(allPhotos, pid);
-          var caption = (photo && photo.caption) ? escape(photo.caption) : escape(pid);
-          var pos     = photoObjectPos(photo);
-          gridItems +=
-            '<div class="trophy-item stagger-item" data-lb-set="trophies-fallback" data-lb-index="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
-              '<div class="trophy-img-wrap" data-photo-gallery-wrap data-photo-gallery="trophyGallery" data-photo-idx="' + i + '">' +
-                '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="(max-width:600px) 100vw, (max-width:900px) 50vw, 33vw" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
-              '</div>' +
-              '<p class="trophy-caption">' + caption + '</p>' +
-            '</div>';
-        });
-      } else {
-        for (var fi = 0; fi < 3; fi++) {
-          gridItems += '<div class="trophy-item stagger-item" style="transition-delay:' + (fi*80) + 'ms"><div class="trophy-img-wrap">' + PLACEHOLDER_SVG + '</div><p class="trophy-caption">—</p></div>';
-        }
-      }
-      return '<section id="sec-trophies">' +
-        '<span class="section-label fade-up">Gallery</span>' +
-        '<h2 class="heading-reveal">Trophy</h2>' +
-        '<span class="brass-rule rule-reveal"></span>' +
-        '<div class="trophy-grid" id="trophy-grid">' + gridItems + '</div>' +
-      '</section>';
-    }
-
-    /* Single tab — no tab bar */
-    if (tabs.length === 1) {
-      var tab = tabs[0];
-      return '<section id="sec-trophies">' +
-        '<span class="section-label fade-up" data-edit-path="trophySection.label" data-edit-default="Gallery">Gallery</span>' +
-        '<h2 class="heading-reveal" data-edit-path="trophySection.heading" data-edit-default="Trophy">Trophy</h2>' +
-        '<span class="brass-rule rule-reveal"></span>' +
-        buildTrophyTabPanel(tab, data, 0) +
-      '</section>';
-    }
-
-    /* 2+ tabs — render tab bar + panels */
-    var tabBtns  = '';
-    var tabPanels = '';
-    tabs.forEach(function (tab, i) {
-      var isFirst = i === 0;
-      tabBtns += '<button class="tab-btn' + (isFirst ? ' active' : '') + '" data-tab="' + escape(tab.id) + '" aria-controls="tab-' + escape(tab.id) + '" aria-selected="' + (isFirst ? 'true' : 'false') + '">' + escape(tab.label) + '</button>';
-      tabPanels += '<div class="tab-panel' + (isFirst ? ' active' : '') + '" id="tab-' + escape(tab.id) + '" role="tabpanel">' +
-        buildTrophyTabPanel(tab, data, i) +
-      '</div>';
-    });
 
     return '<section id="sec-trophies">' +
-      '<span class="section-label fade-up" data-edit-path="trophySection.label" data-edit-default="Gallery">Gallery</span>' +
-      '<h2 class="heading-reveal" data-edit-path="trophySection.heading" data-edit-default="Trophy">Trophy</h2>' +
-      '<span class="brass-rule rule-reveal"></span>' +
-      '<div class="tab-bar fade-up">' + tabBtns + '</div>' +
-      '<div class="tab-panels-wrap">' + tabPanels + '</div>' +
+      '<div class="inner">' +
+        '<span class="section-label fade-up">Trophy Gallery</span>' +
+        '<h2 class="heading-reveal">Hunt Journal</h2>' +
+        '<span class="brass-rule rule-reveal"></span>' +
+      '</div>' +
+      '<div class="ag-tabs fade-up">' +
+        '<button class="ag-tab active" data-ag-tab="whitetail">Whitetail</button>' +
+        '<button class="ag-tab" data-ag-tab="exotic">Exotics</button>' +
+      '</div>' +
+      '<div class="ag-panel active" id="ag-panel-whitetail" style="padding:0 24px">' + buildCards(wtAnimals) + '</div>' +
+      '<div class="ag-panel" id="ag-panel-exotic" style="padding:0 24px">' + buildCards(exAnimals) + '</div>' +
     '</section>';
   }
 
@@ -1487,7 +1455,7 @@
   var SECTION_BUILDERS = {
     'sec-hero':       buildHero,
     'sec-ranch':      buildRanch,
-    'sec-trophies':   buildTrophies,
+    'sec-trophies':   buildAnimalGallery,
     'sec-wt-gallery': buildWtGallery,
     'sec-ex-gallery': buildExGallery,
     'sec-lodge':      buildLodge,
@@ -1540,6 +1508,7 @@
     setupScrollAnimations();
     setupTabs();
     setupLightbox(data);
+    setupAnimalGallery(data);
     setupAudio(data);
 
     /* Drag-to-scroll for scored gallery strips */
@@ -1555,6 +1524,127 @@
     });
 
     if (window.__BHR_PREVIEW__) attachPreviewHooks();
+  }
+
+  /* ────────────────────────────────────────────────────────────
+     ANIMAL GALLERY
+  ──────────────────────────────────────────────────────────── */
+  var agData = { animals: [], photos: [], currentId: null, currentIdx: 0 };
+
+  function setupAnimalGallery(data) {
+    agData.animals = data.animalGallery || [];
+    agData.photos  = data.photos || [];
+
+    /* Tab switching */
+    document.querySelectorAll('.ag-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.ag-tab').forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        document.querySelectorAll('.ag-panel').forEach(function(p) { p.classList.remove('active'); });
+        var panelId = 'ag-panel-' + tab.dataset.agTab;
+        var panel = document.getElementById(panelId);
+        if (panel) panel.classList.add('active');
+      });
+    });
+
+    /* Card clicks */
+    document.querySelectorAll('.ag-card[data-animal-id]').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var animal = agData.animals.find(function(a) { return a.id === card.dataset.animalId; });
+        if (!animal || !animal.photoIds || !animal.photoIds.length) return;
+        openAnimalDrawer(animal.id, 0);
+      });
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
+    });
+
+    /* Drawer controls */
+    document.getElementById('ad-back').addEventListener('click', closeAnimalDrawer);
+    document.getElementById('ad-prev').addEventListener('click', function() { agNav(-1); });
+    document.getElementById('ad-next').addEventListener('click', function() { agNav(1); });
+    document.getElementById('ad-img').addEventListener('click', function() {
+      openLightbox('ag-' + agData.currentId, agData.currentIdx);
+    });
+
+    /* Build lightbox sets for each animal */
+    agData.animals.forEach(function(animal) {
+      lbData.sets['ag-' + animal.id] = (animal.photoIds || []).map(function(pid) {
+        var photo = findPhoto(agData.photos, pid);
+        return { id: pid, caption: (photo && photo.caption) || animal.name.value || '', x: (photo && photo.x) || 0.5, y: (photo && photo.y) || 0.5 };
+      });
+    });
+
+    /* Close on Escape */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var drawer = document.getElementById('animal-drawer');
+        if (drawer && drawer.classList.contains('open')) closeAnimalDrawer();
+      }
+    });
+  }
+
+  function openAnimalDrawer(animalId, startIdx) {
+    agData.currentId  = animalId;
+    agData.currentIdx = startIdx;
+    document.getElementById('animal-drawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    agUpdateDrawer();
+    document.getElementById('ad-back').focus();
+  }
+
+  function closeAnimalDrawer() {
+    document.getElementById('animal-drawer').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function agNav(dir) {
+    var animal = agData.animals.find(function(a) { return a.id === agData.currentId; });
+    if (!animal) return;
+    var len = (animal.photoIds || []).length;
+    agData.currentIdx = (agData.currentIdx + dir + len) % len;
+    agUpdateDrawer();
+  }
+
+  function agUpdateDrawer() {
+    var animal = agData.animals.find(function(a) { return a.id === agData.currentId; });
+    if (!animal) return;
+    var pids  = animal.photoIds || [];
+    var idx   = agData.currentIdx;
+    var photo = pids[idx] ? findPhoto(agData.photos, pids[idx]) : null;
+
+    document.getElementById('ad-title').textContent = animal.name.value || '';
+    document.getElementById('ad-score').textContent = (animal.score && animal.score.value) ? animal.score.value : '';
+    document.getElementById('ad-count').textContent = pids.length > 1 ? (idx + 1) + ' of ' + pids.length : '';
+
+    var img = document.getElementById('ad-img');
+    img.style.opacity = '0';
+    img.src = pids[idx] ? photoSrc(pids[idx], 960) : '';
+    img.alt = animal.name.value || '';
+    img.onload = function() { img.style.opacity = '1'; };
+
+    var caption = (photo && photo.caption) ? photo.caption : (animal.score && animal.score.value ? animal.score.value : '');
+    document.getElementById('ad-caption').textContent = caption;
+
+    document.getElementById('ad-prev').disabled = pids.length <= 1;
+    document.getElementById('ad-next').disabled = pids.length <= 1;
+
+    /* Thumbnails */
+    var thumbsEl = document.getElementById('ad-thumbs');
+    thumbsEl.innerHTML = pids.map(function(pid, i) {
+      var p = findPhoto(agData.photos, pid);
+      var pos = p ? photoObjectPos(p) : 'center';
+      return '<img class="ad-thumb' + (i === idx ? ' active' : '') + '" src="' + escape(photoSrc(pid, 120)) + '" alt="" data-ag-thumb="' + i + '" style="object-position:' + pos + '">';
+    }).join('');
+    thumbsEl.querySelectorAll('.ad-thumb').forEach(function(thumb) {
+      thumb.addEventListener('click', function() {
+        agData.currentIdx = parseInt(thumb.dataset.agThumb, 10);
+        agUpdateDrawer();
+      });
+    });
+    /* Scroll active thumb into view */
+    var activeThumb = thumbsEl.querySelector('.ad-thumb.active');
+    if (activeThumb) activeThumb.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
 
   /* ────────────────────────────────────────────────────────────
