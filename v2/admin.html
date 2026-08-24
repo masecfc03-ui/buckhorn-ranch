@@ -1651,11 +1651,12 @@ async function handleFileUpload(files) {
         metadata: {}
       };
       await apiJson('POST', '/api/images/upload', payload);
-      draft.photos.push({ photoId, filename: file.name, metadata: {} });
+      draft.photos.push({ id: photoId, photoId, filename: file.name, metadata: {} });
       document.getElementById(`pb-${photoId}`).style.width = '100%';
       document.getElementById(`ps-${photoId}`).textContent = '✓ Done';
       renderPhotoGrid();
       scheduleSave();
+      if (currentTab === 'visual') loadPreview();
     } catch (e) {
       document.getElementById(`ps-${photoId}`).textContent = '✕ Error';
       document.getElementById(`ps-${photoId}`).style.color = 'var(--error)';
@@ -2117,6 +2118,7 @@ function applySingleChange(change) {
       }
     }
     if (currentTab === 'form') renderForm();
+    if (currentTab === 'visual') loadPreview();
     scheduleSave();
   } catch (e) {
     toast('Failed to apply change: ' + e.message, 'err');
