@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buckhorn Ranch — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bone: #F5F1E8;
+  --parchment: #EDE6D6;
+  --ink: #2B221B;
+  --brown: #4A3B2E;
+  --brass: #A8854B;
+  --brass-dim: #C9B896;
+  --error: #7A2E2E;
+  --ok: #3E5C3A;
+  --border: rgba(74,59,46,0.2);
+  --shadow: 0 2px 8px rgba(43,34,27,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: system-ui, -apple-system, sans-serif; background: var(--bone); color: var(--ink); font-size: 14px; }
+
+/* ---- AUTH SCREEN ---- */
+#auth-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; background: var(--bone);
+}
+.auth-card {
+  background: white; border: 1px solid var(--border); border-radius: 8px;
+  padding: 48px 40px; width: 360px; text-align: center; box-shadow: var(--shadow);
+}
+.auth-card h1 {
+  font-family: 'Cormorant Garamond', serif; font-weight: 600;
+  font-size: 28px; color: var(--ink); margin-bottom: 4px;
+}
+.auth-card .subtitle { color: var(--brown); margin-bottom: 32px; font-size: 13px; }
+.auth-card input[type=password] {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--border);
+  border-radius: 4px; font-size: 15px; background: var(--bone); color: var(--ink);
+  margin-bottom: 12px; outline: none; transition: border-color 0.2s;
+}
+.auth-card input[type=password]:focus { border-color: var(--brass); }
+.auth-error { color: var(--error); font-size: 12px; margin-top: 8px; min-height: 16px; }
+
+/* ---- APP SHELL ---- */
+#app { display: none; flex-direction: column; height: 100vh; overflow: hidden; }
+#app.visible { display: flex; }
+
+/* ---- HEADER ---- */
+header {
+  background: var(--brown); color: var(--bone);
+  display: flex; align-items: center; gap: 0; padding: 0 16px; height: 52px;
+  flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.2);
+  position: relative; z-index: 100;
+}
+.header-logo {
+  font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 20px;
+  color: var(--brass-dim); letter-spacing: 0.03em; margin-right: 24px; white-space: nowrap;
+}
+.tab-bar { display: flex; gap: 2px; }
+.tab-btn {
+  background: none; border: none; color: rgba(245,241,232,0.65);
+  font-size: 13px; padding: 6px 14px; border-radius: 4px; cursor: pointer;
+  transition: background 0.15s, color 0.15s; white-space: nowrap;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.08); color: var(--bone); }
+.tab-btn.active { background: rgba(168,133,75,0.25); color: var(--brass-dim); font-weight: 600; }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.hdr-btn {
+  background: none; border: 1px solid rgba(245,241,232,0.25); color: var(--bone);
+  font-size:12px; padding: 5px 12px; border-radius: 4px; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.hdr-btn:hover { background: rgba(255,255,255,0.08); }
+.hdr-btn.primary { background: var(--brass); border-color: var(--brass); color: white; font-weight: 600; }
+.hdr-btn.primary:hover { background: #96763e; }
+.hdr-btn:disabled { opacity: 0.4; cursor: default; }
+.undo-count {
+  display: inline-block; background: rgba(168,133,75,0.35); color: var(--brass-dim);
+  font-size: 10px; border-radius: 10px; padding: 0 5px; margin-left: 3px; min-width: 16px; text-align: center;
+}
+.save-indicator {
+  font-size: 11px; color: rgba(245,241,232,0.5); min-width: 60px; text-align: right; padding-right: 4px;
+}
+
+/* ---- MODE PANELS ---- */
+.mode-panel { display: none; flex: 1; overflow: hidden; }
+.mode-panel.active { display: flex; flex-direction: column; }
+
+/* ---- FORM MODE ---- */
+#mode-form { overflow-y: auto; padding: 24px; }
+.form-section { background: white; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 20px; overflow: hidden; }
+.form-section-header {
+  background: var(--parchment); padding: 10px 16px;
+  font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 17px;
+  color: var(--brown); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.form-body { padding: 16px; }
+.field-row { display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+.field-row:last-child { margin-bottom: 0; }
+.field-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 160px; }
+.field-group label { font-size: 11px; font-weight: 600; color: var(--brown); text-transform: uppercase; letter-spacing: 0.04em; }
+.field-group .word-count { font-size: 10px; color: var(--brass); margin-left: auto; }
+.field-label-row { display: flex; justify-content: space-between; align-items: center; }
+input[type=text], input[type=email], input[type=tel], input[type=number], input[type=password], textarea, select {
+  border: 1px solid var(--border); border-radius: 4px; padding: 7px 10px;
+  font-size: 13px; background: var(--bone); color: var(--ink); width: 100%;
+  font-family: inherit; outline: none; transition: border-color 0.2s;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--brass); background: white; }
+textarea { resize: vertical; min-height: 80px; }
+.money-wrap { position: relative; }
+.money-wrap span { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--brown); font-size: 12px; pointer-events: none; }
+.money-wrap input { padding-left: 22px; }
+
+/* ---- TABLES ---- */
+.admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.admin-table th {
+  text-align: left; padding: 6px 8px; font-size: 11px; font-weight: 600;
+  color: var(--brown); text-transform: uppercase; letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border); background: var(--parchment);
+}
+.admin-table td { padding: 4px 6px; border-bottom: 1px solid rgba(74,59,46,0.08); vertical-align: middle; }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table input { padding: 5px 8px; }
+.admin-table input[type=checkbox] { width: auto; }
+.tbl-del-btn {
+  background: none; border: 1px solid rgba(122,46,46,0.3); color: var(--error);
+  border-radius: 3px; padding: 3px 8px; cursor: pointer; font-size: 11px;
+  transition: background 0.15s;
+}
+.tbl-del-btn:hover { background: rgba(122,46,46,0.08); }
+.add-row-btn {
+  background: none; border: 1px dashed var(--border); color: var(--brown);
+  border-radius: 4px; padding: 6px 14px; cursor: pointer; font-size: 12px;
+  margin-top: 8px; width: 100%; transition: border-color 0.15s, color 0.15s;
+}
+.add-row-btn:hover { border-color: var(--brass); color: var(--brass); }
+
+/* ---- TOGGLE SWITCH ---- */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(74,59,46,0.08); }
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 13px; color: var(--ink); }
+.toggle-sub { font-size: 11px; color: var(--brown); }
+.switch { position: relative; display: inline-block; width: 38px; height: 20px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch-slider {
+  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(74,59,46,0.2); border-radius: 20px; transition: 0.2s;
+}
+.switch-slider:before {
+  content: ''; position: absolute; width: 14px; height: 14px; left: 3px; bottom: 3px;
+  background: white; border-radius: 50%; transition: 0.2s;
+}
+.switch input:checked + .switch-slider { background: var(--brass); }
+.switch input:checked + .switch-slider:before { transform: translateX(18px); }
+
+/* ---- DETAILS LIST ---- */
+.detail-item { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+.detail-item input { flex: 1; }
+
+/* ---- TIMMY MODE ---- */
+#mode-timmy { flex-direction: column; overflow: hidden; }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px;
+}
+.chat-bubble { max-width: 70%; padding: 10px 14px; border-radius: 12px; line-height: 1.5; font-size: 13px; }
+.bubble-user { align-self: flex-end; background: var(--brown); color: var(--bone); border-radius: 12px 12px 2px 12px; }
+.bubble-timmy { align-self: flex-start; background: white; color: var(--ink); border: 1px solid var(--border); border-radius: 12px 12px 12px 2px; }
+.bubble-timmy .bubble-name { font-size: 10px; font-weight: 600; color: var(--brass); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+.chat-input-bar {
+  border-top: 1px solid var(--border); padding: 12px 16px;
+  display: flex; gap: 10px; background: white; flex-shrink: 0;
+}
+.chat-input-bar textarea {
+  flex: 1; min-height: 42px; max-height: 120px; resize: none; padding: 10px 12px;
+  border-radius: 6px;
+}
+.send-btn {
+  background: var(--brass); color: white; border: none; border-radius: 6px;
+  padding: 0 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap; align-self: flex-end; height: 42px;
+}
+.send-btn:hover { background: #96763e; }
+.send-btn:disabled { opacity: 0.5; cursor: default; }
+.chat-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 16px; background: var(--parchment); border-bottom: 1px solid var(--border); font-size: 12px; flex-shrink: 0;
+}
+.chat-clear-btn {
+  background: none; border: 1px solid var(--border); color: var(--brown);
+  border-radius: 4px; padding: 3px 10px; cursor: pointer; font-size: 11px;
+}
+.chat-clear-btn:hover { border-color: var(--error); color: var(--error); }
+.spend-warning { background: #7a6020; color: #f5e9c0; padding: 6px 14px; font-size: 12px; border-radius: 4px; margin: 8px 16px 0; }
+
+/* ---- REVIEW CARDS ---- */
+.review-cards { background: var(--parchment); border-top: 1px solid var(--border); padding: 12px 16px; flex-shrink: 0; max-height: 280px; overflow-y: auto; }
+.review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.review-header span { font-size: 12px; font-weight: 600; color: var(--brown); }
+.apply-all-btn {
+  background: var(--ok); color: white; border: none; border-radius: 4px;
+  padding: 4px 12px; font-size: 12px; cursor: pointer;
+}
+.review-card {
+  background: white; border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 12px; margin-bottom: 8px;
+}
+.review-card:last-child { margin-bottom: 0; }
+.review-card-op { font-size: 10px; font-weight: 700; color: var(--brass); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.review-card-desc { font-size: 12px; color: var(--ink); margin-bottom: 8px; }
+.review-card-vals { font-size: 11px; color: var(--brown); font-family: monospace; margin-bottom: 8px; }
+.review-card-vals .old { color: var(--error); text-decoration: line-through; }
+.review-card-vals .new { color: var(--ok); }
+.review-card-actions { display: flex; gap: 8px; }
+.rc-apply { background: var(--ok); color: white; border: none; border-radius: 3px; padding: 4px 12px; font-size: 12px; cursor: pointer; }
+.rc-skip { background: none; border: 1px solid var(--border); color: var(--brown); border-radius: 3px; padding: 4px 12px; font-size: 12px; cursor: pointer; }
+
+/* ---- VISUAL MODE ---- */
+#mode-visual { flex-direction: column; }
+.visual-toolbar {
+  padding: 12px 16px; background: var(--parchment); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.visual-toolbar button {
+  background: none; border: 1px solid var(--border); color: var(--brown);
+  border-radius: 4px; padding: 5px 12px; font-size: 12px; cursor: pointer;
+}
+.visual-toolbar button:hover { border-color: var(--brass); color: var(--brass); }
+#preview-iframe { flex: 1; border: none; background: white; }
+.preview-loading { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--brown); }
+
+/* ---- MODALS ---- */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(43,34,27,0.55);
+  z-index: 500; display: flex; align-items: center; justify-content: center;
+}
+.modal-backdrop.hidden { display: none; }
+.modal {
+  background: white; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  max-height: 88vh; display: flex; flex-direction: column; overflow: hidden;
+  width: min(720px, 95vw);
+}
+.modal-header {
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.modal-header h2 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 20px; color: var(--ink); }
+.modal-close {
+  background: none; border: none; font-size: 20px; color: var(--brown);
+  cursor: pointer; padding: 0 4px; line-height: 1;
+}
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+.modal-footer {
+  padding: 12px 20px; border-top: 1px solid var(--border); display: flex;
+  justify-content: flex-end; gap: 10px; flex-shrink: 0;
+}
+
+/* ---- PHOTO LIBRARY ---- */
+.photo-tabs { display: flex; gap: 1px; margin-bottom: 16px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.photo-tab-btn {
+  flex: 1; background: var(--parchment); border: none; padding: 8px; cursor: pointer;
+  font-size: 13px; color: var(--brown); transition: background 0.15s;
+}
+.photo-tab-btn.active { background: white; color: var(--brass); font-weight: 600; }
+.drop-zone {
+  border: 2px dashed var(--border); border-radius: 8px; padding: 40px 20px;
+  text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  color: var(--brown); font-size: 13px;
+}
+.drop-zone.drag-over { border-color: var(--brass); background: rgba(168,133,75,0.05); }
+.drop-zone .dz-icon { font-size: 32px; margin-bottom: 8px; }
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.photo-card {
+  position: relative; border-radius: 6px; overflow: hidden; cursor: pointer;
+  border: 2px solid transparent; transition: border-color 0.15s;
+  background: var(--parchment);
+}
+.photo-card:hover { border-color: var(--brass-dim); }
+.photo-card.selected { border-color: var(--brass); }
+.photo-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+.photo-card .photo-caption {
+  padding: 4px 6px; font-size: 11px; color: var(--brown); background: white;
+  border-top: 1px solid var(--border);
+}
+.photo-caption input { border: none; background: none; font-size: 11px; color: var(--brown); width: 100%; padding: 0; outline: none; }
+.photo-caption input:focus { color: var(--ink); }
+.photo-delete {
+  position: absolute; top: 4px; right: 4px; background: rgba(122,46,46,0.85);
+  color: white; border: none; border-radius: 3px; padding: 2px 5px;
+  font-size: 11px; cursor: pointer; opacity: 0; transition: opacity 0.15s;
+}
+.photo-card:hover .photo-delete { opacity: 1; }
+.upload-progress { margin-top: 12px; }
+.progress-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; }
+.progress-bar-wrap { flex: 1; background: var(--border); border-radius: 3px; height: 6px; }
+.progress-bar { background: var(--brass); height: 6px; border-radius: 3px; transition: width 0.2s; }
+
+/* ---- PUBLISH MODAL ---- */
+.preflight-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid rgba(74,59,46,0.08); }
+.preflight-item:last-child { border-bottom: none; }
+.pf-icon { font-size: 16px; }
+.pf-icon.ok { color: var(--ok); }
+.pf-icon.fail { color: var(--error); }
+.commit-input { margin-top: 12px; }
+.commit-input label { font-size: 11px; font-weight: 600; color: var(--brown); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 4px; }
+.diff-summary { background: var(--parchment); border-radius: 4px; padding: 10px 12px; margin: 12px 0; font-size: 12px; color: var(--brown); }
+
+/* ---- VERSION HISTORY ---- */
+.version-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid rgba(74,59,46,0.08);
+}
+.version-item:last-child { border-bottom: none; }
+.version-meta { font-size: 12px; color: var(--brown); margin-top: 2px; }
+.restore-btn {
+  background: none; border: 1px solid var(--border); color: var(--brown);
+  border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer;
+}
+.restore-btn:hover { border-color: var(--brass); color: var(--brass); }
+
+/* ---- AUDIT LOG ---- */
+.audit-item { padding: 8px 0; border-bottom: 1px solid rgba(74,59,46,0.08); font-size: 12px; }
+.audit-item:last-child { border-bottom: none; }
+.audit-ts { font-size: 11px; color: var(--brown); margin-top: 2px; }
+
+/* ---- TOASTS ---- */
+#toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast {
+  background: var(--ink); color: var(--bone); padding: 10px 16px; border-radius: 6px;
+  font-size: 13px; box-shadow: var(--shadow); pointer-events: auto;
+  animation: slideIn 0.2s ease; max-width: 300px;
+}
+.toast.ok { background: var(--ok); }
+.toast.err { background: var(--error); }
+@keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* ---- SPINNER ---- */
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(168,133,75,0.3); border-top-color: var(--brass); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- MISC ---- */
+.btn { padding: 7px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary { background: var(--brass); color: white; border: none; font-weight: 600; }
+.btn-primary:hover { background: #96763e; }
+.btn-secondary { background: none; border: 1px solid var(--border); color: var(--brown); }
+.btn-secondary:hover { border-color: var(--brass); color: var(--brass); }
+.btn-danger { background: none; border: 1px solid rgba(122,46,46,0.35); color: var(--error); }
+.btn-danger:hover { background: rgba(122,46,46,0.06); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.loading-row { padding: 24px; text-align: center; color: var(--brown); }
+footer {
+  background: var(--parchment); border-top: 1px solid var(--border);
+  padding: 6px 16px; font-size: 11px; color: var(--brown); display: flex;
+  align-items: center; gap: 16px; flex-shrink: 0;
+}
+footer a { color: var(--brass); text-decoration: none; cursor: pointer; }
+footer a:hover { text-decoration: underline; }
+.manage-photos-btn {
+  background: none; border: 1px dashed var(--border); color: var(--brown);
+  border-radius: 4px; padding: 5px 12px; cursor: pointer; font-size: 12px; margin-top: 6px;
+}
+.manage-photos-btn:hover { border-color: var(--brass); color: var(--brass); }
+.pick-photo-btn {
+  background: none; border: 1px solid var(--border); color: var(--brown);
+  border-radius: 3px; padding: 3px 8px; font-size: 11px; cursor: pointer; margin-top: 4px;
+}
+.pick-photo-btn:hover { border-color: var(--brass); color: var(--brass); }
+.slot-preview { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.slot-preview img { width: 60px; height: 45px; object-fit: cover; border-radius: 3px; border: 1px solid var(--border); }
+.slot-preview .clear-slot { background: none; border: none; color: var(--error); cursor: pointer; font-size: 11px; }
+.multi-slot { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.multi-slot-item { position: relative; }
+.multi-slot-item img { width: 50px; height: 38px; object-fit: cover; border-radius: 3px; border: 1px solid var(--border); }
+.multi-slot-item button { position: absolute; top: -4px; right: -4px; background: var(--error); color: white; border: none; border-radius: 50%; width: 14px; height: 14px; font-size: 10px; line-height: 14px; cursor: pointer; padding: 0; }
+.tip { font-size: 11px; color: var(--brown); margin-top: 4px; font-style: italic; }
+.section-id-badge { font-size: 10px; font-family: monospace; color: var(--brass); background: rgba(168,133,75,0.1); padding: 1px 5px; border-radius: 3px; margin-left: 6px; }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <h1>Buckhorn Ranch</h1>
+    <p class="subtitle">Admin Panel</p>
+    <input type="password" id="passcode-input" placeholder="Passcode" autocomplete="current-password">
+    <button class="btn btn-primary" style="width:100%" id="login-btn">Sign In</button>
+    <div class="auth-error" id="auth-error"></div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app">
+  <header>
+    <div class="header-logo">Buckhorn</div>
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="timmy">Timmy</button>
+      <button class="tab-btn" data-tab="form">Form</button>
+      <button class="tab-btn" data-tab="visual">Visual</button>
+    </div>
+    <div class="header-right">
+      <span class="save-indicator" id="save-indicator"></span>
+      <button class="hdr-btn" id="undo-btn" disabled>Undo <span class="undo-count" id="undo-count">0</span></button>
+      <button class="hdr-btn" id="history-btn">History</button>
+      <button class="hdr-btn" id="preview-btn">Preview ↗</button>
+      <button class="hdr-btn primary" id="publish-btn">Publish</button>
+      <button class="hdr-btn" id="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <!-- TIMMY MODE -->
+  <div class="mode-panel active" id="mode-timmy">
+    <div class="chat-toolbar">
+      <span style="color:var(--brown);font-size:12px">Timmy · Ranch Manager AI</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div id="spend-warning-banner" style="display:none" class="spend-warning">Budget 80% used</div>
+        <button class="chat-clear-btn" id="clear-chat-btn">Clear conversation</button>
+      </div>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-bubble bubble-timmy">
+        <div class="bubble-name">Timmy</div>
+        Hey! I'm Timmy, your ranch manager assistant. Ask me to update pricing, tweak the about section, add exotic animals, or anything else on the Buckhorn Ranch website.
+      </div>
+    </div>
+    <div id="review-cards-container" style="display:none" class="review-cards">
+      <div class="review-header">
+        <span id="review-cards-title">Proposed Changes</span>
+        <button class="apply-all-btn" id="apply-all-btn">Apply All</button>
+      </div>
+      <div id="review-cards-list"></div>
+    </div>
+    <div class="chat-input-bar">
+      <textarea id="chat-input" placeholder="Ask Timmy to make changes…" rows="1"></textarea>
+      <button class="send-btn" id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <!-- FORM MODE -->
+  <div class="mode-panel" id="mode-form">
+    <div style="padding:12px 16px;background:var(--parchment);border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-shrink:0">
+      <span style="font-size:12px;color:var(--brown)">Edit all content fields</span>
+      <button class="manage-photos-btn" id="manage-photos-btn-top">Manage Photos</button>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:20px" id="form-scroll">
+      <!-- Dynamically rendered -->
+    </div>
+  </div>
+
+  <!-- VISUAL MODE -->
+  <div class="mode-panel" id="mode-visual">
+    <div class="visual-toolbar">
+      <button id="refresh-preview-btn">↺ Refresh Preview</button>
+      <button id="share-preview-btn">Share Link</button>
+      <span style="margin-left:auto;font-size:11px;color:var(--brown)" id="preview-url-display"></span>
+    </div>
+    <div id="preview-loading" class="preview-loading"><div class="spinner"></div></div>
+    <iframe id="preview-iframe" style="display:none"></iframe>
+  </div>
+
+  <footer>
+    <span>Timmy AI · Claude</span>
+    <a id="audit-log-link">Audit Log</a>
+    <a href="https://masecfc03-ui.github.io/buckhorn-ranch/" target="_blank" rel="noopener">View Public Site ↗</a>
+  </footer>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- PHOTO LIBRARY MODAL -->
+<div class="modal-backdrop hidden" id="photo-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Photo Library</h2>
+      <button class="modal-close" data-close="photo-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="photo-tabs">
+        <button class="photo-tab-btn active" data-photo-tab="upload">Upload</button>
+        <button class="photo-tab-btn" data-photo-tab="library">Library</button>
+      </div>
+      <div id="photo-tab-upload">
+        <div class="drop-zone" id="drop-zone">
+          <div class="dz-icon">📷</div>
+          <div>Drop photos here or <strong>click to browse</strong></div>
+          <div style="font-size:11px;color:var(--brass);margin-top:4px">JPEG / PNG / WebP — encoded to WebP at 4 sizes</div>
+          <input type="file" id="file-input" multiple accept="image/*" style="display:none">
+        </div>
+        <div class="upload-progress" id="upload-progress"></div>
+      </div>
+      <div id="photo-tab-library" style="display:none">
+        <div class="photo-grid" id="photo-grid"></div>
+        <div id="photo-grid-empty" style="display:none;padding:24px;text-align:center;color:var(--brown);font-size:13px">No photos uploaded yet.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="photo-modal">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLISH MODAL -->
+<div class="modal-backdrop hidden" id="publish-modal">
+  <div class="modal" style="width:min(500px,95vw)">
+    <div class="modal-header">
+      <h2>Publish</h2>
+      <button class="modal-close" data-close="publish-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="publish-preflight"></div>
+      <div class="diff-summary" id="publish-diff"></div>
+      <div class="commit-input">
+        <label>Commit message</label>
+        <input type="text" id="commit-message" placeholder="e.g. Update pricing — Aug 2026">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="publish-modal">Cancel</button>
+      <button class="btn btn-primary" id="confirm-publish-btn">Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="modal-backdrop hidden" id="history-modal">
+  <div class="modal" style="width:min(560px,95vw)">
+    <div class="modal-header">
+      <h2>Version History</h2>
+      <button class="modal-close" data-close="history-modal">×</button>
+    </div>
+    <div class="modal-body" id="history-body">
+      <div class="loading-row"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- AUDIT LOG MODAL -->
+<div class="modal-backdrop hidden" id="audit-modal">
+  <div class="modal" style="width:min(560px,95vw)">
+    <div class="modal-header">
+      <h2>Audit Log</h2>
+      <button class="modal-close" data-close="audit-modal">×</button>
+    </div>
+    <div class="modal-body" id="audit-body">
+      <div class="loading-row"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+let draft = null;
+let undoStack = [];
+const MAX_UNDO = 30;
+let saveTimer = null;
+let currentTab = 'timmy';
+let chatHistory = [];   // Anthropic messages format
+let currentPhotoSlot = null; // {type:'single'|'multi', key:'hero'|'trophyGallery'|'lodgeGallery'}
+let previewUrl = null;
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function getPath(obj, path) {
+  return path.split('.').reduce((cur, k) => (cur == null ? undefined : cur[k]), obj);
+}
+
+function setPath(obj, path, value) {
+  const keys = path.split('.');
+  let cur = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (cur[keys[i]] == null) cur[keys[i]] = {};
+    cur = cur[keys[i]];
+  }
+  cur[keys[keys.length - 1]] = value;
+}
+
+function wordCount(str) {
+  if (!str) return 0;
+  return str.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function randomHex(n) {
+  return Array.from(crypto.getRandomValues(new Uint8Array(n))).map(b => b.toString(16).padStart(2,'0')).join('').slice(0,n);
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  try { return new Date(iso).toLocaleString(); } catch { return iso; }
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function toast(msg, type='', dur=2800) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (type ? ' '+type : '');
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), dur);
+}
+
+/* ============================================================
+   API HELPERS
+   ============================================================ */
+async function api(method, path, body) {
+  const opts = { method, headers: {} };
+  if (body !== undefined) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  }
+  const res = await fetch(path, opts);
+  return res;
+}
+
+async function apiJson(method, path, body) {
+  const res = await api(method, path, body);
+  if (res.status === 401) { showLogin(); throw new Error('401'); }
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(txt || res.statusText);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+function showLogin() {
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app').classList.remove('visible');
+}
+
+function showApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+}
+
+document.getElementById('login-btn').addEventListener('click', doLogin);
+document.getElementById('passcode-input').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogin() {
+  const passcode = document.getElementById('passcode-input').value;
+  const errEl = document.getElementById('auth-error');
+  errEl.textContent = '';
+  try {
+    const res = await api('POST', '/auth', { passcode });
+    if (res.ok) {
+      await initApp();
+    } else {
+      errEl.textContent = 'Incorrect passcode.';
+    }
+  } catch (e) {
+    errEl.textContent = 'Connection error.';
+  }
+}
+
+document.getElementById('logout-btn').addEventListener('click', async () => {
+  await api('POST', '/auth/logout');
+  showLogin();
+  draft = null;
+  undoStack = [];
+  chatHistory = [];
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function initApp() {
+  try {
+    const res = await api('GET', '/api/draft');
+    if (res.status === 401) { showLogin(); return; }
+    draft = await res.json();
+    showApp();
+    renderForm();
+    loadChatHistory();
+  } catch (e) {
+    showLogin();
+  }
+}
+
+// Kick off auth check on load
+(async () => {
+  try {
+    const res = await api('GET', '/api/draft');
+    if (res.ok) {
+      draft = await res.json();
+      showApp();
+      renderForm();
+      loadChatHistory();
+    } else {
+      showLogin();
+    }
+  } catch {
+    showLogin();
+  }
+})();
+
+/* ============================================================
+   UNDO
+   ============================================================ */
+function pushUndo() {
+  undoStack.push(deepClone(draft));
+  if (undoStack.length > MAX_UNDO) undoStack.shift();
+  updateUndoBtn();
+}
+
+function updateUndoBtn() {
+  const btn = document.getElementById('undo-btn');
+  const cnt = document.getElementById('undo-count');
+  btn.disabled = undoStack.length === 0;
+  cnt.textContent = undoStack.length;
+}
+
+document.getElementById('undo-btn').addEventListener('click', applyUndo);
+
+function applyUndo() {
+  if (!undoStack.length) return;
+  draft = undoStack.pop();
+  updateUndoBtn();
+  renderForm();
+  scheduleSave();
+  toast('Undo applied');
+}
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+    e.preventDefault();
+    applyUndo();
+  }
+});
+
+/* ============================================================
+   AUTO-SAVE
+   ============================================================ */
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  document.getElementById('save-indicator').textContent = 'Saving…';
+  saveTimer = setTimeout(doSave, 2000);
+}
+
+async function doSave() {
+  try {
+    await apiJson('PUT', '/api/draft', draft);
+    document.getElementById('save-indicator').textContent = 'Saved ✓';
+    setTimeout(() => { document.getElementById('save-indicator').textContent = ''; }, 2000);
+  } catch (e) {
+    document.getElementById('save-indicator').textContent = '';
+    toast('Save failed: ' + e.message, 'err');
+  }
+}
+
+/* ============================================================
+   TAB SWITCHING
+   ============================================================ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    switchTab(tab);
+  });
+});
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('mode-' + tab).classList.add('active');
+  if (tab === 'visual') loadPreview();
+}
+
+/* ============================================================
+   FORM MODE
+   ============================================================ */
+function renderForm() {
+  if (!draft) return;
+  const el = document.getElementById('form-scroll');
+  el.innerHTML = buildFormHTML();
+  attachFormListeners();
+}
+
+function buildFormHTML() {
+  return `
+    ${buildSection('Ranch Info', buildRanchFields())}
+    ${buildSection('Contact', buildContactFields())}
+    ${buildSection('Lodging', buildLodgingFields())}
+    ${buildSection('Whitetail Tiers', buildWhitetailTable(), 'Add Tier', 'addWhitetailTier')}
+    ${buildSection('Exotics', buildExoticsTable(), 'Add Exotic', 'addExotic')}
+    ${buildSection('Wingshooting', buildWingshootingTable(), 'Add Hunt', 'addWingshooting')}
+    ${buildSection('Corporate', buildCorporateFields())}
+    ${buildSection('Terms', buildTermsFields())}
+    ${buildSection('Audio', buildAudioFields())}
+    ${buildSection('Photos & Slots', buildSlotsFields())}
+    ${buildSection('Section Visibility', buildSectionsToggle())}
+  `;
+}
+
+function buildSection(title, body, addLabel, addFn) {
+  const addBtn = addLabel ? `<button class="add-row-btn" data-addfn="${addFn}">+ ${addLabel}</button>` : '';
+  return `<div class="form-section">
+    <div class="form-section-header">${title}</div>
+    <div class="form-body">${body}${addBtn}</div>
+  </div>`;
+}
+
+function buildRanchFields() {
+  const r = draft.ranch;
+  const wc = wordCount(r.about.value);
+  const max = r.about.maxWords || 90;
+  return `
+    <div class="field-row">
+      <div class="field-group"><label>Ranch Name</label><input type="text" data-path="ranch.name.value" value="${esc(r.name.value)}"></div>
+      <div class="field-group"><label>Tagline</label><input type="text" data-path="ranch.tagline.value" value="${esc(r.tagline.value)}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field-group"><label>Location</label><input type="text" data-path="ranch.location.value" value="${esc(r.location.value)}"></div>
+      <div class="field-group"><label>Acreage</label><input type="text" data-path="ranch.acreage.value" value="${esc(r.acreage.value)}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label-row"><label>About / Intro</label><span class="word-count" id="wc-about">${wc}/${max} words</span></div>
+        <textarea data-path="ranch.about.value" data-wc="wc-about" data-maxwords="${max}" rows="4">${esc(r.about.value)}</textarea>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group"><label>Season Year</label><input type="text" data-path="meta.seasonYear" value="${esc(draft.meta.seasonYear)}"></div>
+    </div>
+  `;
+}
+
+function buildContactFields() {
+  const c = draft.contact;
+  return `
+    <div class="field-row">
+      <div class="field-group"><label>Contact Name</label><input type="text" data-path="contact.name.value" value="${esc(c.name.value)}"></div>
+      <div class="field-group"><label>Phone</label><input type="text" data-path="contact.phone.value" value="${esc(c.phone.value)}"></div>
+      <div class="field-group"><label>Email</label><input type="email" data-path="contact.email.value" value="${esc(c.email.value)}"></div>
+    </div>
+  `;
+}
+
+function buildLodgingFields() {
+  const l = draft.lodging;
+  return `
+    <div class="field-row">
+      <div class="field-group"><label>Per Hunter Rate ($/night pkg)</label>
+        <div class="money-wrap"><span>$</span><input type="number" data-path="lodging.hunterRate.value" value="${l.hunterRate.value || ''}"></div>
+      </div>
+      <div class="field-group"><label>Guest Rate</label>
+        <div class="money-wrap"><span>$</span><input type="number" data-path="lodging.guestRate.value" value="${l.guestRate.value || ''}"></div>
+      </div>
+      <div class="field-group"><label>Lodge Sleeps</label>
+        <input type="number" data-path="lodging.sleeps.value" value="${esc(l.sleeps.value)}">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group"><label>Lodging Inclusion Note</label><input type="text" data-path="lodging.inclusionNote.value" value="${esc(l.inclusionNote.value)}"></div>
+    </div>
+  `;
+}
+
+function buildWhitetailTable() {
+  const rows = draft.whitetailTiers.map((t, i) => `
+    <tr>
+      <td><input type="text" data-array="whitetailTiers" data-idx="${i}" data-field="scoreRange.value" value="${esc(t.scoreRange.value)}"></td>
+      <td><div class="money-wrap"><span>$</span><input type="number" data-array="whitetailTiers" data-idx="${i}" data-field="fee.value" value="${t.fee.value || ''}"></div></td>
+      <td><button class="tbl-del-btn" data-delarray="whitetailTiers" data-delidx="${i}">✕</button></td>
+    </tr>
+  `).join('');
+  return `<table class="admin-table"><thead><tr><th>Score Range</th><th>Fee</th><th></th></tr></thead><tbody id="tbl-whitetail">${rows}</tbody></table>`;
+}
+
+function buildExoticsTable() {
+  const rows = draft.exotics.map((ex, i) => `
+    <tr>
+      <td><input type="text" data-array="exotics" data-idx="${i}" data-field="animal.value" value="${esc(ex.animal.value)}"></td>
+      <td><input type="text" data-array="exotics" data-idx="${i}" data-field="sci.value" value="${esc(ex.sci.value)}"></td>
+      <td><div class="money-wrap"><span>$</span><input type="number" data-array="exotics" data-idx="${i}" data-field="fee.value" value="${ex.fee.value || ''}"></div></td>
+      <td style="text-align:center"><input type="checkbox" data-array="exotics" data-idx="${i}" data-field="onRequest" ${ex.onRequest ? 'checked' : ''}></td>
+      <td><input type="text" data-array="exotics" data-idx="${i}" data-field="note.value" value="${esc(ex.note.value)}"></td>
+      <td><button class="tbl-del-btn" data-delarray="exotics" data-delidx="${i}">✕</button></td>
+    </tr>
+  `).join('');
+  return `<table class="admin-table"><thead><tr><th>Animal</th><th>SCI</th><th>Fee</th><th>On Request</th><th>Note</th><th></th></tr></thead><tbody id="tbl-exotics">${rows}</tbody></table>`;
+}
+
+function buildWingshootingTable() {
+  const rows = draft.wingshooting.map((ws, i) => `
+    <tr>
+      <td><input type="text" data-array="wingshooting" data-idx="${i}" data-field="hunt.value" value="${esc(ws.hunt.value)}"></td>
+      <td><input type="text" data-array="wingshooting" data-idx="${i}" data-field="season.value" value="${esc(ws.season.value)}"></td>
+      <td><div class="money-wrap"><span>$</span><input type="number" data-array="wingshooting" data-idx="${i}" data-field="fee.value" value="${ws.fee.value || ''}"></div></td>
+      <td><input type="text" data-array="wingshooting" data-idx="${i}" data-field="unit" value="${esc(ws.unit || '')}"></td>
+      <td><input type="text" data-array="wingshooting" data-idx="${i}" data-field="note.value" value="${esc(ws.note.value)}"></td>
+      <td><button class="tbl-del-btn" data-delarray="wingshooting" data-delidx="${i}">✕</button></td>
+    </tr>
+  `).join('');
+  return `<table class="admin-table"><thead><tr><th>Hunt</th><th>Season</th><th>Fee</th><th>Unit</th><th>Note</th><th></th></tr></thead><tbody id="tbl-wingshooting">${rows}</tbody></table>`;
+}
+
+function buildCorporateFields() {
+  const co = draft.corporate;
+  const wc = wordCount(co.body.value);
+  const max = co.body.maxWords || 70;
+  return `
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label-row"><label>Body</label><span class="word-count" id="wc-corp">${wc}/${max} words</span></div>
+        <textarea data-path="corporate.body.value" data-wc="wc-corp" data-maxwords="${max}" rows="4">${esc(co.body.value)}</textarea>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Capacity (guns)</label>
+        <input type="number" data-path="corporate.capacity.value" value="${esc(co.capacity.value)}">
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label style="font-size:11px;font-weight:600;color:var(--brown);text-transform:uppercase;letter-spacing:0.04em">Details List</label>
+      <div id="details-list" style="margin-top:8px">${buildDetailItems()}</div>
+      <button class="add-row-btn" data-addfn="addDetail" style="margin-top:6px">+ Add Detail</button>
+    </div>
+  `;
+}
+
+function buildDetailItems() {
+  return draft.corporate.details.map((d, i) => `
+    <div class="detail-item" data-detail-idx="${i}">
+      <input type="text" data-array="corporate.details" data-idx="${i}" data-field="value" value="${esc(d.value)}">
+      <button class="tbl-del-btn" data-delarray="corporate.details" data-delidx="${i}">✕</button>
+    </div>
+  `).join('');
+}
+
+function buildTermsFields() {
+  const t = draft.terms;
+  return `
+    <div class="field-row">
+      <div class="field-group">
+        <label>Terms (shown on site)</label>
+        <textarea data-path="terms.body.value" rows="5">${esc(t.body.value)}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+function buildAudioFields() {
+  const a = draft.audio;
+  return `
+    <div class="toggle-row">
+      <div><div class="toggle-label">Enable ambient audio</div></div>
+      <label class="switch"><input type="checkbox" data-path="audio.enabled" ${a.enabled ? 'checked' : ''}><span class="switch-slider"></span></label>
+    </div>
+    <div class="field-row" style="margin-top:10px">
+      <div class="field-group"><label>Audio File Path</label><input type="text" data-path="audio.file" value="${esc(a.file || '')}"><p class="tip">e.g. audio/ambient.mp3</p></div>
+    </div>
+  `;
+}
+
+function buildSlotsFields() {
+  const s = draft.slots;
+  const heroPhoto = draft.photos.find(p => p.photoId === s.hero.photoId);
+  const trophyPhotos = (s.trophyGallery.photoIds || []).map(id => draft.photos.find(p => p.photoId === id)).filter(Boolean);
+  const lodgePhotos = (s.lodgeGallery.photoIds || []).map(id => draft.photos.find(p => p.photoId === id)).filter(Boolean);
+
+  const heroPreview = heroPhoto
+    ? `<div class="slot-preview"><img src="img/${heroPhoto.photoId}-480.webp" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="hero">✕ Remove</button></div>`
+    : `<p class="tip">No photo selected</p>`;
+
+  const trophyMulti = `<div class="multi-slot" id="multi-trophy">${trophyPhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="trophyGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const lodgeMulti = `<div class="multi-slot" id="multi-lodge">${lodgePhotos.map(p => `<div class="multi-slot-item"><img src="img/${p.photoId}-480.webp" onerror="this.style.display='none'"><button data-removemulti="lodgeGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+
+  return `
+    <div class="field-row" style="flex-direction:column;gap:16px">
+      <div class="field-group">
+        <label>Hero Photo</label>
+        ${heroPreview}
+        <button class="pick-photo-btn" data-pickslot="hero">Pick Hero Photo</button>
+      </div>
+      <div class="field-group">
+        <label>Trophy Gallery</label>
+        ${trophyMulti}
+        <button class="pick-photo-btn" data-pickslot="trophyGallery">Add Trophy Photo</button>
+      </div>
+      <div class="field-group">
+        <label>Lodge Gallery</label>
+        ${lodgeMulti}
+        <button class="pick-photo-btn" data-pickslot="lodgeGallery">Add Lodge Photo</button>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <button class="manage-photos-btn" data-addfn="openPhotoLibrary">Manage All Photos</button>
+    </div>
+  `;
+}
+
+function buildSectionsToggle() {
+  const sectionLabels = {
+    'sec-hero': 'Hero Banner',
+    'sec-ranch': 'Ranch / About',
+    'sec-trophies': 'Trophy Gallery',
+    'sec-lodge': 'Lodge Gallery',
+    'sec-corporate': 'Corporate / Group Hunts',
+    'sec-pricing': 'Pricing Tables',
+    'sec-terms': 'Terms & Conditions',
+    'sec-contact': 'Contact'
+  };
+  return draft.sections.map(sec => `
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">${sectionLabels[sec.id] || sec.id}<span class="section-id-badge">${sec.id}</span></div>
+        <div class="toggle-sub">${sec.type}</div>
+      </div>
+      <label class="switch"><input type="checkbox" data-section-id="${sec.id}" ${sec.visible ? 'checked' : ''}><span class="switch-slider"></span></label>
+    </div>
+  `).join('');
+}
+
+function esc(v) {
+  if (v == null) return '';
+  return String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ============================================================
+   FORM LISTENERS
+   ============================================================ */
+function attachFormListeners() {
+  const form = document.getElementById('form-scroll');
+
+  // Generic path inputs (text/number/textarea)
+  form.querySelectorAll('[data-path]').forEach(el => {
+    const event = el.type === 'checkbox' ? 'change' : 'input';
+    el.addEventListener(event, () => {
+      pushUndo();
+      if (el.type === 'checkbox') {
+        setPath(draft, el.dataset.path, el.checked);
+      } else {
+        const v = el.type === 'number' ? (el.value === '' ? null : Number(el.value)) : el.value;
+        setPath(draft, el.dataset.path, v);
+      }
+      // Word count update
+      if (el.dataset.wc) {
+        const max = Number(el.dataset.maxwords);
+        const wc = wordCount(el.value);
+        document.getElementById(el.dataset.wc).textContent = `${wc}/${max} words`;
+        document.getElementById(el.dataset.wc).style.color = wc > max ? 'var(--error)' : 'var(--brass)';
+      }
+      scheduleSave();
+    });
+  });
+
+  // Array field inputs
+  form.querySelectorAll('[data-array]').forEach(el => {
+    const event = el.type === 'checkbox' ? 'change' : 'input';
+    el.addEventListener(event, () => {
+      pushUndo();
+      const arrPath = el.dataset.array;
+      const idx = Number(el.dataset.idx);
+      const field = el.dataset.field;
+      const arr = arrPath.includes('.') ? getPath(draft, arrPath) : draft[arrPath];
+      const row = arr[idx];
+      // Handle nested field paths like "scoreRange.value"
+      if (field.includes('.')) {
+        const parts = field.split('.');
+        let cur = row;
+        for (let i = 0; i < parts.length - 1; i++) cur = cur[parts[i]];
+        if (el.type === 'checkbox') {
+          cur[parts[parts.length-1]] = el.checked;
+        } else {
+          cur[parts[parts.length-1]] = el.type === 'number' ? (el.value === '' ? null : Number(el.value)) : el.value;
+        }
+      } else {
+        if (el.type === 'checkbox') {
+          row[field] = el.checked;
+        } else {
+          row[field] = el.type === 'number' ? (el.value === '' ? null : Number(el.value)) : el.value;
+        }
+      }
+      scheduleSave();
+    });
+  });
+
+  // Delete row buttons
+  form.querySelectorAll('[data-delarray]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pushUndo();
+      const arrPath = btn.dataset.delarray;
+      const idx = Number(btn.dataset.delidx);
+      const arr = arrPath.includes('.') ? getPath(draft, arrPath) : draft[arrPath];
+      arr.splice(idx, 1);
+      renderForm();
+      scheduleSave();
+    });
+  });
+
+  // Add row buttons
+  form.querySelectorAll('[data-addfn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fn = btn.dataset.addfn;
+      if (fn === 'addWhitetailTier') addWhitetailTier();
+      else if (fn === 'addExotic') addExotic();
+      else if (fn === 'addWingshooting') addWingshooting();
+      else if (fn === 'addDetail') addDetail();
+      else if (fn === 'openPhotoLibrary') openPhotoModal(null);
+    });
+  });
+
+  // Section toggles
+  form.querySelectorAll('[data-section-id]').forEach(el => {
+    el.addEventListener('change', () => {
+      pushUndo();
+      const sec = draft.sections.find(s => s.id === el.dataset.sectionId);
+      if (sec) sec.visible = el.checked;
+      scheduleSave();
+    });
+  });
+
+  // Clear slot
+  form.querySelectorAll('[data-clearslot]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pushUndo();
+      draft.slots[btn.dataset.clearslot].photoId = '';
+      renderForm();
+      scheduleSave();
+    });
+  });
+
+  // Remove multi-slot photo
+  form.querySelectorAll('[data-removemulti]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pushUndo();
+      const slot = btn.dataset.removemulti;
+      const pid = btn.dataset.photoid;
+      const ids = draft.slots[slot].photoIds || [];
+      draft.slots[slot].photoIds = ids.filter(id => id !== pid);
+      renderForm();
+      scheduleSave();
+    });
+  });
+
+  // Pick photo buttons
+  form.querySelectorAll('[data-pickslot]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const slot = btn.dataset.pickslot;
+      openPhotoModal(slot);
+    });
+  });
+}
+
+function addWhitetailTier() {
+  pushUndo();
+  const id = 'wt-' + (Date.now());
+  draft.whitetailTiers.push({ id, scoreRange: { value: '', type: 'text' }, fee: { value: null, type: 'money' } });
+  renderForm();
+  scheduleSave();
+}
+
+function addExotic() {
+  pushUndo();
+  const id = 'ex-' + Date.now();
+  draft.exotics.push({ id, animal: { value: '', type: 'text' }, sci: { value: '', type: 'text' }, fee: { value: null, type: 'money' }, onRequest: false, note: { value: '', type: 'text' } });
+  renderForm();
+  scheduleSave();
+}
+
+function addWingshooting() {
+  pushUndo();
+  const id = 'ws-' + Date.now();
+  draft.wingshooting.push({ id, hunt: { value: '', type: 'text' }, season: { value: '', type: 'dateRange' }, fee: { value: null, type: 'money' }, unit: '/hunter', note: { value: '', type: 'text' } });
+  renderForm();
+  scheduleSave();
+}
+
+function addDetail() {
+  pushUndo();
+  const id = 'cd-' + Date.now();
+  draft.corporate.details.push({ id, value: '', type: 'text' });
+  renderForm();
+  scheduleSave();
+}
+
+document.getElementById('manage-photos-btn-top').addEventListener('click', () => openPhotoModal(null));
+
+/* ============================================================
+   PHOTO LIBRARY MODAL
+   ============================================================ */
+function openPhotoModal(slotKey) {
+  currentPhotoSlot = slotKey;
+  const modal = document.getElementById('photo-modal');
+  modal.classList.remove('hidden');
+  switchPhotoTab('upload');
+  renderPhotoGrid();
+}
+
+function switchPhotoTab(tab) {
+  document.querySelectorAll('.photo-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.photoTab === tab));
+  document.getElementById('photo-tab-upload').style.display = tab === 'upload' ? '' : 'none';
+  document.getElementById('photo-tab-library').style.display = tab === 'library' ? '' : 'none';
+}
+
+document.querySelectorAll('.photo-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchPhotoTab(btn.dataset.photoTab));
+});
+
+function renderPhotoGrid() {
+  const grid = document.getElementById('photo-grid');
+  const empty = document.getElementById('photo-grid-empty');
+  const photos = draft.photos || [];
+  if (!photos.length) {
+    grid.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.innerHTML = photos.map(p => {
+    const caption = (p.metadata && p.metadata.caption) || '';
+    const selected = currentPhotoSlot && (
+      (draft.slots[currentPhotoSlot].photoId === p.photoId) ||
+      ((draft.slots[currentPhotoSlot].photoIds || []).includes(p.photoId))
+    );
+    return `<div class="photo-card ${selected ? 'selected' : ''}" data-photoid="${p.photoId}">
+      <img src="img/${p.photoId}-480.webp" onerror="this.src=''" alt="">
+      <button class="photo-delete" data-deletephoto="${p.photoId}">🗑</button>
+      <div class="photo-caption"><input type="text" placeholder="Caption…" value="${esc(caption)}" data-captionfor="${p.photoId}"></div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.photo-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('.photo-delete') || e.target.closest('.photo-caption input')) return;
+      selectPhotoFromLibrary(card.dataset.photoid);
+    });
+  });
+
+  grid.querySelectorAll('[data-captionfor]').forEach(input => {
+    input.addEventListener('change', () => {
+      const pid = input.dataset.captionfor;
+      const photo = draft.photos.find(p => p.photoId === pid);
+      if (photo) {
+        if (!photo.metadata) photo.metadata = {};
+        photo.metadata.caption = input.value;
+        scheduleSave();
+      }
+    });
+  });
+
+  grid.querySelectorAll('[data-deletephoto]').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const pid = btn.dataset.deletephoto;
+      if (!confirm('Delete this photo?')) return;
+      try {
+        await apiJson('DELETE', `/api/images/${pid}`);
+        draft.photos = draft.photos.filter(p => p.photoId !== pid);
+        // Remove from all slots
+        if (draft.slots.hero.photoId === pid) draft.slots.hero.photoId = '';
+        ['trophyGallery','lodgeGallery'].forEach(k => {
+          if (draft.slots[k].photoIds) draft.slots[k].photoIds = draft.slots[k].photoIds.filter(id => id !== pid);
+        });
+        renderPhotoGrid();
+        renderForm();
+        scheduleSave();
+        toast('Photo deleted');
+      } catch (e) {
+        toast('Delete failed: ' + e.message, 'err');
+      }
+    });
+  });
+}
+
+function selectPhotoFromLibrary(photoId) {
+  if (!currentPhotoSlot) return;
+  pushUndo();
+  const slotObj = draft.slots[currentPhotoSlot];
+  if ('photoId' in slotObj) {
+    slotObj.photoId = photoId;
+  } else if ('photoIds' in slotObj) {
+    if (!slotObj.photoIds.includes(photoId)) slotObj.photoIds.push(photoId);
+  }
+  renderPhotoGrid();
+  renderForm();
+  scheduleSave();
+  toast('Photo assigned to slot');
+}
+
+// Drag and drop
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag-over');
+  handleFileUpload(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+});
+fileInput.addEventListener('change', () => {
+  handleFileUpload(Array.from(fileInput.files));
+  fileInput.value = '';
+});
+
+async function handleFileUpload(files) {
+  if (!files.length) return;
+  const prog = document.getElementById('upload-progress');
+  prog.innerHTML = '';
+
+  for (const file of files) {
+    const photoId = `photo-${Date.now()}-${randomHex(6)}`;
+    const item = document.createElement('div');
+    item.className = 'progress-item';
+    item.innerHTML = `<span style="flex:0 0 120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(file.name)}</span>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="pb-${photoId}" style="width:0%"></div></div>
+      <span id="ps-${photoId}" style="flex:0 0 60px;text-align:right;font-size:11px">Processing</span>`;
+    prog.appendChild(item);
+
+    try {
+      const renditions = await processImageToWebP(file, photoId);
+      document.getElementById(`ps-${photoId}`).textContent = 'Uploading…';
+      document.getElementById(`pb-${photoId}`).style.width = '60%';
+
+      const payload = {
+        photoId,
+        filename: file.name,
+        renditions,
+        metadata: {}
+      };
+      await apiJson('POST', '/api/images/upload', payload);
+      draft.photos.push({ photoId, filename: file.name, metadata: {} });
+      document.getElementById(`pb-${photoId}`).style.width = '100%';
+      document.getElementById(`ps-${photoId}`).textContent = '✓ Done';
+      renderPhotoGrid();
+      scheduleSave();
+    } catch (e) {
+      document.getElementById(`ps-${photoId}`).textContent = '✕ Error';
+      document.getElementById(`ps-${photoId}`).style.color = 'var(--error)';
+      toast('Upload failed for ' + file.name + ': ' + e.message, 'err');
+    }
+  }
+}
+
+const RENDITION_WIDTHS = [480, 960, 1600, 2400];
+
+async function processImageToWebP(file, photoId) {
+  const bitmap = await createImageBitmap(file);
+  const renditions = [];
+  const pbEl = document.getElementById('pb-' + photoId);
+  const psEl = document.getElementById('ps-' + photoId);
+
+  for (let wi = 0; wi < RENDITION_WIDTHS.length; wi++) {
+    const w = RENDITION_WIDTHS[wi];
+    if (bitmap.width < w && wi > 0) break; // skip sizes larger than original (keep at least one)
+    const aspect = bitmap.height / bitmap.width;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.min(w, bitmap.width);
+    canvas.height = Math.round(canvas.width * aspect);
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/webp', 0.88));
+    const data = await blobToBase64(blob);
+    renditions.push({ width: canvas.width, data, ext: 'webp' });
+    if (pbEl) pbEl.style.width = `${Math.round((wi + 1) / RENDITION_WIDTHS.length * 55)}%`;
+    if (psEl) psEl.textContent = `${wi+1}/${RENDITION_WIDTHS.length}`;
+  }
+  return renditions;
+}
+
+function blobToBase64(blob) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onloadend = () => res(reader.result.split(',')[1]);
+    reader.onerror = rej;
+    reader.readAsDataURL(blob);
+  });
+}
+
+/* ============================================================
+   TIMMY MODE
+   ============================================================ */
+async function loadChatHistory() {
+  try {
+    const data = await apiJson('GET', '/api/timmy-history');
+    if (data && Array.isArray(data.messages)) {
+      chatHistory = data.messages;
+      renderChatHistory();
+    }
+  } catch { /* ignore */ }
+}
+
+function renderChatHistory() {
+  const container = document.getElementById('chat-messages');
+  const existing = container.querySelector('.chat-bubble.bubble-timmy:first-child');
+  // Clear and re-render
+  container.innerHTML = `<div class="chat-bubble bubble-timmy"><div class="bubble-name">Timmy</div>Hey! I'm Timmy, your ranch manager assistant. Ask me to update pricing, tweak the about section, add exotic animals, or anything else on the Buckhorn Ranch website.</div>`;
+  for (const msg of chatHistory) {
+    if (msg.role === 'user') {
+      appendBubble('user', typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content));
+    } else if (msg.role === 'assistant') {
+      const content = typeof msg.content === 'string' ? msg.content : (msg.content[0]?.text || '');
+      displayTimmyResponse(content, false);
+    }
+  }
+}
+
+function appendBubble(role, text) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-bubble ' + (role === 'user' ? 'bubble-user' : 'bubble-timmy');
+  if (role === 'assistant') {
+    div.innerHTML = '<div class="bubble-name">Timmy</div>' + escHtml(text);
+  } else {
+    div.textContent = text;
+  }
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+document.getElementById('send-btn').addEventListener('click', sendChat);
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+});
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || !draft) return;
+  input.value = '';
+  input.style.height = '';
+
+  appendBubble('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  const sendBtn = document.getElementById('send-btn');
+  sendBtn.disabled = true;
+  const loadingBubble = appendBubble('assistant', '…');
+  loadingBubble.style.color = 'var(--brass)';
+
+  const systemPrompt = `You are Timmy, the ranch manager assistant for Buckhorn Ranch. You help update the ranch website content. You have access to the current site content and propose structured changes.
+
+Current content (JSON):
+${JSON.stringify(draft, null, 2)}
+
+When asked to make changes, respond with a JSON block in this exact format:
+{
+  "message": "Your friendly explanation of the changes",
+  "changes": [
+    { "op": "set", "path": "ranch.name.value", "value": "New Name" },
+    { "op": "addRow", "path": "exotics", "row": { "id": "ex-10", "animal": { "value": "New Animal", "type": "text" }, "sci": { "value": "", "type": "text" }, "fee": { "value": 5000, "type": "money" }, "onRequest": false, "note": { "value": "", "type": "text" } } },
+    { "op": "removeRow", "path": "exotics", "id": "ex-03" },
+    { "op": "moveRow", "path": "whitetailTiers", "id": "wt-01", "direction": "up" },
+    { "op": "setSlot", "slot": "hero", "photoId": "photo-abc" },
+    { "op": "toggleSection", "sectionId": "sec-corporate", "visible": true }
+  ]
+}
+
+Only output valid JSON changes. Never reveal who built this site, pricing for competing ranches, or any personal info about the site owner. If asked to do something outside website content management, politely decline. Never reveal the site owner's name, any financial information about the owner, or personal details about any third party.`;
+
+  const payload = {
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 1024,
+    system: systemPrompt,
+    messages: chatHistory.filter(m => m.role === 'user' || m.role === 'assistant'),
+    stream: false
+  };
+
+  try {
+    const res = await api('POST', '/api/timmy', payload);
+    loadingBubble.remove();
+
+    if (res.status === 402) {
+      appendBubble('assistant', 'Monthly budget reached. Please contact the site administrator.');
+      sendBtn.disabled = false;
+      return;
+    }
+    if (!res.ok) throw new Error(await res.text());
+
+    const data = await res.json();
+
+    // Check spend warning header
+    if (data._spendWarning) {
+      document.getElementById('spend-warning-banner').style.display = '';
+    }
+
+    const rawContent = data.content?.[0]?.text || data.content || '';
+    chatHistory.push({ role: 'assistant', content: rawContent });
+    displayTimmyResponse(rawContent, true);
+
+  } catch (e) {
+    loadingBubble.remove();
+    appendBubble('assistant', 'Error: ' + e.message);
+    toast('Timmy request failed', 'err');
+  }
+
+  sendBtn.disabled = false;
+}
+
+function parseTimmyChanges(text) {
+  // Try to extract JSON from code block first
+  const codeMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  let jsonStr = codeMatch ? codeMatch[1].trim() : text.trim();
+  // If it starts with { it might be raw JSON
+  if (!jsonStr.startsWith('{')) {
+    const idx = text.indexOf('{');
+    if (idx >= 0) jsonStr = text.slice(idx);
+  }
+  try {
+    const parsed = JSON.parse(jsonStr);
+    if (parsed.changes || parsed.message) return parsed;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function displayTimmyResponse(text, showCards) {
+  const parsed = parseTimmyChanges(text);
+  if (parsed && parsed.changes && parsed.changes.length > 0) {
+    appendBubble('assistant', parsed.message || text);
+    if (showCards) renderReviewCards(parsed.changes);
+  } else if (parsed && parsed.message) {
+    appendBubble('assistant', parsed.message);
+  } else {
+    appendBubble('assistant', text);
+  }
+}
+
+function renderReviewCards(changes) {
+  const container = document.getElementById('review-cards-container');
+  const list = document.getElementById('review-cards-list');
+  const title = document.getElementById('review-cards-title');
+  title.textContent = `${changes.length} Proposed Change${changes.length !== 1 ? 's' : ''}`;
+  list.innerHTML = '';
+
+  const pendingChanges = [...changes];
+
+  container.style.display = '';
+
+  pendingChanges.forEach((change, i) => {
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    card.dataset.changeIdx = i;
+
+    const oldVal = getOldValueForChange(change);
+    const newVal = getNewValueForChange(change);
+
+    card.innerHTML = `
+      <div class="review-card-op">${change.op}</div>
+      <div class="review-card-desc">${describeChange(change)}</div>
+      ${oldVal !== null ? `<div class="review-card-vals"><span class="old">${esc(String(oldVal))}</span> → <span class="new">${esc(String(newVal))}</span></div>` : ''}
+      <div class="review-card-actions">
+        <button class="rc-apply" data-change-idx="${i}">✓ Apply</button>
+        <button class="rc-skip" data-change-idx="${i}">✗ Skip</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  list.querySelectorAll('.rc-apply').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.changeIdx);
+      applySingleChange(pendingChanges[idx]);
+      btn.closest('.review-card').remove();
+      if (!list.children.length) container.style.display = 'none';
+    });
+  });
+
+  list.querySelectorAll('.rc-skip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.review-card').remove();
+      if (!list.children.length) container.style.display = 'none';
+    });
+  });
+
+  document.getElementById('apply-all-btn').onclick = () => {
+    pendingChanges.forEach(c => applySingleChange(c));
+    container.style.display = 'none';
+    list.innerHTML = '';
+    toast('All changes applied');
+  };
+}
+
+function describeChange(change) {
+  switch (change.op) {
+    case 'set': return `Set <code>${change.path}</code>`;
+    case 'addRow': return `Add row to <code>${change.path}</code>`;
+    case 'removeRow': return `Remove row <code>${change.id}</code> from <code>${change.path}</code>`;
+    case 'moveRow': return `Move <code>${change.id}</code> ${change.direction} in <code>${change.path}</code>`;
+    case 'setSlot': return `Set <code>${change.slot}</code> slot photo`;
+    case 'toggleSection': return `${change.visible ? 'Show' : 'Hide'} section <code>${change.sectionId}</code>`;
+    default: return JSON.stringify(change);
+  }
+}
+
+function getOldValueForChange(change) {
+  if (change.op === 'set') {
+    try { return getPath(draft, change.path); } catch { return null; }
+  }
+  return null;
+}
+
+function getNewValueForChange(change) {
+  if (change.op === 'set') return change.value;
+  if (change.op === 'addRow') return '[new row]';
+  if (change.op === 'removeRow') return '[removed]';
+  if (change.op === 'toggleSection') return change.visible ? 'visible' : 'hidden';
+  return null;
+}
+
+function applySingleChange(change) {
+  pushUndo();
+  try {
+    switch (change.op) {
+      case 'set':
+        setPath(draft, change.path, change.value);
+        break;
+      case 'addRow':
+        if (draft[change.path]) draft[change.path].push(change.row);
+        break;
+      case 'removeRow': {
+        const arr = draft[change.path];
+        if (arr) { const idx = arr.findIndex(r => r.id === change.id); if (idx >= 0) arr.splice(idx, 1); }
+        break;
+      }
+      case 'moveRow': {
+        const arr = draft[change.path];
+        if (arr) {
+          const idx = arr.findIndex(r => r.id === change.id);
+          if (idx >= 0) {
+            const newIdx = change.direction === 'up' ? idx - 1 : idx + 1;
+            if (newIdx >= 0 && newIdx < arr.length) {
+              [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+            }
+          }
+        }
+        break;
+      }
+      case 'setSlot':
+        if (draft.slots[change.slot]) draft.slots[change.slot].photoId = change.photoId;
+        break;
+      case 'toggleSection': {
+        const sec = draft.sections.find(s => s.id === change.sectionId);
+        if (sec) sec.visible = change.visible;
+        break;
+      }
+    }
+    if (currentTab === 'form') renderForm();
+    scheduleSave();
+  } catch (e) {
+    toast('Failed to apply change: ' + e.message, 'err');
+  }
+}
+
+// Clear conversation
+document.getElementById('clear-chat-btn').addEventListener('click', async () => {
+  if (!confirm('Clear conversation history?')) return;
+  try {
+    await api('DELETE', '/api/timmy-history');
+    chatHistory = [];
+    document.getElementById('chat-messages').innerHTML = `<div class="chat-bubble bubble-timmy"><div class="bubble-name">Timmy</div>Conversation cleared. How can I help?</div>`;
+    document.getElementById('review-cards-container').style.display = 'none';
+    toast('Conversation cleared');
+  } catch (e) {
+    toast('Failed to clear: ' + e.message, 'err');
+  }
+});
+
+// Auto-resize textarea
+document.getElementById('chat-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+/* ============================================================
+   VISUAL MODE
+   ============================================================ */
+async function loadPreview() {
+  const loading = document.getElementById('preview-loading');
+  const iframe = document.getElementById('preview-iframe');
+  loading.style.display = 'flex';
+  iframe.style.display = 'none';
+
+  try {
+    const data = await apiJson('POST', '/api/preview-token', {});
+    if (data && data.url) {
+      previewUrl = data.url;
+      document.getElementById('preview-url-display').textContent = data.url;
+      iframe.src = data.url;
+      iframe.onload = () => {
+        loading.style.display = 'none';
+        iframe.style.display = '';
+      };
+      iframe.onerror = () => {
+        loading.innerHTML = '<div style="color:var(--error)">Preview failed to load.</div>';
+      };
+    } else {
+      loading.innerHTML = '<div style="color:var(--brown)">Preview not available.</div>';
+    }
+  } catch (e) {
+    loading.innerHTML = `<div style="color:var(--brown)">Preview unavailable: ${escHtml(e.message)}</div>`;
+  }
+}
+
+document.getElementById('refresh-preview-btn').addEventListener('click', loadPreview);
+
+document.getElementById('share-preview-btn').addEventListener('click', () => {
+  if (!previewUrl) { toast('No preview URL — click Refresh first', 'err'); return; }
+  navigator.clipboard.writeText(previewUrl).then(() => toast('Preview link copied!')).catch(() => {
+    prompt('Copy this link:', previewUrl);
+  });
+});
+
+document.getElementById('preview-btn').addEventListener('click', async () => {
+  if (previewUrl) { window.open(previewUrl, '_blank'); return; }
+  try {
+    const data = await apiJson('POST', '/api/preview-token', {});
+    if (data && data.url) window.open(data.url, '_blank');
+  } catch (e) { toast('Preview failed: ' + e.message, 'err'); }
+});
+
+/* ============================================================
+   PUBLISH
+   ============================================================ */
+document.getElementById('publish-btn').addEventListener('click', openPublishModal);
+
+function openPublishModal() {
+  if (!draft) return;
+  document.getElementById('publish-modal').classList.remove('hidden');
+
+  // Preflight
+  const checks = [
+    { label: 'Ranch name present', ok: !!draft.ranch?.name?.value?.trim() },
+    { label: 'Phone present', ok: !!draft.contact?.phone?.value?.trim() },
+    { label: 'Hero photo assigned', ok: !!draft.slots?.hero?.photoId }
+  ];
+  const preflightEl = document.getElementById('publish-preflight');
+  preflightEl.innerHTML = '<div style="margin-bottom:12px;font-size:13px;font-weight:600;color:var(--brown)">Preflight Checks</div>' +
+    checks.map(c => `<div class="preflight-item">
+      <span class="pf-icon ${c.ok ? 'ok' : 'fail'}">${c.ok ? '✓' : '✗'}</span>
+      <span>${c.label}</span>
+    </div>`).join('');
+
+  // Diff
+  const changed = [];
+  if (!draft.meta.publishedAt) { changed.push('First publish'); }
+  else { changed.push('Content updated since last publish'); }
+  document.getElementById('publish-diff').textContent = changed.join('; ');
+
+  // Auto commit message
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { month: 'short', year: 'numeric', day: 'numeric' });
+  document.getElementById('commit-message').value = `Update ranch content — ${dateStr}`;
+
+  const allOk = checks.every(c => c.ok);
+  const confirmBtn = document.getElementById('confirm-publish-btn');
+  confirmBtn.disabled = !allOk;
+  if (!allOk) confirmBtn.title = 'Fix preflight issues to publish';
+}
+
+document.getElementById('confirm-publish-btn').addEventListener('click', async () => {
+  const summary = document.getElementById('commit-message').value;
+  const confirmBtn = document.getElementById('confirm-publish-btn');
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = 'Publishing…';
+
+  try {
+    await apiJson('POST', '/api/publish', { draft, summary });
+    draft.meta.publishedAt = new Date().toISOString();
+    draft.meta.publishedSummary = summary;
+    closeModal('publish-modal');
+    toast('Published! 🎉', 'ok', 4000);
+  } catch (e) {
+    toast('Publish failed: ' + e.message, 'err');
+  } finally {
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = 'Publish';
+  }
+});
+
+/* ============================================================
+   VERSION HISTORY
+   ============================================================ */
+document.getElementById('history-btn').addEventListener('click', openHistoryModal);
+
+async function openHistoryModal() {
+  document.getElementById('history-modal').classList.remove('hidden');
+  const body = document.getElementById('history-body');
+  body.innerHTML = '<div class="loading-row"><div class="spinner"></div></div>';
+  try {
+    const data = await apiJson('GET', '/api/versions');
+    const versions = Array.isArray(data) ? data : (data.versions || []);
+    if (!versions.length) {
+      body.innerHTML = '<p style="color:var(--brown);font-size:13px">No published versions yet.</p>';
+      return;
+    }
+    body.innerHTML = versions.map(v => `
+      <div class="version-item">
+        <div>
+          <div style="font-size:13px;font-weight:500">${esc(v.summary || 'Published version')}</div>
+          <div class="version-meta">${fmtDate(v.publishedAt || v.key)}</div>
+        </div>
+        <button class="restore-btn" data-vkey="${esc(v.key || v.publishedAt)}">Restore</button>
+      </div>
+    `).join('');
+
+    body.querySelectorAll('.restore-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Restore this version? Your current draft will be replaced.')) return;
+        btn.textContent = '…';
+        try {
+          const vData = await apiJson('GET', '/api/versions/' + encodeURIComponent(btn.dataset.vkey));
+          pushUndo();
+          draft = vData.draft || vData;
+          draft.meta.schemaVersion = 1;
+          renderForm();
+          scheduleSave();
+          closeModal('history-modal');
+          toast('Version restored');
+        } catch (e) {
+          toast('Restore failed: ' + e.message, 'err');
+          btn.textContent = 'Restore';
+        }
+      });
+    });
+  } catch (e) {
+    body.innerHTML = `<p style="color:var(--error);font-size:13px">Failed to load: ${escHtml(e.message)}</p>`;
+  }
+}
+
+/* ============================================================
+   AUDIT LOG
+   ============================================================ */
+document.getElementById('audit-log-link').addEventListener('click', openAuditModal);
+
+async function openAuditModal() {
+  document.getElementById('audit-modal').classList.remove('hidden');
+  const body = document.getElementById('audit-body');
+  body.innerHTML = '<div class="loading-row"><div class="spinner"></div></div>';
+  try {
+    const data = await apiJson('GET', '/api/audit');
+    const entries = Array.isArray(data) ? data : (data.entries || []);
+    if (!entries.length) {
+      body.innerHTML = '<p style="color:var(--brown);font-size:13px">No audit entries yet.</p>';
+      return;
+    }
+    body.innerHTML = entries.slice().reverse().map(e => `
+      <div class="audit-item">
+        <div>${esc(e.summary || e.action || 'Action')}</div>
+        <div class="audit-ts">${fmtDate(e.timestamp || e.ts)} ${e.mode ? '· ' + e.mode : ''}</div>
+      </div>
+    `).join('');
+  } catch (e) {
+    body.innerHTML = `<p style="color:var(--error);font-size:13px">Failed to load: ${escHtml(e.message)}</p>`;
+  }
+}
+
+/* ============================================================
+   MODAL CLOSE LOGIC
+   ============================================================ */
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+}
+
+document.querySelectorAll('[data-close]').forEach(btn => {
+  btn.addEventListener('click', () => closeModal(btn.dataset.close));
+});
+
+document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+  backdrop.addEventListener('click', e => {
+    if (e.target === backdrop) closeModal(backdrop.id);
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-backdrop:not(.hidden)').forEach(m => closeModal(m.id));
+  }
+});
+</script>
+</body>
+</html>

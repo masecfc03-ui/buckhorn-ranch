@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "schemaVersion": 1,
+    "seasonYear": "2026-2027",
+    "publishedAt": "",
+    "publishedSummary": ""
+  },
+  "ranch": {
+    "name":     { "value": "Buckhorn Ranch",          "type": "text",     "label": "Ranch name" },
+    "tagline":  { "value": "Whitetail. Exotics. Wingshooting.", "type": "text", "label": "Tagline" },
+    "location": { "value": "Sulphur, Oklahoma",        "type": "text",     "label": "Location line" },
+    "about":    { "value": "Free-range and managed acreage in the Arbuckle Mountains. Guided hunts only — from the moment you arrive, the ranch handles everything. Morning calls, field prep, meals cooked on site, and trophies scored and packaged for shipment. Bucks scoring above 280 SCI have come off this property.", "type": "longtext", "label": "The Ranch intro", "maxWords": 90 },
+    "acreage":  { "value": "1,750",                    "type": "text",     "label": "Acreage" }
+  },
+  "contact": {
+    "name":  { "value": "",               "type": "text",  "label": "Contact name" },
+    "phone": { "value": "(214) 558-7987", "type": "phone", "label": "Phone" },
+    "email": { "value": "",               "type": "email", "label": "Email" }
+  },
+  "lodging": {
+    "hunterRate":    { "value": 1500,  "type": "money",  "label": "Per hunter, 2 nights 3 days" },
+    "guestRate":     { "value": 400,   "type": "money",  "label": "Non hunting guest" },
+    "inclusionNote": { "value": "Lodging is included when trophy fees reach $6,000 or greater.", "type": "text", "label": "Inclusion note" },
+    "sleeps":        { "value": "",    "type": "number", "label": "Lodge sleeps" }
+  },
+  "whitetailTiers": [
+    { "id": "wt-01", "scoreRange": { "value": "Up to 129",  "type": "text" }, "fee": { "value": 3000,  "type": "money" } },
+    { "id": "wt-02", "scoreRange": { "value": "130–139",    "type": "text" }, "fee": { "value": 4000,  "type": "money" } },
+    { "id": "wt-03", "scoreRange": { "value": "140–149",    "type": "text" }, "fee": { "value": 5000,  "type": "money" } },
+    { "id": "wt-04", "scoreRange": { "value": "150–159",    "type": "text" }, "fee": { "value": 6000,  "type": "money" } },
+    { "id": "wt-05", "scoreRange": { "value": "160–169",    "type": "text" }, "fee": { "value": 7000,  "type": "money" } },
+    { "id": "wt-06", "scoreRange": { "value": "170–179",    "type": "text" }, "fee": { "value": 8500,  "type": "money" } },
+    { "id": "wt-07", "scoreRange": { "value": "180–189",    "type": "text" }, "fee": { "value": 9500,  "type": "money" } },
+    { "id": "wt-08", "scoreRange": { "value": "190–199",    "type": "text" }, "fee": { "value": 12000, "type": "money" } },
+    { "id": "wt-09", "scoreRange": { "value": "200–219",    "type": "text" }, "fee": { "value": 14000, "type": "money" } },
+    { "id": "wt-10", "scoreRange": { "value": "220–239",    "type": "text" }, "fee": { "value": 16000, "type": "money" } },
+    { "id": "wt-11", "scoreRange": { "value": "240–279",    "type": "text" }, "fee": { "value": 18000, "type": "money" } },
+    { "id": "wt-12", "scoreRange": { "value": "280–300+",   "type": "text" }, "fee": { "value": 20000, "type": "money" } }
+  ],
+  "exotics": [
+    { "id": "ex-01", "animal": { "value": "Bison Bull",          "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": null,  "type": "money" }, "onRequest": true,  "note": { "value": "",                              "type": "text" } },
+    { "id": "ex-02", "animal": { "value": "Gemsbok",             "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 8000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
+    { "id": "ex-03", "animal": { "value": "Fallow Deer",         "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 7000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
+    { "id": "ex-04", "animal": { "value": "Red Stag",            "type": "text" }, "sci": { "value": "250–299", "type": "text" }, "fee": { "value": 7000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
+    { "id": "ex-05", "animal": { "value": "Red Stag",            "type": "text" }, "sci": { "value": "300–349", "type": "text" }, "fee": { "value": 10000, "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
+    { "id": "ex-06", "animal": { "value": "Red Stag",            "type": "text" }, "sci": { "value": "350+",    "type": "text" }, "fee": { "value": 15000, "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
+    { "id": "ex-07", "animal": { "value": "Scimitar Oryx",       "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 6000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
+    { "id": "ex-08", "animal": { "value": "Zebra",               "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 6000,  "type": "money" }, "onRequest": false, "note": { "value": "",                              "type": "text" } },
+    { "id": "ex-09", "animal": { "value": "Red Deer Cow",        "type": "text" }, "sci": { "value": "",        "type": "text" }, "fee": { "value": 1500,  "type": "money" }, "onRequest": false, "note": { "value": "Best tasting meat on the ranch.", "type": "text" } }
+  ],
+  "wingshooting": [
+    { "id": "ws-01", "hunt": { "value": "Spring Turkey", "type": "text" }, "season": { "value": "April through May", "type": "dateRange" }, "fee": { "value": 1500, "type": "money" }, "unit": "/hunter", "note": { "value": "Shotgun only. Family and group specials available.", "type": "text" } },
+    { "id": "ws-02", "hunt": { "value": "Quail",         "type": "text" }, "season": { "value": "January through mid-March", "type": "dateRange" }, "fee": { "value": 1500, "type": "money" }, "unit": "/gun",    "note": { "value": "Released birds, dogs and handler included.", "type": "text" } }
+  ],
+  "corporate": {
+    "body": { "value": "Full ranch buyout available. Non-hunting guests welcome. Chef-prepared meals, covered porch and common space for evening conversation, cell service and wifi at the lodge. Invoicing and W9 on request. Roughly two hours from Dallas, ninety minutes from Oklahoma City.", "type": "longtext", "label": "Corporate section", "maxWords": 70 },
+    "details": [
+      { "id": "cd-01", "value": "Full ranch buyout available",         "type": "text" },
+      { "id": "cd-02", "value": "Non-hunting guests $400",            "type": "text" },
+      { "id": "cd-03", "value": "Chef-prepared meals",                 "type": "text" },
+      { "id": "cd-04", "value": "Covered porch and common area",       "type": "text" },
+      { "id": "cd-05", "value": "Cell service and wifi at the lodge",  "type": "text" },
+      { "id": "cd-06", "value": "Invoicing and W9 on request",         "type": "text" },
+      { "id": "cd-07", "value": "~2 hrs from Dallas, ~90 min from OKC", "type": "text" }
+    ],
+    "capacity": { "value": "", "type": "number", "label": "Capacity, guns" }
+  },
+  "terms": {
+    "body": { "value": "Included: field preparation of any trophy for shipment, lodging, accommodations, food and beverages. Not included: Oklahoma license and tag fees, transportation to the lodge, gratuity. A wounded animal is charged the same as a kill and we will do our best to recover it. Whitetail season runs October through December and dates are subject to availability. Exotics are available year round. Deposits lock in price.", "type": "longtext", "label": "Terms", "protected": true }
+  },
+  "photos": [],
+  "slots": {
+    "hero":         { "photoId": "" },
+    "trophyGallery": { "photoIds": [] },
+    "lodgeGallery":  { "photoIds": [] }
+  },
+  "sections": [
+    { "id": "sec-hero",      "type": "hero",        "visible": true },
+    { "id": "sec-ranch",     "type": "textSection", "visible": true },
+    { "id": "sec-trophies",  "type": "gallery",     "visible": true },
+    { "id": "sec-lodge",     "type": "gallery",     "visible": true },
+    { "id": "sec-corporate", "type": "textSection", "visible": true },
+    { "id": "sec-pricing",   "type": "pricing",     "visible": true },
+    { "id": "sec-terms",     "type": "terms",       "visible": true },
+    { "id": "sec-contact",   "type": "contact",     "visible": true }
+  ],
+  "audio": { "enabled": true, "file": "audio/ambient.mp3" }
+}

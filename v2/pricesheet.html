@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buckhorn Ranch — Price Sheet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bone: #F5F1E8;
+      --parchment: #EDE6D6;
+      --ink: #2B221B;
+      --brown: #4A3B2E;
+      --brass: #A8854B;
+    }
+
+    @page {
+      size: letter;
+      margin: 1in;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bone);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 10pt;
+      line-height: 1.5;
+      padding: 1in;
+      max-width: 8.5in;
+      margin: 0 auto;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+        max-width: none;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    /* Print button */
+    .no-print {
+      text-align: right;
+      margin-bottom: 1.5em;
+    }
+
+    .print-btn {
+      background: var(--brass);
+      color: white;
+      border: none;
+      padding: 0.5em 1.4em;
+      font-family: system-ui, sans-serif;
+      font-size: 9pt;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    .print-btn:hover {
+      background: var(--brown);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2.2em;
+      padding-bottom: 1.2em;
+      border-bottom: 1.5pt solid var(--brass);
+    }
+
+    .header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28pt;
+      font-weight: 600;
+      color: var(--brown);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+
+    .header .season {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12pt;
+      font-weight: 400;
+      color: var(--brass);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.3em;
+    }
+
+    .header .location {
+      font-size: 9.5pt;
+      color: var(--brown);
+      margin-top: 0.3em;
+      letter-spacing: 0.04em;
+    }
+
+    /* Section headings */
+    .section {
+      margin-bottom: 1.8em;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13pt;
+      font-weight: 600;
+      color: var(--brown);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-bottom: 0.75pt solid var(--brass);
+      padding-bottom: 0.25em;
+      margin-bottom: 0.8em;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+    }
+
+    thead th {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 9pt;
+      font-weight: 600;
+      color: var(--brass);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2em 0.6em 0.4em 0.6em;
+      text-align: left;
+      border-bottom: 0.5pt solid var(--parchment);
+    }
+
+    thead th.right {
+      text-align: right;
+    }
+
+    tbody tr {
+      border-bottom: 0.5pt solid var(--parchment);
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody td {
+      padding: 0.42em 0.6em;
+      vertical-align: top;
+    }
+
+    tbody td.fee {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    tbody td.note {
+      color: #6B5544;
+      font-size: 8.5pt;
+      font-style: italic;
+    }
+
+    tbody td.sci {
+      color: var(--brown);
+    }
+
+    /* Lodging layout */
+    .lodging-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6em 2em;
+      margin-bottom: 0.6em;
+    }
+
+    .lodging-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 0.5pt solid var(--parchment);
+      padding: 0.42em 0;
+    }
+
+    .lodging-label {
+      color: var(--ink);
+    }
+
+    .lodging-fee {
+      font-variant-numeric: tabular-nums;
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    .lodging-note {
+      font-size: 8.5pt;
+      color: #6B5544;
+      font-style: italic;
+      margin-top: 0.4em;
+    }
+
+    /* Two-column whitetail + exotics layout on screen */
+    .two-col-tables {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 2.5em;
+      margin-bottom: 1.8em;
+    }
+
+    .two-col-tables .section {
+      margin-bottom: 0;
+    }
+
+    /* Terms */
+    .terms-text {
+      font-size: 9pt;
+      color: #4A3B2E;
+      line-height: 1.6;
+    }
+
+    /* Contact */
+    .contact-line {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11pt;
+      color: var(--brown);
+      margin-top: 0.3em;
+    }
+
+    .contact-line a {
+      color: var(--brass);
+      text-decoration: none;
+    }
+
+    /* Loading / error state */
+    #loading {
+      text-align: center;
+      padding: 4em;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14pt;
+      color: var(--brass);
+    }
+
+    #error {
+      text-align: center;
+      padding: 4em;
+      color: #8B2020;
+      font-size: 11pt;
+    }
+
+    #content {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading">Loading&hellip;</div>
+  <div id="error" style="display:none"></div>
+  <div id="content">
+    <div class="no-print">
+      <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <h1 id="ranch-name"></h1>
+      <div class="season" id="season-year"></div>
+      <div class="location" id="location"></div>
+    </div>
+
+    <!-- Lodging & Meals -->
+    <div class="section" id="section-lodging">
+      <div class="section-title">Lodging &amp; Meals</div>
+      <div class="lodging-grid" id="lodging-grid"></div>
+      <div class="lodging-note" id="lodging-note"></div>
+    </div>
+
+    <!-- Whitetail + Exotics side by side -->
+    <div class="two-col-tables">
+      <div class="section" id="section-whitetail">
+        <div class="section-title">Whitetail Trophy Fees</div>
+        <table>
+          <thead>
+            <tr>
+              <th>SCI Score</th>
+              <th class="right">Fee</th>
+            </tr>
+          </thead>
+          <tbody id="whitetail-rows"></tbody>
+        </table>
+      </div>
+
+      <div class="section" id="section-exotics">
+        <div class="section-title">Exotic Trophy Fees</div>
+        <table id="exotics-table">
+          <thead>
+            <tr>
+              <th>Animal</th>
+              <th id="exotics-sci-header" class="right" style="display:none">SCI</th>
+              <th class="right">Fee</th>
+            </tr>
+          </thead>
+          <tbody id="exotics-rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Wingshooting -->
+    <div class="section" id="section-wingshooting">
+      <div class="section-title">Wingshooting</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Hunt</th>
+            <th>Season</th>
+            <th class="right">Fee</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="wingshooting-rows"></tbody>
+      </table>
+    </div>
+
+    <!-- Terms -->
+    <div class="section" id="section-terms">
+      <div class="section-title">Terms</div>
+      <p class="terms-text" id="terms-body"></p>
+    </div>
+
+    <!-- Contact -->
+    <div class="section" id="section-contact">
+      <div class="section-title">Contact</div>
+      <div id="contact-lines"></div>
+    </div>
+  </div>
+
+  <script>
+    function formatFee(value, onRequest) {
+      if (onRequest || value === null || value === undefined) return 'On request';
+      return '$' + Number(value).toLocaleString('en-US');
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function loadAndRender() {
+      try {
+        const res = await fetch('/content.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const d = await res.json();
+
+        // Header
+        document.getElementById('ranch-name').textContent = d.ranch.name.value || 'Buckhorn Ranch';
+        document.getElementById('season-year').textContent = d.meta.seasonYear ? d.meta.seasonYear + ' Season' : '';
+        document.getElementById('location').textContent = d.ranch.location.value || '';
+
+        // Lodging
+        const lodgingGrid = document.getElementById('lodging-grid');
+        const items = [
+          { label: 'Per Hunter (2 nights, 3 days)', fee: d.lodging.hunterRate.value },
+          { label: 'Non-Hunting Guest', fee: d.lodging.guestRate.value }
+        ];
+        lodgingGrid.innerHTML = items.map(item => `
+          <div class="lodging-item">
+            <span class="lodging-label">${escHtml(item.label)}</span>
+            <span class="lodging-fee">${formatFee(item.fee, false)}</span>
+          </div>
+        `).join('');
+        const note = d.lodging.inclusionNote && d.lodging.inclusionNote.value;
+        if (note) {
+          document.getElementById('lodging-note').textContent = note;
+        }
+
+        // Whitetail
+        const wtRows = document.getElementById('whitetail-rows');
+        wtRows.innerHTML = (d.whitetailTiers || []).map(tier => `
+          <tr>
+            <td>${escHtml(tier.scoreRange.value)}</td>
+            <td class="fee">${formatFee(tier.fee.value, false)}</td>
+          </tr>
+        `).join('');
+
+        // Exotics
+        const exRows = document.getElementById('exotics-rows');
+        const exotics = d.exotics || [];
+        const hasSci = exotics.some(ex => ex.sci && ex.sci.value);
+        if (hasSci) {
+          document.getElementById('exotics-sci-header').style.display = '';
+        }
+        exRows.innerHTML = exotics.map(ex => {
+          const sciCell = hasSci
+            ? `<td class="sci right">${escHtml(ex.sci && ex.sci.value ? ex.sci.value : '')}</td>`
+            : '';
+          const hasNote = ex.note && ex.note.value;
+          return `
+            <tr>
+              <td>
+                ${escHtml(ex.animal.value)}
+                ${hasNote ? `<br><span style="font-size:8pt;font-style:italic;color:#6B5544">${escHtml(ex.note.value)}</span>` : ''}
+              </td>
+              ${sciCell}
+              <td class="fee">${formatFee(ex.fee.value, ex.onRequest)}</td>
+            </tr>
+          `;
+        }).join('');
+
+        // Wingshooting
+        const wsRows = document.getElementById('wingshooting-rows');
+        wsRows.innerHTML = (d.wingshooting || []).map(ws => `
+          <tr>
+            <td>${escHtml(ws.hunt.value)}</td>
+            <td>${escHtml(ws.season.value)}</td>
+            <td class="fee">${formatFee(ws.fee.value, false)}${ws.unit ? '<span style="font-size:8pt;font-weight:400;color:#6B5544"> ' + escHtml(ws.unit) + '</span>' : ''}</td>
+            <td class="note">${escHtml(ws.note && ws.note.value ? ws.note.value : '')}</td>
+          </tr>
+        `).join('');
+
+        // Terms
+        const termsBody = d.terms && d.terms.body && d.terms.body.value;
+        if (termsBody) {
+          document.getElementById('terms-body').textContent = termsBody;
+        } else {
+          document.getElementById('section-terms').style.display = 'none';
+        }
+
+        // Contact
+        const contactLines = document.getElementById('contact-lines');
+        const phone = d.contact && d.contact.phone && d.contact.phone.value;
+        const email = d.contact && d.contact.email && d.contact.email.value;
+        let contactHtml = '';
+        if (phone) {
+          contactHtml += `<div class="contact-line"><a href="tel:${escHtml(phone)}">${escHtml(phone)}</a></div>`;
+        }
+        if (email) {
+          contactHtml += `<div class="contact-line"><a href="mailto:${escHtml(email)}">${escHtml(email)}</a></div>`;
+        }
+        if (!contactHtml) {
+          document.getElementById('section-contact').style.display = 'none';
+        } else {
+          contactLines.innerHTML = contactHtml;
+        }
+
+        // Show content
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+
+      } catch (err) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error').textContent = 'Could not load price sheet data: ' + err.message;
+      }
+    }
+
+    loadAndRender();
+  </script>
+</body>
+</html>

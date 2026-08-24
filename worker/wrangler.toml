@@ -1,3 +1,11 @@
 name = "buckhorn-proxy"
 main = "index.js"
 compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "BHR_KV"
+id = "ddfd67e5f74149e3a50e0d8ff84bdf83"
+preview_id = "f2d9a65f33334d95a52ce5fa3e1d5d4b"
+
+[triggers]
+crons = ["0 6 * * *"]
