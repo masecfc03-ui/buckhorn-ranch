@@ -1655,8 +1655,7 @@ async function handleFileUpload(files) {
       document.getElementById(`pb-${photoId}`).style.width = '100%';
       document.getElementById(`ps-${photoId}`).textContent = '✓ Done';
       renderPhotoGrid();
-      scheduleSave();
-      if (currentTab === 'visual') loadPreview();
+      if (currentTab === 'visual') { doSave().then(loadPreview); } else { scheduleSave(); }
     } catch (e) {
       document.getElementById(`ps-${photoId}`).textContent = '✕ Error';
       document.getElementById(`ps-${photoId}`).style.color = 'var(--error)';
@@ -2118,8 +2117,8 @@ function applySingleChange(change) {
       }
     }
     if (currentTab === 'form') renderForm();
-    if (currentTab === 'visual') loadPreview();
     scheduleSave();
+    if (currentTab === 'visual') doSave().then(loadPreview);
   } catch (e) {
     toast('Failed to apply change: ' + e.message, 'err');
   }
