@@ -19,7 +19,7 @@ const SESSION_TTL = 43200; // 12 hours
 const AUTH_RATE_WINDOW = 900; // 15 min
 const AUTH_RATE_MAX = 5;
 const TIMMY_RATE_MAX = 20;
-const DEV_RATE_MAX = 5; // per hour for dev mode
+const DEV_RATE_MAX = 0; // 0 = unlimited
 const VERSIONS_CAP = 25;
 const AUDIT_CAP = 500;
 const HISTORY_CAP = 40;
@@ -492,14 +492,16 @@ async function handleDeleteTimmyHistory(env, session) {
 }
 
 async function handleTimmyDev(request, env, session) {
-  // Rate limiting
-  const hourKey = `timmy-dev-rate:${session.sessionId}:${getHourKey()}`;
-  const rateRaw = await env.BHR_KV.get(hourKey);
-  const rateCount = rateRaw ? parseInt(rateRaw, 10) : 0;
-  if (rateCount >= DEV_RATE_MAX) {
-    return err('Rate limit: max 5 dev requests per hour.', 429);
+  // Rate limiting (DEV_RATE_MAX = 0 means unlimited)
+  if (DEV_RATE_MAX > 0) {
+    const hourKey = `timmy-dev-rate:${session.sessionId}:${getHourKey()}`;
+    const rateRaw = await env.BHR_KV.get(hourKey);
+    const rateCount = rateRaw ? parseInt(rateRaw, 10) : 0;
+    if (rateCount >= DEV_RATE_MAX) {
+      return err(`Rate limit: max ${DEV_RATE_MAX} dev requests per hour.`, 429);
+    }
+    await env.BHR_KV.put(hourKey, String(rateCount + 1), { expirationTtl: 3600 });
   }
-  await env.BHR_KV.put(hourKey, String(rateCount + 1), { expirationTtl: 3600 });
 
   // Spend guard
   const now = new Date();
