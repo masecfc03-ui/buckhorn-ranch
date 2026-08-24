@@ -1487,15 +1487,19 @@
     sections.forEach(function (sec) {
       if (!sec.visible) return;
       var builder = SECTION_BUILDERS[sec.id];
-      if (builder) {
+      if (!builder) return;
+      try {
         html += builder(data);
+      } catch (e) {
+        console.error('[buckhorn] Section builder error for ' + sec.id + ':', e);
+        html += '<section id="' + sec.id + '" style="padding:40px;text-align:center;color:rgba(255,255,255,0.4)"><p>Section temporarily unavailable</p></section>';
       }
     });
 
     /* Custom galleries appended after all sections */
-    html += buildCustomGalleries(data);
+    try { html += buildCustomGalleries(data); } catch(e) { console.error('[buckhorn] customGalleries error:', e); }
 
-    html += buildFooter(data);
+    try { html += buildFooter(data); } catch(e) { console.error('[buckhorn] footer error:', e); }
 
     var app = document.getElementById('app');
     if (app) app.innerHTML = html;
