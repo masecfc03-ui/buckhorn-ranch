@@ -1914,6 +1914,13 @@
       return;
     }
 
+    if (e.data.type === 'bhr-content-update') {
+      BHR_EDIT_MODE = false; // reset so enableEditMode re-attaches handlers after re-render
+      render(e.data.content);
+      enableEditMode();
+      return;
+    }
+
     if (e.data.type === 'bhr-drag-hover') {
       /* Find nearest photo slot under pointer */
       var x = e.data.x * window.innerWidth;

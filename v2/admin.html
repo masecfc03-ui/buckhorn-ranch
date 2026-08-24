@@ -1660,7 +1660,8 @@ async function handleFileUpload(files) {
       document.getElementById(`pb-${photoId}`).style.width = '100%';
       document.getElementById(`ps-${photoId}`).textContent = '✓ Done';
       renderPhotoGrid();
-      if (currentTab === 'visual') { doSave().then(loadPreview); } else { scheduleSave(); }
+      scheduleSave();
+      if (currentTab === 'visual') pushContentToPreview();
     } catch (e) {
       document.getElementById(`ps-${photoId}`).textContent = '✕ Error';
       document.getElementById(`ps-${photoId}`).style.color = 'var(--error)';
@@ -2123,7 +2124,7 @@ function applySingleChange(change) {
     }
     if (currentTab === 'form') renderForm();
     scheduleSave();
-    if (currentTab === 'visual') doSave().then(loadPreview);
+    if (currentTab === 'visual') pushContentToPreview();
   } catch (e) {
     toast('Failed to apply change: ' + e.message, 'err');
   }
@@ -2196,6 +2197,13 @@ async function loadPreview() {
 }
 
 document.getElementById('refresh-preview-btn').addEventListener('click', loadPreview);
+
+// Push draft content directly into the live preview iframe (instant, no reload)
+function pushContentToPreview() {
+  const iframe = document.getElementById('preview-iframe');
+  if (!iframe || !iframe.contentWindow) return;
+  iframe.contentWindow.postMessage({ type: 'bhr-content-update', content: draft }, '*');
+}
 
 /* ============================================================
    QUICK EDIT PANEL
@@ -2737,8 +2745,6 @@ function applyPickedPhoto(photoId) {
   pendingPhotoTarget = null;
   if (t.slot === 'hero') {
     applySingleChange({ op: 'setSlot', slot: 'hero', photoId });
-    toast('Hero photo updated');
-    loadPreview();
   } else if (t.gallery) {
     const slotKey = t.gallery;
     const slotObj = draft.slots[slotKey];
@@ -2746,12 +2752,9 @@ function applyPickedPhoto(photoId) {
       pushUndo();
       slotObj.photoIds[t.idx] = photoId;
       scheduleSave();
-      toast('Photo updated');
-      loadPreview();
+      pushContentToPreview();
     } else {
       applySingleChange({ op: 'addGalleryPhoto', gallery: slotKey, photoId });
-      toast('Photo added to gallery');
-      loadPreview();
     }
   }
 }
