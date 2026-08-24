@@ -2196,12 +2196,25 @@ document.getElementById('qe-save').addEventListener('click', () => {
 window.addEventListener('message', function(e) {
   if (!e.data) return;
   if (e.data.type === 'bhr-nav') {
+    const secId = e.data.section; // now always a full section id like 'sec-ranch'
     if (currentTab === 'visual') {
-      openQuickEdit(e.data.section);
+      const def = QE_SECTION_MAP[secId];
+      if (def) {
+        openQuickEdit(secId);
+      } else {
+        // Section not in quick-edit map — fall back to form tab
+        switchTab('form');
+        const formSecId = secId.replace('sec-', '');
+        setTimeout(function() {
+          var el = document.getElementById('fsec-' + formSecId);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
+      }
     } else {
       switchTab('form');
+      const formSecId = secId.replace('sec-', '');
       setTimeout(function() {
-        var el = document.getElementById('fsec-' + e.data.section);
+        var el = document.getElementById('fsec-' + formSecId);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 80);
     }
