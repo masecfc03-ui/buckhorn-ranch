@@ -1542,14 +1542,14 @@ async function processImageToWebP(file, photoId) {
     if (bitmap.width < w && wi > 0) break; // skip sizes larger than original (keep at least one)
     const aspect = bitmap.height / bitmap.width;
     const canvas = document.createElement('canvas');
-    canvas.width = Math.min(w, bitmap.width);
-    canvas.height = Math.round(canvas.width * aspect);
+    canvas.width = w;
+    canvas.height = Math.round(w * aspect);
     const ctx = canvas.getContext('2d');
     ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
 
     const blob = await new Promise(res => canvas.toBlob(res, 'image/webp', 0.88));
     const data = await blobToBase64(blob);
-    renditions.push({ width: canvas.width, data, ext: 'webp' });
+    renditions.push({ width: w, data, ext: 'webp' });
     if (pbEl) pbEl.style.width = `${Math.round((wi + 1) / RENDITION_WIDTHS.length * 55)}%`;
     if (psEl) psEl.textContent = `${wi+1}/${RENDITION_WIDTHS.length}`;
   }

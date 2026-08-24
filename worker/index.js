@@ -667,6 +667,18 @@ async function handleImageUpload(request, env) {
   const { photoId, filename, renditions, metadata } = body;
   if (!photoId || !Array.isArray(renditions)) return err('photoId and renditions required');
 
+  // Verify token has write access before processing renditions
+  const tokenCheck = await ghApi(env, 'GET', `/repos/${GH_OWNER}/${GH_REPO}`);
+  if (!tokenCheck.ok) {
+    const status = tokenCheck.status;
+    return err(
+      status === 404
+        ? 'GitHub token is invalid or lacks repo access. Run: wrangler secret put GH_TOKEN'
+        : `GitHub repo check failed: ${status}`,
+      502
+    );
+  }
+
   const uploadResults = [];
   for (const rendition of renditions) {
     const { width, data, ext } = rendition;
