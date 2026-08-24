@@ -1821,8 +1821,11 @@
   ──────────────────────────────────────────────────────────── */
   var editModeStyleEl = null;
   var pendingDropTarget = null;
+  var BHR_EDIT_MODE = false;
 
   function enableEditMode() {
+    if (BHR_EDIT_MODE) return; // idempotent — don't double-attach
+    BHR_EDIT_MODE = true;
     document.body.classList.add('bhr-editing');
 
     /* Inject edit-mode styles */
@@ -1842,6 +1845,9 @@
     document.querySelectorAll('[data-edit-path]').forEach(function(el) {
       el.contentEditable = 'true';
       el.setAttribute('spellcheck', 'false');
+
+      /* Stop click from bubbling to section → prevents bhr-nav from firing */
+      el.addEventListener('click', function(e) { e.stopPropagation(); });
 
       /* Blur → send field change */
       el.addEventListener('blur', function onBlur() {
@@ -1901,6 +1907,7 @@
     if (e.data.type === 'bhr-edit-mode') {
       if (e.data.enabled) {
         enableEditMode();
+        window.parent.postMessage({ type: 'bhr-edit-mode-ack' }, '*');
       } else {
         disableEditMode();
       }

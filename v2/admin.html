@@ -2161,10 +2161,22 @@ async function loadPreview() {
       iframe.onload = () => {
         loading.style.display = 'none';
         iframe.style.display = '';
-        // Signal iframe to enter WYSIWYG edit mode
-        setTimeout(() => {
+        // Signal iframe to enter WYSIWYG edit mode; retry until ack received
+        let editModeAcked = false;
+        let editModeAttempts = 0;
+        const sendEditMode = () => {
+          if (editModeAcked) return;
           iframe.contentWindow.postMessage({ type: 'bhr-edit-mode', enabled: true }, '*');
-        }, 400);
+          if (++editModeAttempts < 8) setTimeout(sendEditMode, 500);
+        };
+        const _editAckHandler = (ev) => {
+          if (ev.data && ev.data.type === 'bhr-edit-mode-ack') {
+            editModeAcked = true;
+            window.removeEventListener('message', _editAckHandler);
+          }
+        };
+        window.addEventListener('message', _editAckHandler);
+        setTimeout(sendEditMode, 200);
       };
       iframe.onerror = () => {
         loading.innerHTML = '<div style="color:var(--error)">Preview failed to load.</div>';
@@ -2229,23 +2241,11 @@ document.getElementById('qe-save').addEventListener('click', () => {
 window.addEventListener('message', function(e) {
   if (!e.data) return;
   if (e.data.type === 'bhr-nav') {
-    const secId = e.data.section; // now always a full section id like 'sec-ranch'
-    if (currentTab === 'visual') {
-      const def = QE_SECTION_MAP[secId];
-      if (def) {
-        openQuickEdit(secId);
-      } else {
-        // Section not in quick-edit map — fall back to form tab
-        switchTab('form');
-        const formSecId = secId.replace('sec-', '');
-        setTimeout(function() {
-          var el = document.getElementById('fsec-' + formSecId);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 80);
-      }
-    } else {
+    // In visual tab: stay put — edit mode handles inline editing directly
+    // In other tabs: jump to the relevant form section
+    if (currentTab !== 'visual') {
       switchTab('form');
-      const formSecId = secId.replace('sec-', '');
+      const formSecId = (e.data.section || '').replace('sec-', '');
       setTimeout(function() {
         var el = document.getElementById('fsec-' + formSecId);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
