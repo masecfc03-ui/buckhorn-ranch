@@ -2257,13 +2257,25 @@ window.addEventListener('message', function(e) {
   if (!e.data) return;
   if (e.data.type === 'bhr-nav') {
     if (currentTab === 'visual') {
-      // Map nav section name → QE key and open the quick edit panel
       const navToQe = {
         ranch: 'sec-ranch', corporate: 'sec-corporate', whitetail: 'sec-pricing',
         terms: 'sec-terms', contact: 'sec-contact',
       };
       const qeKey = navToQe[e.data.section];
-      if (qeKey) openQuickEdit(qeKey);
+      if (qeKey) {
+        openQuickEdit(qeKey);
+      } else if (e.data.section === 'photos') {
+        // Photo-only sections: open photo picker for the right gallery
+        const sectionId = e.data.sectionId || '';
+        const photoSlotMap = {
+          'sec-hero': { slot: 'hero', gallery: null },
+          'sec-trophies': { slot: null, gallery: 'trophyGallery' },
+          'sec-lodge': { slot: null, gallery: 'lodgeGallery' },
+        };
+        const target = photoSlotMap[sectionId] || { slot: 'hero', gallery: null };
+        pendingPhotoTarget = { slot: target.slot, gallery: target.gallery, idx: null };
+        openPhotoPicker();
+      }
     } else {
       switchTab('form');
       const formSecId = (e.data.section || '').replace('sec-', '');
