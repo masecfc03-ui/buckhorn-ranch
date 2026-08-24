@@ -995,9 +995,6 @@
     var heroPhotoId = data.slots && data.slots.hero && data.slots.hero.photoId;
     var heroPhoto   = heroPhotoId ? findPhoto(data.photos || [], heroPhotoId) : null;
 
-    /* Logo — try white version first, fall back to orange */
-    var logoHtml = '<div class="hero-logo fade-in"><img src="img/Buckhorn-Brand-and-Name---White.jpg" alt="Buckhorn Ranch" onerror="this.src=\'img/Buckhorn-Brand-and-Name---Orange.jpg\'"></div>';
-
     var bgHtml;
     if (heroPhotoId) {
       var pos = photoObjectPos(heroPhoto);
