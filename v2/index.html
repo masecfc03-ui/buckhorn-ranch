@@ -1426,7 +1426,7 @@
     exotics.forEach(function (ex) {
       var animal = escape(v(ex.animal));
       var sci    = v(ex.sci) ? escape(' (' + v(ex.sci) + ' SCI)') : '';
-      var fee    = ex.onRequest ? '<span class="on-request">Call for Pricing</span>' : (formatMoney(v(ex.fee)) || '<span class="on-request">On request</span>');
+      var fee    = ex.onRequest ? '<span class="on-request">Call for Pricing</span>' : (formatMoney(v(ex.fee)) || '<span class="on-request">Call for Pricing</span>');
       var note   = v(ex.note) ? '<br><small style="font-size:12px;color:var(--brass-dim)">' + escape(v(ex.note)) + '</small>' : '';
       exRows += '<tr><td>' + animal + sci + note + '</td><td>' + fee + '</td></tr>';
     });
