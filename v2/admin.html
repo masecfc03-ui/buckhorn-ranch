@@ -1773,6 +1773,8 @@ function selectPhotoFromLibrary(photoId) {
   // Ensure ranchLeft/ranchRight slots exist
       if (!draft.slots.ranchLeft) draft.slots.ranchLeft = { photoId: '' };
       if (!draft.slots.ranchRight) draft.slots.ranchRight = { photoId: '' };
+      if (!draft.slots.corporateLeft) draft.slots.corporateLeft = { photoId: '' };
+      if (!draft.slots.corporateRight) draft.slots.corporateRight = { photoId: '' };
       const slotObj = draft.slots[currentPhotoSlot];
   if ('photoId' in slotObj) {
     slotObj.photoId = photoId;
