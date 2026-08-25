@@ -1594,7 +1594,7 @@
         var pos = photo ? photoObjectPos(photo) : 'center';
         var caption = (photo && photo.caption) ? photo.caption : '';
         return '<div class="ag-gallery-item" data-ag-grid-idx="' + i + '">' +
-          '<img src="' + escape(photoSrc(pid, 800)) + '" alt="" loading="' + (i < 4 ? 'eager' : 'lazy') + '" style="object-position:' + pos + '">' +
+          '<img src="' + escape(photoSrc(pid, 960)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="(max-width:600px) 100vw, 50vw" alt="" loading="' + (i < 4 ? 'eager' : 'lazy') + '" style="object-position:' + pos + '">' +
           (caption ? '<span class="ag-gallery-caption">' + escape(caption) + '</span>' : '') +
         '</div>';
       }).join('') + '</div>';
