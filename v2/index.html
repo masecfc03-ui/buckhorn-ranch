@@ -270,6 +270,58 @@
     }
 
     /* ── 2. THE RANCH ────────────────────────────────────────── */
+    #sec-ranch .ranch-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 32px;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    @media (max-width: 768px) {
+      #sec-ranch .ranch-layout {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      #sec-ranch .ranch-photo-left,
+      #sec-ranch .ranch-photo-right {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+    }
+    #sec-ranch .ranch-photo-left,
+    #sec-ranch .ranch-photo-right {
+      position: relative;
+      overflow: hidden;
+      background: var(--parchment);
+    }
+    #sec-ranch .ranch-photo-left {
+      aspect-ratio: 3/4;
+      margin-top: 40px;
+    }
+    #sec-ranch .ranch-photo-right {
+      aspect-ratio: 3/4;
+      margin-bottom: 40px;
+    }
+    #sec-ranch .ranch-photo-left img,
+    #sec-ranch .ranch-photo-right img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 500ms var(--ease);
+    }
+    @media (hover: hover) {
+      #sec-ranch .ranch-photo-left:hover img,
+      #sec-ranch .ranch-photo-right:hover img {
+        transform: scale(1.04);
+      }
+    }
+    #sec-ranch .ranch-text {
+      text-align: center;
+    }
     #sec-ranch h2 {
       font-size: clamp(36px, 5vw, 52px);
       color: var(--ink);
@@ -1095,14 +1147,34 @@
   function buildRanch(data) {
     var about   = escape(v(data.ranch.about) || '');
     var acreage = v(data.ranch.acreage) || '';
+    var allPhotos = data.photos || [];
+    var slots = data.slots || {};
+
+    /* Pick two photos for the ranch section: try slots.ranchLeft/ranchRight, else fall back to lodgeGallery[0] and lodgeGallery[1] */
+    var leftPhotoId  = (slots.ranchLeft  && slots.ranchLeft.photoId)  || ((slots.lodgeGallery && slots.lodgeGallery.photoIds && slots.lodgeGallery.photoIds[0]) || '');
+    var rightPhotoId = (slots.ranchRight && slots.ranchRight.photoId) || ((slots.lodgeGallery && slots.lodgeGallery.photoIds && slots.lodgeGallery.photoIds[1]) || '');
+    var leftPhoto  = leftPhotoId  ? findPhoto(allPhotos, leftPhotoId)  : null;
+    var rightPhoto = rightPhotoId ? findPhoto(allPhotos, rightPhotoId) : null;
+
+    function photoBox(pid, photo, slot, cls) {
+      if (!pid) return '<div class="' + cls + ' fade-up">' + PLACEHOLDER_SVG + '</div>';
+      var pos = photoObjectPos(photo);
+      return '<div class="' + cls + ' fade-up" data-lb-set="ranch-photos" data-lb-index="' + (slot === 'left' ? 0 : 1) + '" role="button" tabindex="0" aria-label="Ranch photo" data-photo-gallery-wrap data-photo-gallery="ranchPhotos" data-photo-idx="' + (slot === 'left' ? 0 : 1) + '">' +
+        '<img src="' + escape(photoSrc(pid, 960, photo)) + '" srcset="' + escape(photoSrcset(pid, photo)) + '" sizes="(max-width:768px) 90vw, 25vw" alt="Ranch" loading="lazy" style="object-position:' + pos + '">' +
+      '</div>';
+    }
 
     return '<section id="sec-ranch">' +
-      '<div class="inner">' +
-        '<span class="section-label fade-up" data-edit-path="ranch.sectionLabel" data-edit-default="The Ranch">The Ranch</span>' +
-        '<h2 class="heading-reveal" data-edit-path="ranch.acreageHeading" data-edit-default="The Ranch">' + escape(acreage ? acreage + ' Acres. One Property.' : 'The Ranch') + '</h2>' +
-        '<span class="brass-rule rule-reveal"></span>' +
-        (about ? '<p class="fade-up" data-edit-path="ranch.about.value" data-edit-multiline="true">' + about + '</p>' : '') +
-        (acreage ? '<span class="acreage-note fade-up" data-edit-path="ranch.acreage.value">' + escape(acreage) + ' acres · Arbuckle Mountains, Oklahoma</span>' : '') +
+      '<span class="section-label fade-up" style="display:block;text-align:center;margin-bottom:20px" data-edit-path="ranch.sectionLabel" data-edit-default="The Ranch">Buckhorn Ranch</span>' +
+      '<div class="ranch-layout">' +
+        photoBox(leftPhotoId, leftPhoto, 'left', 'ranch-photo-left') +
+        '<div class="ranch-text">' +
+          '<h2 class="heading-reveal" data-edit-path="ranch.acreageHeading" data-edit-default="The Ranch">' + escape(acreage ? acreage + ' Acres. One Property.' : 'The Ranch') + '</h2>' +
+          '<span class="brass-rule rule-reveal"></span>' +
+          (about ? '<p class="fade-up" data-edit-path="ranch.about.value" data-edit-multiline="true">' + about + '</p>' : '') +
+          (acreage ? '<span class="acreage-note fade-up" data-edit-path="ranch.acreage.value">' + escape(acreage) + ' acres · Arbuckle Mountains, Oklahoma</span>' : '') +
+        '</div>' +
+        photoBox(rightPhotoId, rightPhoto, 'right', 'ranch-photo-right') +
       '</div>' +
     '</section>';
   }
