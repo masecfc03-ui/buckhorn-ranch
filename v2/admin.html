@@ -1836,6 +1836,12 @@ async function processImageToWebP(file, photoId) {
   const pbEl = document.getElementById('pb-' + photoId);
   const psEl = document.getElementById('ps-' + photoId);
 
+  // Detect WebP canvas support (iOS Safari <16 falls back silently to PNG)
+  const _tc = document.createElement('canvas'); _tc.width = 1; _tc.height = 1;
+  const supportsWebP = _tc.toDataURL('image/webp').startsWith('data:image/webp');
+  const mimeType = supportsWebP ? 'image/webp' : 'image/jpeg';
+  const ext = supportsWebP ? 'webp' : 'jpeg';
+
   for (let wi = 0; wi < RENDITION_WIDTHS.length; wi++) {
     const w = RENDITION_WIDTHS[wi];
     if (bitmap.width < w && wi > 0) break; // skip sizes larger than original (keep at least one)
@@ -1846,9 +1852,10 @@ async function processImageToWebP(file, photoId) {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
 
-    const blob = await new Promise(res => canvas.toBlob(res, 'image/webp', 0.88));
+    const blob = await new Promise(res => canvas.toBlob(res, mimeType, 0.88));
+    if (!blob) throw new Error('Image conversion failed (canvas.toBlob returned null)');
     const data = await blobToBase64(blob);
-    renditions.push({ width: w, data, ext: 'webp' });
+    renditions.push({ width: w, data, ext });
     if (pbEl) pbEl.style.width = `${Math.round((wi + 1) / RENDITION_WIDTHS.length * 55)}%`;
     if (psEl) psEl.textContent = `${wi+1}/${RENDITION_WIDTHS.length}`;
   }
