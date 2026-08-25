@@ -955,9 +955,12 @@
     return /\.(jpe?g|png|gif|webp)$/i.test(photoId);
   }
 
-  /* Build srcset string; legacy photos return empty (no renditions) */
-  function photoSrcset(photoId) {
+  /* Build srcset string using actual rendition filePaths when available */
+  function photoSrcset(photoId, photo) {
     if (isLegacyPhoto(photoId)) return '';
+    if (photo && Array.isArray(photo.renditions) && photo.renditions.length > 0) {
+      return photo.renditions.map(function(r) { return r.filePath + ' ' + r.width + 'w'; }).join(', ');
+    }
     var base = 'img/' + photoId;
     return (
       base + '-480.webp 480w, ' +
@@ -967,9 +970,18 @@
     );
   }
 
-  /* Resolve a single src URL for a photoId at a given preferred width */
-  function photoSrc(photoId, width) {
+  /* Resolve a single src URL, using actual rendition filePath when available */
+  function photoSrc(photoId, width, photo) {
     if (isLegacyPhoto(photoId)) return 'img/' + photoId;
+    if (photo && Array.isArray(photo.renditions) && photo.renditions.length > 0) {
+      var best = null, bestDiff = Infinity;
+      for (var _i = 0; _i < photo.renditions.length; _i++) {
+        var _r = photo.renditions[_i];
+        var _d = Math.abs((_r.width || 0) - (width || 960));
+        if (_d < bestDiff) { bestDiff = _d; best = _r; }
+      }
+      if (best) return best.filePath;
+    }
     return 'img/' + photoId + '-' + (width || 960) + '.webp';
   }
 
@@ -1050,8 +1062,8 @@
     if (heroPhotoId) {
       var pos = photoObjectPos(heroPhoto);
       bgHtml = '<img' +
-        ' src="' + escape(photoSrc(heroPhotoId, 960)) + '"' +
-        ' srcset="' + escape(photoSrcset(heroPhotoId)) + '"' +
+        ' src="' + escape(photoSrc(heroPhotoId, 960, heroPhoto)) + '"' +
+        ' srcset="' + escape(photoSrcset(heroPhotoId, heroPhoto)) + '"' +
         ' sizes="100vw"' +
         ' alt="' + ranchName + ' hero"' +
         ' style="object-position:' + pos + '"' +
@@ -1109,7 +1121,7 @@
         var coverPhotoId = (animal.photoIds && animal.photoIds[0]) || null;
         var coverPhoto = coverPhotoId ? findPhoto(allPhotos, coverPhotoId) : null;
         var imgHtml = coverPhoto
-          ? '<img src="' + escape(photoSrc(coverPhotoId, 480)) + '" srcset="' + escape(photoSrcset(coverPhotoId)) + '" sizes="(max-width:600px) 50vw, 240px" alt="' + escape(animal.name.value || '') + '" loading="lazy" style="object-position:' + photoObjectPos(coverPhoto) + '">'
+          ? '<img src="' + escape(photoSrc(coverPhotoId, 480, coverPhoto)) + '" srcset="' + escape(photoSrcset(coverPhotoId, coverPhoto)) + '" sizes="(max-width:600px) 50vw, 240px" alt="' + escape(animal.name.value || '') + '" loading="lazy" style="object-position:' + photoObjectPos(coverPhoto) + '">'
           : '<div class="ag-placeholder">🦌</div>';
         var scoreHtml = (animal.score && animal.score.value) ? '<span class="ag-card-score">' + escape(animal.score.value) + '</span>' : '';
         var hasPhotos = animal.photoIds && animal.photoIds.length > 0;
@@ -1153,8 +1165,8 @@
         gridItems +=
           '<div class="lodge-img-wrap stagger-item fade-in" data-lb-set="lodge" data-lb-index="' + i + '" data-photo-gallery-wrap data-photo-gallery="lodgeGallery" data-photo-idx="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
             '<img' +
-            ' src="' + escape(photoSrc(pid, 480)) + '"' +
-            ' srcset="' + escape(photoSrcset(pid)) + '"' +
+            ' src="' + escape(photoSrc(pid, 480, photo)) + '"' +
+            ' srcset="' + escape(photoSrcset(pid, photo)) + '"' +
             ' sizes="(max-width:600px) 100vw, (max-width:769px) 50vw, 33vw"' +
             ' alt="' + caption + '"' +
             ' loading="lazy"' +
@@ -1202,7 +1214,7 @@
       var pos = photoObjectPos(photo);
       cards +=
         '<div class="scored-card" data-lb-set="wt-gallery" data-lb-index="' + i + '" data-photo-gallery-wrap data-photo-gallery="whitetailGallery" data-photo-idx="' + i + '" role="button" tabindex="0" aria-label="' + caption + '">' +
-          '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="260px" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
+          '<img src="' + escape(photoSrc(pid, 480, photo)) + '" srcset="' + escape(photoSrcset(pid, photo)) + '" sizes="260px" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
           '<div class="score-label">' + caption + '</div>' +
           '<div class="score-sub">Whitetail</div>' +
         '</div>';
@@ -1227,7 +1239,7 @@
       var pos = photoObjectPos(photo);
       cards +=
         '<div class="scored-card" data-lb-set="ex-gallery" data-lb-index="' + i + '" data-photo-gallery-wrap data-photo-gallery="exoticsGallery" data-photo-idx="' + i + '" role="button" tabindex="0" aria-label="' + caption + '">' +
-          '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="260px" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
+          '<img src="' + escape(photoSrc(pid, 480, photo)) + '" srcset="' + escape(photoSrcset(pid, photo)) + '" sizes="260px" alt="' + caption + '" loading="lazy" style="object-position:' + pos + '">' +
           '<div class="score-label">' + caption + '</div>' +
           '<div class="score-sub">Exotics</div>' +
         '</div>';
@@ -1252,7 +1264,7 @@
           var caption = (photo && photo.caption) ? escape(photo.caption) : '';
           var pos = photoObjectPos(photo);
           return '<div class="scored-card" data-lb-set="cg-' + escape(g.id) + '" data-lb-index="' + i + '" role="button" tabindex="0">' +
-            '<img src="' + escape(photoSrc(pid, 480)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="260px" alt="' + escape(g.label) + '" loading="lazy" style="object-position:' + pos + '">' +
+            '<img src="' + escape(photoSrc(pid, 480, photo)) + '" srcset="' + escape(photoSrcset(pid, photo)) + '" sizes="260px" alt="' + escape(g.label) + '" loading="lazy" style="object-position:' + pos + '">' +
             (caption ? '<div class="score-label">' + caption + '</div>' : '') +
           '</div>';
         }).join('');
@@ -1562,7 +1574,7 @@
     agData.animals.forEach(function(animal) {
       lbData.sets['ag-' + animal.id] = (animal.photoIds || []).map(function(pid) {
         var photo = findPhoto(agData.photos, pid);
-        return { id: pid, caption: (photo && photo.caption) || animal.name.value || '', x: (photo && photo.x) || 0.5, y: (photo && photo.y) || 0.5 };
+        return { id: pid, caption: (photo && photo.caption) || animal.name.value || '', x: (photo && photo.x) || 0.5, y: (photo && photo.y) || 0.5, renditions: photo ? photo.renditions : null };
       });
     });
 
@@ -1594,7 +1606,7 @@
         var pos = photo ? photoObjectPos(photo) : 'center';
         var caption = (photo && photo.caption) ? photo.caption : '';
         return '<div class="ag-gallery-item" data-ag-grid-idx="' + i + '">' +
-          '<img src="' + escape(photoSrc(pid, 960)) + '" srcset="' + escape(photoSrcset(pid)) + '" sizes="(max-width:600px) 100vw, 50vw" alt="" loading="' + (i < 4 ? 'eager' : 'lazy') + '" style="object-position:' + pos + '">' +
+          '<img src="' + escape(photoSrc(pid, 960, photo)) + '" srcset="' + escape(photoSrcset(pid, photo)) + '" sizes="(max-width:600px) 100vw, 50vw" alt="" loading="' + (i < 4 ? 'eager' : 'lazy') + '" style="object-position:' + pos + '">' +
           (caption ? '<span class="ag-gallery-caption">' + escape(caption) + '</span>' : '') +
         '</div>';
       }).join('') + '</div>';
@@ -1712,7 +1724,7 @@
         }
         lbData.sets[lbSet] = pids.map(function(pid) {
           var photo = findPhoto(photos, pid);
-          return { id: pid, caption: (photo && photo.caption) || '', x: photo ? photo.x : 0.5, y: photo ? photo.y : 0.5 };
+          return { id: pid, caption: (photo && photo.caption) || '', x: photo ? photo.x : 0.5, y: photo ? photo.y : 0.5, renditions: photo ? photo.renditions : null };
         });
       });
     } else {
@@ -1720,7 +1732,7 @@
       var trophyIds = (slots.trophyGallery && slots.trophyGallery.photoIds) || [];
       lbData.sets['trophies-fallback'] = trophyIds.map(function (pid) {
         var photo = findPhoto(photos, pid);
-        return { id: pid, caption: (photo && photo.caption) ? photo.caption : pid, x: photo ? photo.x : 0.5, y: photo ? photo.y : 0.5 };
+        return { id: pid, caption: (photo && photo.caption) ? photo.caption : pid, x: photo ? photo.x : 0.5, y: photo ? photo.y : 0.5, renditions: photo ? photo.renditions : null };
       });
     }
 
@@ -1732,7 +1744,8 @@
         id: pid,
         caption: (photo && photo.caption) ? photo.caption : pid,
         x: photo ? photo.x : 0.5,
-        y: photo ? photo.y : 0.5
+        y: photo ? photo.y : 0.5,
+        renditions: photo ? photo.renditions : null
       };
     });
 
@@ -1744,7 +1757,8 @@
         id: pid,
         caption: (photo && photo.caption) ? photo.caption : pid,
         x: photo ? photo.x : 0.5,
-        y: photo ? photo.y : 0.5
+        y: photo ? photo.y : 0.5,
+        renditions: photo ? photo.renditions : null
       };
     });
 
@@ -1756,7 +1770,8 @@
         id: pid,
         caption: (photo && photo.caption) ? photo.caption : pid,
         x: photo ? photo.x : 0.5,
-        y: photo ? photo.y : 0.5
+        y: photo ? photo.y : 0.5,
+        renditions: photo ? photo.renditions : null
       };
     });
 
@@ -1764,7 +1779,7 @@
     (data.customGalleries || []).forEach(function(g) {
       lbData.sets['cg-' + g.id] = (g.photoIds || []).map(function(pid) {
         var p = findPhoto(photos, pid);
-        return { id: pid, caption: (p && p.caption) || '', x: (p && p.x) || 0.5, y: (p && p.y) || 0.5 };
+        return { id: pid, caption: (p && p.caption) || '', x: (p && p.x) || 0.5, y: (p && p.y) || 0.5, renditions: p ? p.renditions : null };
       });
     });
   }
@@ -1804,14 +1819,14 @@
     img.style.objectPosition = pos;
     img.alt = entry.caption || '';
 
-    var newSrc = photoSrc(entry.id, 1600);
+    var newSrc = photoSrc(entry.id, 1600, entry);
     img.src = newSrc;
     img.onload = function () {
       img.classList.add('lb-visible');
     };
     img.onerror = function () {
       /* try lower res */
-      img.src = photoSrc(entry.id, 960);
+      img.src = photoSrc(entry.id, 960, entry);
     };
     cap.textContent = entry.caption || '';
   }
