@@ -1072,11 +1072,19 @@ async function handleRequest(request, env) {
     // Proxy img/* to GitHub raw (serves repo photos to admin panel)
     if (method === 'GET' && path.startsWith('/img/')) {
       const ghRes = await fetch(`${GH_RAW}${path}`, { cf: { cacheEverything: true, cacheTtl: 3600 } });
-      if (!ghRes.ok) return err('Image not found', 404);
-      const ct = ghRes.headers.get('content-type') || 'image/jpeg';
-      return new Response(ghRes.body, {
-        headers: { 'Content-Type': ct, 'Cache-Control': 'public, max-age=3600' }
-      });
+      if (ghRes.ok) {
+        const ct = ghRes.headers.get('content-type') || 'image/jpeg';
+        return new Response(ghRes.body, { headers: { 'Content-Type': ct, 'Cache-Control': 'public, max-age=3600' } });
+      }
+      // Fallback: try alternative extensions (handles iOS JPEG uploads stored when WebP unavailable)
+      const base = path.replace(/\.(webp|jpeg|jpg|png|heic)$/i, '');
+      for (const altExt of ['jpeg', 'jpg', 'webp', 'png']) {
+        const altRes = await fetch(`${GH_RAW}${base}.${altExt}`, { cf: { cacheEverything: true, cacheTtl: 3600 } });
+        if (altRes.ok) {
+          return new Response(altRes.body, { headers: { 'Content-Type': `image/${altExt === 'jpg' ? 'jpeg' : altExt}`, 'Cache-Control': 'public, max-age=3600' } });
+        }
+      }
+      return err('Image not found', 404);
     }
 
     // ── Auth-required routes ───────────────────────────────────────────────────
