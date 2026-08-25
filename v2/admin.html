@@ -1211,6 +1211,16 @@ function buildSlotsFields() {
         <button class="pick-photo-btn" data-pickslot="lodgeGallery">Add Lodge Photo</button>
       </div>
       <div class="field-group">
+        <label>Ranch Left Photo</label>
+        ${(function() { const pid = (draft.slots.ranchLeft && draft.slots.ranchLeft.photoId) || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="ranchLeft">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        <button class="pick-photo-btn" data-pickslot="ranchLeft">Pick Ranch Left Photo</button>
+      </div>
+      <div class="field-group">
+        <label>Ranch Right Photo</label>
+        ${(function() { const pid = (draft.slots.ranchRight && draft.slots.ranchRight.photoId) || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="ranchRight">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        <button class="pick-photo-btn" data-pickslot="ranchRight">Pick Ranch Right Photo</button>
+      </div>
+      <div class="field-group">
         <label>Whitetail Score Gallery</label>
         ${wtMulti}
         <button class="pick-photo-btn" data-pickslot="whitetailGallery">Add Whitetail Photo</button>
@@ -1760,7 +1770,10 @@ function renderPhotoGrid() {
 function selectPhotoFromLibrary(photoId) {
   if (!currentPhotoSlot) return;
   pushUndo();
-  const slotObj = draft.slots[currentPhotoSlot];
+  // Ensure ranchLeft/ranchRight slots exist
+      if (!draft.slots.ranchLeft) draft.slots.ranchLeft = { photoId: '' };
+      if (!draft.slots.ranchRight) draft.slots.ranchRight = { photoId: '' };
+      const slotObj = draft.slots[currentPhotoSlot];
   if ('photoId' in slotObj) {
     slotObj.photoId = photoId;
   } else if ('photoIds' in slotObj) {
