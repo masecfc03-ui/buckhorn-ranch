@@ -537,6 +537,57 @@
     #sec-corporate {
       background: var(--parchment);
     }
+    #sec-corporate .corp-layout {
+      display: grid;
+      grid-template-columns: 1fr 2.2fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    @media (max-width: 768px) {
+      #sec-corporate .corp-layout {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      #sec-corporate .corp-photo-left,
+      #sec-corporate .corp-photo-right {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+    }
+    #sec-corporate .corp-photo-left {
+      position: relative;
+      overflow: hidden;
+      background: var(--parchment);
+      aspect-ratio: 4/3;
+      margin-top: 280px;
+      margin-bottom: 0;
+    }
+    #sec-corporate .corp-photo-right {
+      position: relative;
+      overflow: hidden;
+      background: var(--parchment);
+      aspect-ratio: 3/2;
+      margin-top: 0;
+      margin-bottom: 280px;
+    }
+    #sec-corporate .corp-photo-left img,
+    #sec-corporate .corp-photo-right img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 500ms var(--ease);
+    }
+    @media (hover: hover) {
+      #sec-corporate .corp-photo-left:hover img,
+      #sec-corporate .corp-photo-right:hover img {
+        transform: scale(1.04);
+      }
+    }
     #sec-corporate h2 {
       font-size: clamp(36px, 5vw, 52px);
       margin-bottom: 8px;
@@ -1352,6 +1403,19 @@
 
   /* 5. CORPORATE */
   function buildCorporate(data) {
+    var allPhotos = data.photos || [];
+    var slots = data.slots || {};
+    var leftPhotoId  = (slots.corporateLeft  && slots.corporateLeft.photoId)  || '';
+    var rightPhotoId = (slots.corporateRight && slots.corporateRight.photoId) || '';
+    var leftPhoto  = leftPhotoId  ? findPhoto(allPhotos, leftPhotoId)  : null;
+    var rightPhoto = rightPhotoId ? findPhoto(allPhotos, rightPhotoId) : null;
+    function corpPhotoBox(pid, photo, slot, cls) {
+      if (!pid) return '<div class="' + cls + ' fade-up" data-photo-slot="corporate' + (slot === 'left' ? 'Left' : 'Right') + '">' + PLACEHOLDER_SVG + '</div>';
+      var pos = photoObjectPos(photo);
+      return '<div class="' + cls + ' fade-up" data-photo-slot="corporate' + (slot === 'left' ? 'Left' : 'Right') + '" role="button" tabindex="0">' +
+        '<img src="' + escape(photoSrc(pid, 960, photo)) + '" srcset="' + escape(photoSrcset(pid, photo)) + '" sizes="(max-width:768px) 90vw, 25vw" alt="Corporate" loading="lazy" style="object-position:' + pos + '">' +
+      '</div>';
+    }
     var corp    = data.corporate || {};
     var body    = escape(v(corp.body) || '');
     var details = corp.details || [];
@@ -1366,12 +1430,16 @@
     }
 
     return '<section id="sec-corporate">' +
-      '<div class="inner">' +
-        '<span class="section-label fade-up" data-edit-path="corporateSection.label" data-edit-default="Groups &amp; Corporate">Groups &amp; Corporate</span>' +
-        '<h2 class="heading-reveal" data-edit-path="corporateSection.heading" data-edit-default="Corporate Hunts">Corporate Hunts</h2>' +
-        '<span class="brass-rule rule-reveal"></span>' +
-        (body ? '<p class="corp-body fade-up" data-edit-path="corporate.body.value" data-edit-multiline="true">' + body + '</p>' : '') +
-        listHtml +
+      '<span class="section-label fade-up" data-edit-path="corporateSection.label" data-edit-default="Groups &amp; Corporate">Groups &amp; Corporate</span>' +
+      '<div class="corp-layout">' +
+        corpPhotoBox(leftPhotoId, leftPhoto, 'left', 'corp-photo-left') +
+        '<div class="ranch-text">' +
+          '<h2 class="heading-reveal" data-edit-path="corporateSection.heading" data-edit-default="Corporate Hunts">Corporate Hunts</h2>' +
+          '<span class="brass-rule rule-reveal"></span>' +
+          (body ? '<p class="corp-body fade-up" data-edit-path="corporate.body.value" data-edit-multiline="true">' + body + '</p>' : '') +
+          listHtml +
+        '</div>' +
+        corpPhotoBox(rightPhotoId, rightPhoto, 'right', 'corp-photo-right') +
       '</div>' +
     '</section>';
   }
