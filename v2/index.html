@@ -1159,9 +1159,9 @@
     var rightPhoto = rightPhotoId ? findPhoto(allPhotos, rightPhotoId) : null;
 
     function photoBox(pid, photo, slot, cls) {
-      if (!pid) return '<div class="' + cls + ' fade-up">' + PLACEHOLDER_SVG + '</div>';
+      if (!pid) return '<div class="' + cls + ' fade-up" data-photo-slot="ranch' + (slot === 'left' ? 'Left' : 'Right') + '">' + PLACEHOLDER_SVG + '</div>';
       var pos = photoObjectPos(photo);
-      return '<div class="' + cls + ' fade-up" data-lb-set="ranch-photos" data-lb-index="' + (slot === 'left' ? 0 : 1) + '" role="button" tabindex="0" aria-label="Ranch photo" data-photo-gallery-wrap data-photo-gallery="ranchPhotos" data-photo-idx="' + (slot === 'left' ? 0 : 1) + '">' +
+      return '<div class="' + cls + ' fade-up" data-photo-slot="ranch' + (slot === 'left' ? 'Left' : 'Right') + '" role="button" tabindex="0" aria-label="Ranch photo">' +
         '<img src="' + escape(photoSrc(pid, 960, photo)) + '" srcset="' + escape(photoSrcset(pid, photo)) + '" sizes="(max-width:768px) 90vw, 25vw" alt="Ranch" loading="lazy" style="object-position:' + pos + '">' +
       '</div>';
     }
