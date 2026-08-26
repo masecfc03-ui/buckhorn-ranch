@@ -1221,6 +1221,16 @@ function buildSlotsFields() {
         <button class="pick-photo-btn" data-pickslot="ranchRight">Pick Ranch Right Photo</button>
       </div>
       <div class="field-group">
+        <label>Corporate Left Photo</label>
+        ${(function() { if (!draft.slots.corporateLeft) draft.slots.corporateLeft = { photoId: '' }; const pid = draft.slots.corporateLeft.photoId || ''; return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="corporateLeft">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        <button class="pick-photo-btn" data-pickslot="corporateLeft">Pick Corporate Left Photo</button>
+      </div>
+      <div class="field-group">
+        <label>Corporate Right Photo</label>
+        ${(function() { if (!draft.slots.corporateRight) draft.slots.corporateRight = { photoId: '' }; const pid = draft.slots.corporateRight.photoId || ''; return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="corporateRight">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        <button class="pick-photo-btn" data-pickslot="corporateRight">Pick Corporate Right Photo</button>
+      </div>
+      <div class="field-group">
         <label>Whitetail Score Gallery</label>
         ${wtMulti}
         <button class="pick-photo-btn" data-pickslot="whitetailGallery">Add Whitetail Photo</button>
