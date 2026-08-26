@@ -1085,6 +1085,12 @@
   /* Resolve a single src URL, using actual rendition filePath when available */
   function photoSrc(photoId, width, photo) {
     if (isLegacyPhoto(photoId)) return 'img/' + photoId;
+    if (!photo || (!Array.isArray(photo.renditions) || photo.renditions.length === 0)) {
+      var widths = [480, 960, 1600, 2400];
+      var best = width || 960;
+      var closest = widths.reduce(function(a,b){ return Math.abs(b-best)<Math.abs(a-best)?b:a; });
+      return 'img/' + photoId + '-' + closest + '.webp';
+    }
     if (photo && Array.isArray(photo.renditions) && photo.renditions.length > 0) {
       var best = null, bestDiff = Infinity;
       for (var _i = 0; _i < photo.renditions.length; _i++) {
