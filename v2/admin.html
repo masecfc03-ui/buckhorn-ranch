@@ -736,10 +736,21 @@ function normalizeDraft(d) {
   return d;
 }
 
-// Return correct src for a photo id: legacy files serve direct, new WebP use rendition path
-function photoSrcAdmin(id, width) {
+// Return correct src for a photo id. photo object is optional but preferred.
+function photoSrcAdmin(id, width, photo) {
   if (!id) return '';
+  // Newly-uploaded photos carry a local data URL before GitHub CDN propagates
+  if (photo && photo._localDataUrl) return photo._localDataUrl;
   if (/\.(jpg|jpeg|png|gif)$/i.test(id)) return `img/${id}`;
+  // Use actual rendition filePath when available (works for jpeg/webp)
+  if (photo && Array.isArray(photo.renditions) && photo.renditions.length > 0) {
+    var best = null, bestDiff = Infinity;
+    photo.renditions.forEach(function(r) {
+      var d = Math.abs((r.width || 0) - (width || 480));
+      if (d < bestDiff) { bestDiff = d; best = r; }
+    });
+    if (best && best.filePath) return best.filePath;
+  }
   return `img/${id}-${width || 480}.webp`;
 }
 let saveTimer = null;
@@ -1255,7 +1266,7 @@ function buildSlotsFields() {
   function buildAnimalFormPanel(a) {
     const photos = (a.photoIds || []).map(pid => {
       const ph = (draft.photos || []).find(p => (p.id || p.photoId) === pid);
-      const src = photoSrcAdmin(pid, 120);
+      const src = photoSrcAdmin(pid, 120, ph);
       const caption = ph ? (ph.caption || '') : '';
       return `<div class="ag-form-photo-item" draggable="true" data-ag-drag-animal="${escHtml(a.id)}" data-ag-drag-pid="${escHtml(pid)}">
         <span class="ag-form-drag-handle" title="Drag to reorder">⠿</span>
@@ -1728,7 +1739,7 @@ function renderPhotoGrid() {
       ((draft.slots[currentPhotoSlot].photoIds || []).includes(p.photoId))
     );
     return `<div class="photo-card ${selected ? 'selected' : ''}" data-photoid="${p.photoId}" draggable="true" data-drag-photoid="${p.photoId}">
-      <img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.src=''" alt="">
+      <img src="${photoSrcAdmin(p.photoId, 480, p)}" onerror="this.src=''" alt="">
       <button class="photo-delete" data-deletephoto="${p.photoId}">🗑</button>
       <div class="photo-caption"><input type="text" placeholder="Caption…" value="${esc(caption)}" data-captionfor="${p.photoId}"></div>
     </div>`;
@@ -1839,7 +1850,11 @@ async function handleFileUpload(files) {
         metadata: {}
       };
       await apiJson('POST', '/api/images/upload', payload);
-      draft.photos.push({ id: photoId, photoId, filename: file.name, metadata: {} });
+      // Build filePath renditions for display (filePath matches what the worker stored in KV)
+      const draftRenditions = renditions.map(r => ({ width: r.width, filePath: `img/${photoId}-${r.width}.${r.ext}` }));
+      // Use local data URL for immediate display while GitHub CDN propagates
+      const localDataUrl = renditions[0] ? `data:image/${renditions[0].ext};base64,${renditions[0].data}` : null;
+      draft.photos.push({ id: photoId, photoId, filename: file.name, metadata: {}, renditions: draftRenditions, _localDataUrl: localDataUrl });
       document.getElementById(`pb-${photoId}`).style.width = '100%';
       document.getElementById(`ps-${photoId}`).textContent = '✓ Done';
       renderPhotoGrid();
@@ -3030,7 +3045,7 @@ function openPhotoPicker() {
   const allPhotos = draft.photos || [];
   grid.innerHTML = allPhotos.map(p => {
     const pid = p.photoId || p.id;
-    const src = photoSrcAdmin(pid, 480);
+    const src = photoSrcAdmin(pid, 480, p);
     return `<div class="pp-thumb" data-photoid="${escHtml(pid)}" style="cursor:pointer;border-radius:4px;overflow:hidden;border:2px solid transparent;transition:border-color 0.15s;">
       <img src="${escHtml(src)}" style="width:100%;height:100px;object-fit:cover;display:block;" onerror="this.src=''">
       <div style="font-size:10px;padding:3px 4px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(pid)}</div>
