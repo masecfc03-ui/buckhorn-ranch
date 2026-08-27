@@ -700,7 +700,7 @@ async function handleImageUpload(request, env) {
       const errText = await res.text();
       return err(`GitHub upload failed for ${filePath}: ${res.status} ${errText}`, 502);
     }
-    uploadResults.push({ filePath, width });
+    uploadResults.push({ filePath, width, publicPath: filePath });
   }
 
   // Update draft: add photo entry
@@ -711,7 +711,9 @@ async function handleImageUpload(request, env) {
       if (!Array.isArray(draft.photos)) draft.photos = [];
       // Remove existing entry with same photoId if any
       draft.photos = draft.photos.filter(p => p.id !== photoId);
-      draft.photos.push({ id: photoId, filename, metadata, renditions: uploadResults });
+      // Build rendition objects the frontend expects: { width, filePath }
+      const photoRenditions = uploadResults.map(r => ({ width: r.width, filePath: r.filePath }));
+      draft.photos.push({ id: photoId, photoId, filename, caption: '', metadata: metadata || {}, renditions: photoRenditions, x: 0.5, y: 0.5, uploadedAt: new Date().toISOString() });
       await env.BHR_KV.put('draft:current', JSON.stringify(draft));
     } catch { /* draft parse error — non-fatal */ }
   }
