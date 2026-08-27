@@ -713,7 +713,7 @@ async function handleImageUpload(request, env) {
       draft.photos = draft.photos.filter(p => p.id !== photoId);
       // Build rendition objects the frontend expects: { width, filePath }
       const photoRenditions = uploadResults.map(r => ({ width: r.width, filePath: r.filePath }));
-      draft.photos.push({ id: photoId, photoId, filename, caption: '', metadata: metadata || {}, renditions: photoRenditions, x: 0.5, y: 0.5, uploadedAt: new Date().toISOString() });
+      draft.photos.push({ id: photoId, photoId, filename, caption: '', metadata: metadata || {}, renditions: uploadResults.map(r => ({ width: r.width, filePath: r.filePath })), x: 0.5, y: 0.5, uploadedAt: new Date().toISOString() });
       await env.BHR_KV.put('draft:current', JSON.stringify(draft));
     } catch { /* draft parse error — non-fatal */ }
   }
