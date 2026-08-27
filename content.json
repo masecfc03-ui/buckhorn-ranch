@@ -895,524 +895,2003 @@
       "id": "photo-1787622770934-ace850",
       "photoId": "photo-1787622770934-ace850",
       "filename": "IMG_6051.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787622770934-ace850-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787622770934-ace850-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787622770934-ace850-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787622770934-ace850-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656661492-4a7d84",
       "photoId": "photo-1787656661492-4a7d84",
       "filename": "IMG_1363.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656661492-4a7d84-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656661492-4a7d84-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656671706-dac96f",
       "photoId": "photo-1787656671706-dac96f",
       "filename": "IMG_1424.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656671706-dac96f-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656671706-dac96f-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656686647-d3e789",
       "photoId": "photo-1787656686647-d3e789",
       "filename": "IMG_1372.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656686647-d3e789-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656686647-d3e789-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787656686647-d3e789-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656708662-6119f1",
       "photoId": "photo-1787656708662-6119f1",
       "filename": "IMG_1376.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656708662-6119f1-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656708662-6119f1-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656723311-ae06c9",
       "photoId": "photo-1787656723311-ae06c9",
       "filename": "IMG_1361.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656723311-ae06c9-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656723311-ae06c9-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656735922-1d5609",
       "photoId": "photo-1787656735922-1d5609",
       "filename": "IMG_0543.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656735922-1d5609-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656735922-1d5609-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656749345-2c54f9",
       "photoId": "photo-1787656749345-2c54f9",
       "filename": "IMG_0078.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656749345-2c54f9-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656749345-2c54f9-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787656749345-2c54f9-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787656749345-2c54f9-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656833802-79be98",
       "photoId": "photo-1787656833802-79be98",
       "filename": "IMG_0585.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656833802-79be98-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656833802-79be98-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787656833802-79be98-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656858171-8aa9c4",
       "photoId": "photo-1787656858171-8aa9c4",
       "filename": "IMG_0789.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656858171-8aa9c4-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656858171-8aa9c4-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787656858171-8aa9c4-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656879473-e2ed76",
       "photoId": "photo-1787656879473-e2ed76",
       "filename": "IMG_0344.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656879473-e2ed76-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656879473-e2ed76-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787656879473-e2ed76-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787656879473-e2ed76-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656948898-21f465",
       "photoId": "photo-1787656948898-21f465",
       "filename": "IMG_0531.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656948898-21f465-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656948898-21f465-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787656962109-574945",
       "photoId": "photo-1787656962109-574945",
       "filename": "IMG_4737.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787656962109-574945-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787656962109-574945-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787656962109-574945-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787656962109-574945-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657035954-137340",
       "photoId": "photo-1787657035954-137340",
       "filename": "75D8BD9F-D736-4940-BB8E-4250AC37FA40.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657035954-137340-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657035954-137340-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657035954-137340-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657035954-137340-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657107978-f58ec8",
       "photoId": "photo-1787657107978-f58ec8",
       "filename": "55C3D423-959E-44F8-A62C-B38B4BC63BB4.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657107978-f58ec8-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657107978-f58ec8-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657107978-f58ec8-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657107978-f58ec8-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657159031-ab3d30",
       "photoId": "photo-1787657159031-ab3d30",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657159031-ab3d30-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657159031-ab3d30-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657159031-ab3d30-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657159031-ab3d30-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657226768-cb7edf",
       "photoId": "photo-1787657226768-cb7edf",
       "filename": "IMG_2584.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657226768-cb7edf-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657226768-cb7edf-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657226768-cb7edf-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657318057-a17281",
       "photoId": "photo-1787657318057-a17281",
       "filename": "IMG_2666.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657318057-a17281-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657318057-a17281-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657318057-a17281-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657318057-a17281-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657432693-6757bb",
       "photoId": "photo-1787657432693-6757bb",
       "filename": "IMG_2704.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657432693-6757bb-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657432693-6757bb-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657432693-6757bb-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657463158-7967aa",
       "photoId": "photo-1787657463158-7967aa",
       "filename": "IMG_3295.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657463158-7967aa-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657463158-7967aa-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657463158-7967aa-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657463158-7967aa-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657507497-3b2ee0",
       "photoId": "photo-1787657507497-3b2ee0",
       "filename": "IMG_2564.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657507497-3b2ee0-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657507497-3b2ee0-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657507497-3b2ee0-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657541015-a5b4ec",
       "photoId": "photo-1787657541015-a5b4ec",
       "filename": "A2489426-954D-4577-B5D3-4FECAC5C0969.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657541015-a5b4ec-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657541015-a5b4ec-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657541015-a5b4ec-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657541015-a5b4ec-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657600013-fac26f",
       "photoId": "photo-1787657600013-fac26f",
       "filename": "IMG_7739.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657600013-fac26f-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657600013-fac26f-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657600013-fac26f-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657600013-fac26f-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657675018-573fbb",
       "photoId": "photo-1787657675018-573fbb",
       "filename": "IMG_0988.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657675018-573fbb-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657675018-573fbb-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657675018-573fbb-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657675018-573fbb-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657706149-cf138f",
       "photoId": "photo-1787657706149-cf138f",
       "filename": "CD0FE7AA-C176-47B3-8330-AFEDD89B79CE.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657706149-cf138f-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657706149-cf138f-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657706149-cf138f-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657706149-cf138f-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657752433-947c48",
       "photoId": "photo-1787657752433-947c48",
       "filename": "6D7FDA23-842E-41A8-8499-A9D244B4FF14.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657752433-947c48-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657752433-947c48-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657752433-947c48-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657752433-947c48-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657798374-da2c89",
       "photoId": "photo-1787657798374-da2c89",
       "filename": "IMG_6399.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657798374-da2c89-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657798374-da2c89-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657798374-da2c89-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657798374-da2c89-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657842501-4e62c6",
       "photoId": "photo-1787657842501-4e62c6",
       "filename": "E8669BD2-4D2F-457F-A7F0-6BDC3CF7717C.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657842501-4e62c6-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657842501-4e62c6-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657842501-4e62c6-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657842501-4e62c6-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657896267-3f0f6c",
       "photoId": "photo-1787657896267-3f0f6c",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657896267-3f0f6c-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657896267-3f0f6c-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657896267-3f0f6c-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657896267-3f0f6c-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787657957603-70ee03",
       "photoId": "photo-1787657957603-70ee03",
       "filename": "5F446F31-9648-4593-A328-C6B172A16417.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787657957603-70ee03-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787657957603-70ee03-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787657957603-70ee03-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787657957603-70ee03-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787658744305-3ca1f1",
       "photoId": "photo-1787658744305-3ca1f1",
       "filename": "IMG_5008.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787658744305-3ca1f1-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787658744305-3ca1f1-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787658744305-3ca1f1-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787658744305-3ca1f1-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787658790010-0eb51b",
       "photoId": "photo-1787658790010-0eb51b",
       "filename": "IMG_0850.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787658790010-0eb51b-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787658790010-0eb51b-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787658790010-0eb51b-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787658790010-0eb51b-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787658839159-2e5515",
       "photoId": "photo-1787658839159-2e5515",
       "filename": "IMG_0888.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787658839159-2e5515-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787658839159-2e5515-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787658839159-2e5515-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787658839159-2e5515-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787658883573-be317b",
       "photoId": "photo-1787658883573-be317b",
       "filename": "IMG_4049.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787658883573-be317b-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787658883573-be317b-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787658883573-be317b-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787658883573-be317b-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787658947511-cb282d",
       "photoId": "photo-1787658947511-cb282d",
       "filename": "IMG_0788.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787658947511-cb282d-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787658947511-cb282d-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787658947511-cb282d-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787658947511-cb282d-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659001483-a5a439",
       "photoId": "photo-1787659001483-a5a439",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659001483-a5a439-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659001483-a5a439-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659001483-a5a439-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659053712-6530ac",
       "photoId": "photo-1787659053712-6530ac",
       "filename": "IMG_7987.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659053712-6530ac-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659053712-6530ac-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659053712-6530ac-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659053712-6530ac-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659118605-706a89",
       "photoId": "photo-1787659118605-706a89",
       "filename": "IMG_8041.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659118605-706a89-480.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659121813-d322eb",
       "photoId": "photo-1787659121813-d322eb",
       "filename": "0A235DE0-ECC6-4D94-BEC2-B72FBA1C7428.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659121813-d322eb-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659121813-d322eb-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659121813-d322eb-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659121813-d322eb-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659206901-731917",
       "photoId": "photo-1787659206901-731917",
       "filename": "IMG_8831.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659206901-731917-480.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659211411-95b28e",
       "photoId": "photo-1787659211411-95b28e",
       "filename": "IMG-0154.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659211411-95b28e-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659211411-95b28e-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659211411-95b28e-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659211411-95b28e-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659265221-bf925a",
       "photoId": "photo-1787659265221-bf925a",
       "filename": "IMG_4923.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659265221-bf925a-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659265221-bf925a-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659265221-bf925a-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659301493-d6fea8",
       "photoId": "photo-1787659301493-d6fea8",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659301493-d6fea8-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659301493-d6fea8-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659301493-d6fea8-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659301493-d6fea8-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659360713-a0ff3a",
       "photoId": "photo-1787659360713-a0ff3a",
       "filename": "IMG_2739.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659360713-a0ff3a-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659360713-a0ff3a-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659360713-a0ff3a-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659360713-a0ff3a-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659421403-60526f",
       "photoId": "photo-1787659421403-60526f",
       "filename": "IMG_2662.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659421403-60526f-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659421403-60526f-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659421403-60526f-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659444084-4fee65",
       "photoId": "photo-1787659444084-4fee65",
       "filename": "4FAF5D91-F151-40B2-B65C-3DB92F163F5F.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659444084-4fee65-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659444084-4fee65-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659444084-4fee65-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659444084-4fee65-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659557798-ff99cc",
       "photoId": "photo-1787659557798-ff99cc",
       "filename": "IMG_2542.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659557798-ff99cc-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659557798-ff99cc-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659557798-ff99cc-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659557798-ff99cc-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659603322-296f4f",
       "photoId": "photo-1787659603322-296f4f",
       "filename": "IMG_2556.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659603322-296f4f-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659603322-296f4f-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659603322-296f4f-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659603322-296f4f-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659690705-6149ad",
       "photoId": "photo-1787659690705-6149ad",
       "filename": "IMG_2594.jpeg",
       "metadata": {},
-      "caption": "Bison-Watusi"
+      "caption": "Bison-Watusi",
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659690705-6149ad-480.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659695391-f1b949",
       "photoId": "photo-1787659695391-f1b949",
       "filename": "IMG_2640.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659695391-f1b949-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659695391-f1b949-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659695391-f1b949-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659722473-9996d9",
       "photoId": "photo-1787659722473-9996d9",
       "filename": "C7A241C0-C108-402D-B438-0491B2891F1A.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659722473-9996d9-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659722473-9996d9-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659722473-9996d9-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659722473-9996d9-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659817054-4c2489",
       "photoId": "photo-1787659817054-4c2489",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659817054-4c2489-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659817054-4c2489-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659817054-4c2489-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659817054-4c2489-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787659884130-dd469b",
       "photoId": "photo-1787659884130-dd469b",
       "filename": "IMG_5787.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787659884130-dd469b-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787659884130-dd469b-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787659884130-dd469b-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787659884130-dd469b-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787661540309-b7f31c",
       "photoId": "photo-1787661540309-b7f31c",
       "filename": "IMG_5758.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787661540309-b7f31c-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787661540309-b7f31c-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787661540309-b7f31c-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787661540309-b7f31c-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787661606222-03b9e6",
       "photoId": "photo-1787661606222-03b9e6",
       "filename": "IMG_5194.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787661606222-03b9e6-480.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787661610514-4d1a13",
       "photoId": "photo-1787661610514-4d1a13",
       "filename": "BAC460D8-271D-4EA8-A1DC-550B3011598C.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787661610514-4d1a13-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787661610514-4d1a13-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787661610514-4d1a13-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787661610514-4d1a13-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787661676778-4d8009",
       "photoId": "photo-1787661676778-4d8009",
       "filename": "IMG_0968.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787661676778-4d8009-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787661676778-4d8009-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787661676778-4d8009-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787661676778-4d8009-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787661749300-40dd87",
       "photoId": "photo-1787661749300-40dd87",
       "filename": "IMG_4706.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787661749300-40dd87-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787661749300-40dd87-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787661749300-40dd87-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787661749300-40dd87-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787661859663-c45ff3",
       "photoId": "photo-1787661859663-c45ff3",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787661859663-c45ff3-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787661859663-c45ff3-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787661859663-c45ff3-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787661859663-c45ff3-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787661921100-112449",
       "photoId": "photo-1787661921100-112449",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787661921100-112449-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787661921100-112449-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787661921100-112449-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787661947418-ed864e",
       "photoId": "photo-1787661947418-ed864e",
       "filename": "IMG_4711.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787661947418-ed864e-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787661947418-ed864e-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787661947418-ed864e-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787661947418-ed864e-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662042965-a0e19d",
       "photoId": "photo-1787662042965-a0e19d",
       "filename": "IMG_6723.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662042965-a0e19d-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662042965-a0e19d-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787662042965-a0e19d-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787662042965-a0e19d-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662092711-e7cb8e",
       "photoId": "photo-1787662092711-e7cb8e",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662092711-e7cb8e-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662092711-e7cb8e-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787662092711-e7cb8e-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787662092711-e7cb8e-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662155010-a31086",
       "photoId": "photo-1787662155010-a31086",
       "filename": "C56472B0-B96D-498E-9426-310E0EE75233.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662155010-a31086-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662155010-a31086-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787662155010-a31086-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787662155010-a31086-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662212844-3aa069",
       "photoId": "photo-1787662212844-3aa069",
       "filename": "IMG_6732.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662212844-3aa069-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662212844-3aa069-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787662212844-3aa069-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787662212844-3aa069-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662513409-5f35d9",
       "photoId": "photo-1787662513409-5f35d9",
       "filename": "Screenshot 2026-08-25 at 7.54.58\u202fAM.png",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662513409-5f35d9-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662513409-5f35d9-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662646221-b9c885",
       "photoId": "photo-1787662646221-b9c885",
       "filename": "IMG_1363.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662646221-b9c885-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662646221-b9c885-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662656329-2bd0b5",
       "photoId": "photo-1787662656329-2bd0b5",
       "filename": "IMG_0789.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662656329-2bd0b5-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662656329-2bd0b5-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787662656329-2bd0b5-1600.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662755071-542f9c",
       "photoId": "photo-1787662755071-542f9c",
       "filename": "IMG_1363.jpg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662755071-542f9c-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662755071-542f9c-960.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787662819147-6c5587",
       "photoId": "photo-1787662819147-6c5587",
       "filename": "IMG_2631.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787662819147-6c5587-480.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787662819147-6c5587-960.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787662819147-6c5587-1600.webp",
+          "ext": "webp"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787662819147-6c5587-2400.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787664561065-fa7f80",
       "photoId": "photo-1787664561065-fa7f80",
       "filename": "IMG_1361.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787664561065-fa7f80-480.jpeg",
+          "ext": "jpeg"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787664561065-fa7f80-960.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787709337479-fccec1",
       "photoId": "photo-1787709337479-fccec1",
       "filename": "native.jpg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787709337479-fccec1-480.webp",
+          "ext": "webp"
+        }
+      ]
     },
     {
       "id": "photo-1787755168108-5264ca",
       "photoId": "photo-1787755168108-5264ca",
       "filename": "IMG_2662.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755168108-5264ca-480.jpeg",
+          "ext": "jpeg"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787755168108-5264ca-960.jpeg",
+          "ext": "jpeg"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787755168108-5264ca-1600.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755623336-374dfd",
       "photoId": "photo-1787755623336-374dfd",
       "filename": "IMG_5599.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755623336-374dfd-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755626691-099cdc",
       "photoId": "photo-1787755626691-099cdc",
       "filename": "IMG_5595.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755626691-099cdc-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755628853-dc0db9",
       "photoId": "photo-1787755628853-dc0db9",
       "filename": "IMG_5591.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755628853-dc0db9-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755631247-50d9aa",
       "photoId": "photo-1787755631247-50d9aa",
       "filename": "IMG_5590.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755631247-50d9aa-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755633582-978385",
       "photoId": "photo-1787755633582-978385",
       "filename": "IMG_8760.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755633582-978385-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755638266-91f26d",
       "photoId": "photo-1787755638266-91f26d",
       "filename": "IMG_1330.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755638266-91f26d-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755640563-beb101",
       "photoId": "photo-1787755640563-beb101",
       "filename": "IMG_1241.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755640563-beb101-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755642756-38df9a",
       "photoId": "photo-1787755642756-38df9a",
       "filename": "IMG_0764.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755642756-38df9a-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755645088-0fd79a",
       "photoId": "photo-1787755645088-0fd79a",
       "filename": "IMG_1784.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755645088-0fd79a-480.jpeg",
+          "ext": "jpeg"
+        },
+        {
+          "width": 960,
+          "filePath": "img/photo-1787755645088-0fd79a-960.jpeg",
+          "ext": "jpeg"
+        },
+        {
+          "width": 1600,
+          "filePath": "img/photo-1787755645088-0fd79a-1600.jpeg",
+          "ext": "jpeg"
+        },
+        {
+          "width": 2400,
+          "filePath": "img/photo-1787755645088-0fd79a-2400.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755669499-6681f3",
       "photoId": "photo-1787755669499-6681f3",
       "filename": "IMG_0668.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755669499-6681f3-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755673037-a1d4d2",
       "photoId": "photo-1787755673037-a1d4d2",
       "filename": "IMG_3809.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755673037-a1d4d2-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755676051-3706b6",
       "photoId": "photo-1787755676051-3706b6",
       "filename": "FullSizeRender.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755676051-3706b6-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787755679023-c78801",
       "photoId": "photo-1787755679023-c78801",
       "filename": "image.png",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787755679023-c78801-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     },
     {
       "id": "photo-1787853304469-596a9e",
       "photoId": "photo-1787853304469-596a9e",
       "filename": "IMG_1552.jpeg",
-      "metadata": {}
+      "metadata": {},
+      "renditions": [
+        {
+          "width": 480,
+          "filePath": "img/photo-1787853304469-596a9e-480.jpeg",
+          "ext": "jpeg"
+        }
+      ]
     }
   ],
   "slots": {
