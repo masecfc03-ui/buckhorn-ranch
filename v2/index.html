@@ -1131,6 +1131,7 @@
           caption: p.caption || meta.caption || '',
           x: p.x != null ? p.x : (meta.x != null ? meta.x : 0.5),
           y: p.y != null ? p.y : (meta.y != null ? meta.y : 0.5),
+          renditions: p.renditions || null,
         };
       }
     }
@@ -1345,6 +1346,7 @@
       '<span class="section-label fade-up" data-edit-path="lodgeSection.label" data-edit-default="Accommodations">Accommodations</span>' +
       '<h2 class="heading-reveal" data-edit-path="lodgeSection.heading" data-edit-default="The Lodge">The Lodge</h2>' +
       '<span class="brass-rule rule-reveal"></span>' +
+      featureHtml +
       '<div class="lodge-grid">' + gridItems + '</div>' +
       '</section>';
   }

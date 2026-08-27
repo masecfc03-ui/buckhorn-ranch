@@ -317,7 +317,7 @@ async function handlePublish(request, env) {
 
   if (putRes.status === 409) {
     // Refetch SHA and retry once
-    const retryRes = await ghApi(env, 'GET', `/repos/${GH_OWNER}/${GH_REPO}/contents/content.json`);
+    const retryRes = await ghApi(env, 'GET', `/repos/${GH_OWNER}/${GH_REPO}/contents/content.json?ref=${GH_BRANCH}`);
     if (!retryRes.ok) return err('GitHub conflict and refetch failed', 409);
     const retryData = await retryRes.json();
     putRes = await putToGitHub(retryData.sha);
@@ -501,7 +501,7 @@ async function handleTimmyDev(request, env, session) {
 
   // Spend guard
   const now = new Date();
-  const monthKey = `spend:${now.getFullYear()}-${now.getMonth() + 1}`;
+  const monthKey = getCurrentMonthKey();
   const spendRaw = await env.BHR_KV.get(monthKey);
   const currentSpend = spendRaw ? parseFloat(spendRaw) : 0;
   const spendLimit = parseFloat(env.SPEND_LIMIT || '10');
@@ -703,16 +703,17 @@ async function handleImageUpload(request, env) {
     uploadResults.push({ filePath, width, publicPath: filePath });
   }
 
-  // Update draft: add photo entry
-  const draftRaw = await env.BHR_KV.get('draft:current');
+  // Update draft: add photo entry (create draft from content.json if KV is empty)
+  let draftRaw = await env.BHR_KV.get('draft:current');
+  if (!draftRaw) {
+    const seedRes = await fetch(`${GH_RAW}/content.json`);
+    if (seedRes.ok) draftRaw = await seedRes.text();
+  }
   if (draftRaw) {
     try {
       const draft = JSON.parse(draftRaw);
       if (!Array.isArray(draft.photos)) draft.photos = [];
-      // Remove existing entry with same photoId if any
-      draft.photos = draft.photos.filter(p => p.id !== photoId);
-      // Build rendition objects the frontend expects: { width, filePath }
-      const photoRenditions = uploadResults.map(r => ({ width: r.width, filePath: r.filePath }));
+      draft.photos = draft.photos.filter(p => p.id !== photoId && p.photoId !== photoId);
       draft.photos.push({ id: photoId, photoId, filename, caption: '', metadata: metadata || {}, renditions: uploadResults.map(r => ({ width: r.width, filePath: r.filePath })), x: 0.5, y: 0.5, uploadedAt: new Date().toISOString() });
       await env.BHR_KV.put('draft:current', JSON.stringify(draft));
     } catch { /* draft parse error — non-fatal */ }
@@ -842,7 +843,7 @@ async function handlePreview(request, env) {
   let siteHtml = await siteRes.text();
 
   // Inject content
-  const injection = `<script id="CONTENT_DATA">window.__BHR_PREVIEW__=true;window.__CONTENT__ = ${JSON.stringify(content)};</script>`;
+  const injection = `<script id="CONTENT_DATA">window.__BHR_PREVIEW__=true;window.__CONTENT__ = ${JSON.stringify(content).replace(/<\//g, '<\\/')};</script>`;
   siteHtml = siteHtml.replace('<script id="CONTENT_DATA"></script>', injection);
 
   return new Response(siteHtml, {

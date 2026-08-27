@@ -1196,13 +1196,13 @@ function buildSlotsFields() {
   const exPhotos = ((s.exoticsGallery && s.exoticsGallery.photoIds) || []).map(id => draft.photos.find(p => p.photoId === id)).filter(Boolean);
 
   const heroPreview = heroPhoto
-    ? `<div class="slot-preview"><img src="${photoSrcAdmin(heroPhoto.photoId, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="hero">✕ Remove</button></div>`
+    ? `<div class="slot-preview"><img src="${photoSrcAdmin(heroPhoto.photoId, 480, heroPhoto)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="hero">✕ Remove</button></div>`
     : `<p class="tip">No photo selected</p>`;
 
-  const trophyMulti = `<div class="multi-slot" id="multi-trophy">${trophyPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.style.display='none'"><button data-removemulti="trophyGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
-  const lodgeMulti = `<div class="multi-slot" id="multi-lodge">${lodgePhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.style.display='none'"><button data-removemulti="lodgeGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
-  const wtMulti = `<div class="multi-slot" id="multi-wt">${wtPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.style.display='none'"><button data-removemulti="whitetailGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
-  const exMulti = `<div class="multi-slot" id="multi-ex">${exPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480)}" onerror="this.style.display='none'"><button data-removemulti="exoticsGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const trophyMulti = `<div class="multi-slot" id="multi-trophy">${trophyPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480, p)}" onerror="this.style.display='none'"><button data-removemulti="trophyGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const lodgeMulti = `<div class="multi-slot" id="multi-lodge">${lodgePhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480, p)}" onerror="this.style.display='none'"><button data-removemulti="lodgeGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const wtMulti = `<div class="multi-slot" id="multi-wt">${wtPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480, p)}" onerror="this.style.display='none'"><button data-removemulti="whitetailGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
+  const exMulti = `<div class="multi-slot" id="multi-ex">${exPhotos.map(p => `<div class="multi-slot-item"><img src="${photoSrcAdmin(p.photoId, 480, p)}" onerror="this.style.display='none'"><button data-removemulti="exoticsGallery" data-photoid="${p.photoId}">✕</button></div>`).join('')}</div>`;
 
   const slotHtml = `
     <div class="field-row" style="flex-direction:column;gap:16px">
@@ -1223,22 +1223,22 @@ function buildSlotsFields() {
       </div>
       <div class="field-group">
         <label>Ranch Left Photo</label>
-        ${(function() { const pid = (draft.slots.ranchLeft && draft.slots.ranchLeft.photoId) || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="ranchLeft">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        ${(function() { const pid = (draft.slots.ranchLeft && draft.slots.ranchLeft.photoId) || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480, ph)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="ranchLeft">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
         <button class="pick-photo-btn" data-pickslot="ranchLeft">Pick Ranch Left Photo</button>
       </div>
       <div class="field-group">
         <label>Ranch Right Photo</label>
-        ${(function() { const pid = (draft.slots.ranchRight && draft.slots.ranchRight.photoId) || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="ranchRight">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        ${(function() { const pid = (draft.slots.ranchRight && draft.slots.ranchRight.photoId) || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480, ph)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="ranchRight">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
         <button class="pick-photo-btn" data-pickslot="ranchRight">Pick Ranch Right Photo</button>
       </div>
       <div class="field-group">
         <label>Corporate Left Photo</label>
-        ${(function() { if (!draft.slots.corporateLeft) draft.slots.corporateLeft = { photoId: '' }; const pid = draft.slots.corporateLeft.photoId || ''; return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="corporateLeft">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        ${(function() { if (!draft.slots.corporateLeft) draft.slots.corporateLeft = { photoId: '' }; const pid = draft.slots.corporateLeft.photoId || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480, ph)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="corporateLeft">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
         <button class="pick-photo-btn" data-pickslot="corporateLeft">Pick Corporate Left Photo</button>
       </div>
       <div class="field-group">
         <label>Corporate Right Photo</label>
-        ${(function() { if (!draft.slots.corporateRight) draft.slots.corporateRight = { photoId: '' }; const pid = draft.slots.corporateRight.photoId || ''; return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="corporateRight">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        ${(function() { if (!draft.slots.corporateRight) draft.slots.corporateRight = { photoId: '' }; const pid = draft.slots.corporateRight.photoId || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480, ph)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="corporateRight">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
         <button class="pick-photo-btn" data-pickslot="corporateRight">Pick Corporate Right Photo</button>
       </div>
       <div class="field-group">
@@ -1734,9 +1734,10 @@ function renderPhotoGrid() {
   empty.style.display = 'none';
   grid.innerHTML = photos.map(p => {
     const caption = (p.metadata && p.metadata.caption) || '';
-    const selected = currentPhotoSlot && (
-      (draft.slots[currentPhotoSlot].photoId === p.photoId) ||
-      ((draft.slots[currentPhotoSlot].photoIds || []).includes(p.photoId))
+    const slot = currentPhotoSlot && draft.slots[currentPhotoSlot];
+    const selected = slot && (
+      (slot.photoId === p.photoId) ||
+      ((slot.photoIds || []).includes(p.photoId))
     );
     return `<div class="photo-card ${selected ? 'selected' : ''}" data-photoid="${p.photoId}" draggable="true" data-drag-photoid="${p.photoId}">
       <img src="${photoSrcAdmin(p.photoId, 480, p)}" onerror="this.src=''" alt="">
