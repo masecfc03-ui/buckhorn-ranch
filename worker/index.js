@@ -295,7 +295,7 @@ async function handlePublish(request, env) {
   if (!draft.slots?.hero?.photoId) return err('slots.hero.photoId is required', 400);
 
   // Fetch current SHA from GitHub
-  const shaRes = await ghApi(env, 'GET', `/repos/${GH_OWNER}/${GH_REPO}/contents/content.json`);
+  const shaRes = await ghApi(env, 'GET', `/repos/${GH_OWNER}/${GH_REPO}/contents/content.json?ref=${GH_BRANCH}`);
   if (!shaRes.ok) return err('Failed to fetch content.json SHA from GitHub', 502);
   const shaData = await shaRes.json();
   const sha = shaData.sha;
@@ -849,6 +849,7 @@ async function handlePreview(request, env) {
     status: 200,
     headers: {
       'Content-Type': 'text/html;charset=UTF-8',
+      'Cache-Control': 'no-store',
       'X-Robots-Tag': 'noindex',
       'X-Frame-Options': 'SAMEORIGIN',
       'X-Content-Type-Options': 'nosniff',
@@ -1073,7 +1074,7 @@ async function handleRequest(request, env) {
 
     // Proxy img/* to GitHub raw (serves repo photos to admin panel)
     if (method === 'GET' && path.startsWith('/img/')) {
-      const ghRes = await fetch(`${GH_RAW}${path}`, { cf: { cacheEverything: true, cacheTtl: 3600 } });
+      const ghRes = await fetch(`${GH_RAW}${path}`, { cf: { cacheEverything: false } });
       if (ghRes.ok) {
         const ct = ghRes.headers.get('content-type') || 'image/jpeg';
         return new Response(ghRes.body, { headers: { 'Content-Type': ct, 'Cache-Control': 'public, max-age=3600' } });
@@ -1081,7 +1082,7 @@ async function handleRequest(request, env) {
       // Fallback: try alternative extensions (handles iOS JPEG uploads stored when WebP unavailable)
       const base = path.replace(/\.(webp|jpeg|jpg|png|heic)$/i, '');
       for (const altExt of ['jpeg', 'jpg', 'webp', 'png']) {
-        const altRes = await fetch(`${GH_RAW}${base}.${altExt}`, { cf: { cacheEverything: true, cacheTtl: 3600 } });
+        const altRes = await fetch(`${GH_RAW}${base}.${altExt}`, { cf: { cacheEverything: false } });
         if (altRes.ok) {
           return new Response(altRes.body, { headers: { 'Content-Type': `image/${altExt === 'jpg' ? 'jpeg' : altExt}`, 'Cache-Control': 'public, max-age=3600' } });
         }

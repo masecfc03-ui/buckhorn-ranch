@@ -1074,7 +1074,10 @@
   function photoSrcset(photoId, photo) {
     if (isLegacyPhoto(photoId)) return '';
     if (photo && Array.isArray(photo.renditions) && photo.renditions.length > 0) {
-      return photo.renditions.map(function(r) { return r.filePath + ' ' + r.width + 'w'; }).join(', ');
+      return photo.renditions.map(function(r) {
+        var fp = r.filePath || ('img/' + photoId + '-' + r.width + '.' + (r.ext || 'webp'));
+        return fp + ' ' + r.width + 'w';
+      }).join(', ');
     }
     var base = 'img/' + photoId;
     return (
@@ -1101,7 +1104,11 @@
         var _d = Math.abs((_r.width || 0) - (width || 960));
         if (_d < bestDiff) { bestDiff = _d; best = _r; }
       }
-      if (best) return best.filePath;
+      if (best) {
+        if (best.filePath) return best.filePath;
+        /* old draft format stores {width, ext} instead of {width, filePath} */
+        if (best.ext) return 'img/' + photoId + '-' + best.width + '.' + best.ext;
+      }
     }
     return 'img/' + photoId + '-' + (width || 960) + '.webp';
   }
