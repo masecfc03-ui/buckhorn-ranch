@@ -2,12 +2,12 @@
   "meta": {
     "schemaVersion": 1,
     "seasonYear": "2026-2027",
-    "publishedAt": "",
-    "publishedSummary": ""
+    "publishedAt": "2026-08-27T18:58:57.000Z",
+    "publishedSummary": "Publish: all animal galleries, new photos, hero"
   },
   "ranch": {
     "name": {
-      "value": "Buckhorn Ranch",
+      "value": "BUCKHORN RANCH",
       "type": "text",
       "label": "Ranch name"
     },
@@ -17,21 +17,23 @@
       "label": "Tagline"
     },
     "location": {
-      "value": "Sulphur, Oklahoma",
+      "value": "Est. 2003\u00a0\u00b7\u00a0Sulphur, Oklahoma",
       "type": "text",
       "label": "Location line"
     },
     "about": {
-      "value": "Buckhorn Ranch sits on 1,700 high-fenced acres in the Arbuckle Mountains outside Sulphur, Oklahoma. From the moment you arrive at the gate, we handle everything \u2014 morning calls, field prep, meals cooked on site, and trophies scored and packaged for shipment.",
+      "value": "Buckhorn Ranch sits on 1,700 high-fenced acres in the Arbuckle Mountains outside Sulphur, Oklahoma. From the moment you arrive at the gate, we handle everything \u2014 morning calls, field prep, meal service, and trophies scored and packaged for shipment.",
       "type": "longtext",
       "label": "The Ranch intro",
       "maxWords": 90
     },
     "acreage": {
-      "value": "1,700",
+      "value": "",
       "type": "text",
       "label": "Acreage"
-    }
+    },
+    "acreageHeading": "Outfitting Trophy Hunts in Southern Oklahoma Since 2005",
+    "sectionLabel": "the ranch"
   },
   "contact": {
     "name": {
@@ -40,12 +42,12 @@
       "label": "Contact name"
     },
     "phone": {
-      "value": "(214) 558-7987",
+      "value": "(214) 837-1300",
       "type": "phone",
       "label": "Phone"
     },
     "email": {
-      "value": "",
+      "value": "(214) 558-7987",
       "type": "email",
       "label": "Email"
     }
@@ -210,7 +212,7 @@
     {
       "id": "ex-01",
       "animal": {
-        "value": "Bison Bull",
+        "value": "American Bison",
         "type": "text"
       },
       "sci": {
@@ -221,9 +223,9 @@
         "value": null,
         "type": "money"
       },
-      "onRequest": true,
+      "onRequest": false,
       "note": {
-        "value": "",
+        "value": "Available on request",
         "type": "text"
       }
     },
@@ -370,7 +372,7 @@
     {
       "id": "ex-09",
       "animal": {
-        "value": "Red Deer Cow",
+        "value": "Meat Hunt/Exotic",
         "type": "text"
       },
       "sci": {
@@ -383,7 +385,7 @@
       },
       "onRequest": false,
       "note": {
-        "value": "Best tasting meat on the ranch.",
+        "value": "Availability varies by year",
         "type": "text"
       }
     }
@@ -432,7 +434,7 @@
   ],
   "corporate": {
     "body": {
-      "value": "Full ranch buyout available. Non-hunting guests welcome. Chef-prepared meals, Starlink wifi at the lodge. Invoicing and W9 on request.",
+      "value": "Reserve a weekend for your corporate or family hunt. Non-hunting guests welcome. Full meal service & Starlink wifi provided. Invoicing and W9 on request.",
       "type": "longtext",
       "label": "Corporate section",
       "maxWords": 70
@@ -440,7 +442,7 @@
     "details": [
       {
         "id": "cd-01",
-        "value": "Full ranch buyout available",
+        "value": "Full weekend reservations available for groups",
         "type": "text"
       },
       {
@@ -450,29 +452,39 @@
       },
       {
         "id": "cd-03",
-        "value": "Chef-prepared meals",
+        "value": "1,100 yard rifle & pistol range access",
         "type": "text"
       },
       {
         "id": "cd-05",
-        "value": "Starlink Wifi provided at the Lodge",
+        "value": "All meals provided",
         "type": "text"
       },
       {
         "id": "cd-06",
+        "value": "Starlink Wifi provided at the Lodge",
+        "type": "text"
+      },
+      {
+        "id": "cd-1787695227514",
+        "value": "Euro mount your trophy for additional fee",
+        "type": "text"
+      },
+      {
+        "id": "cd-1787698280735",
         "value": "Invoicing and W9 on request",
         "type": "text"
       }
     ],
     "capacity": {
-      "value": "",
+      "value": 10,
       "type": "number",
       "label": "Capacity, guns"
     }
   },
   "terms": {
     "body": {
-      "value": "Included: field preparation of any trophy for shipment, lodging, accommodations, food and beverages. Not included: Oklahoma license and tag fees, transportation to the lodge, gratuity. A wounded animal is charged the same as a kill and we will do our best to recover it. Whitetail season runs October through December and dates are subject to availability. Exotics are available year round. Deposits lock in price.",
+      "value": "Included: field preparation of any trophy for shipment, lodging, accommodations, food and beverages. Not included: Oklahoma license and tag fees, transportation to the lodge, gratuity. A wounded animal is charged the same as a kill -- we will do our best to recover it. Whitetail season runs October through December; dates are subject to availability. Exotics are available year round.",
       "type": "longtext",
       "label": "Terms",
       "protected": true
@@ -484,403 +496,947 @@
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "hero.jpg"
     },
     {
       "id": "IMG_2631.jpeg",
-      "caption": "Canada Goose",
-      "x": 0.5,
-      "y": 0.5,
-      "uploadedAt": ""
-    },
-    {
-      "id": "IMG_4696.jpeg",
-      "caption": "Mallard Drake",
-      "x": 0.5,
-      "y": 0.5,
-      "uploadedAt": ""
-    },
-    {
-      "id": "IMG_6733.jpeg",
-      "caption": "Waterfowl Hunt",
-      "x": 0.5,
-      "y": 0.5,
-      "uploadedAt": ""
-    },
-    {
-      "id": "IMG_8271.jpeg",
-      "caption": "Night Hunt",
-      "x": 0.5,
-      "y": 0.5,
-      "uploadedAt": ""
-    },
-    {
-      "id": "IMG_2735.jpeg",
-      "caption": "Evening on the Lake",
-      "x": 0.5,
-      "y": 0.5,
-      "uploadedAt": ""
-    },
-    {
-      "id": "IMG_0682.jpeg",
-      "caption": "Sunset",
-      "x": 0.5,
-      "y": 0.5,
-      "uploadedAt": ""
-    },
-    {
-      "id": "lodge-01.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_2631.jpeg"
+    },
+    {
+      "id": "IMG_6733.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": "",
+      "photoId": "IMG_6733.jpeg"
+    },
+    {
+      "id": "IMG_8271.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": "",
+      "photoId": "IMG_8271.jpeg"
+    },
+    {
+      "id": "IMG_2735.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": "",
+      "photoId": "IMG_2735.jpeg"
+    },
+    {
+      "id": "IMG_0682.jpeg",
+      "caption": "",
+      "x": 0.5,
+      "y": 0.5,
+      "uploadedAt": "",
+      "photoId": "IMG_0682.jpeg"
     },
     {
       "id": "lodge-02.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
-    },
-    {
-      "id": "lodge-03.jpg",
-      "caption": "",
-      "x": 0.5,
-      "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "lodge-02.jpg"
     },
     {
       "id": "lodge-04.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "lodge-04.jpg"
     },
     {
       "id": "lodge-05.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "lodge-05.jpg"
     },
     {
       "id": "lodge-06.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "lodge-06.jpg"
     },
     {
       "id": "lodge-07.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "lodge-07.jpg"
     },
     {
       "id": "Buckhorn-Deer---White.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Deer---White.jpg"
     },
     {
       "id": "Buckhorn-Brand---Black.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand---Black.jpg"
     },
     {
       "id": "Buckhorn-Brand---Orange.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand---Orange.jpg"
     },
     {
       "id": "Buckhorn-Brand---White.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand---White.jpg"
     },
     {
       "id": "Buckhorn-Brand-Circle---Black.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand-Circle---Black.jpg"
     },
     {
       "id": "Buckhorn-Brand-Circle---Orange.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand-Circle---Orange.jpg"
     },
     {
       "id": "Buckhorn-Brand-Circle---White.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand-Circle---White.jpg"
     },
     {
       "id": "Buckhorn-Brand-and-Name---Black.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand-and-Name---Black.jpg"
     },
     {
       "id": "Buckhorn-Brand-and-Name---Orange.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand-and-Name---Orange.jpg"
     },
     {
       "id": "Buckhorn-Brand-and-Name---White.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Brand-and-Name---White.jpg"
     },
     {
       "id": "Buckhorn-Deer---Black.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Deer---Black.jpg"
     },
     {
       "id": "Buckhorn-Deer---Orange.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Deer---Orange.jpg"
     },
     {
       "id": "Buckhorn-Deer-Circle---Black.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Deer-Circle---Black.jpg"
     },
     {
       "id": "Buckhorn-Deer-Circle---Orange.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Deer-Circle---Orange.jpg"
     },
     {
       "id": "Buckhorn-Deer-Circle---White.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "Buckhorn-Deer-Circle---White.jpg"
     },
     {
       "id": "E8B327A9-5164-4633-B8FB-2356589AC2BF.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "E8B327A9-5164-4633-B8FB-2356589AC2BF.jpeg"
     },
     {
       "id": "FullSizeRender.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "FullSizeRender.jpg"
     },
     {
       "id": "IMG_0489.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_0489.jpeg"
     },
     {
       "id": "IMG_0587.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_0587.jpeg"
     },
     {
       "id": "IMG_0792.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_0792.jpeg"
     },
     {
       "id": "IMG_0868.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_0868.jpeg"
     },
     {
       "id": "IMG_0889.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_0889.jpeg"
     },
     {
       "id": "IMG_0909.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_0909.jpeg"
     },
     {
       "id": "IMG_0955.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_0955.jpeg"
     },
     {
       "id": "IMG_1067.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_1067.jpeg"
     },
     {
       "id": "IMG_1749.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_1749.jpeg"
     },
     {
       "id": "IMG_3679.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_3679.jpeg"
     },
     {
       "id": "IMG_4798.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_4798.jpeg"
     },
     {
       "id": "IMG_4928.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_4928.jpeg"
     },
     {
       "id": "IMG_5041.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_5041.jpeg"
     },
     {
       "id": "IMG_6285.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_6285.jpeg"
     },
     {
       "id": "IMG_8273.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "IMG_8273.jpeg"
     },
     {
       "id": "_K4A3973.jpeg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
-    },
-    {
-      "id": "logo.jpg",
-      "caption": "",
-      "x": 0.5,
-      "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "_K4A3973.jpeg"
     },
     {
       "id": "trophy-01.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "trophy-01.jpg"
     },
     {
       "id": "trophy-02.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "trophy-02.jpg"
     },
     {
       "id": "trophy-03.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "trophy-03.jpg"
     },
     {
       "id": "trophy-04.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "trophy-04.jpg"
     },
     {
       "id": "trophy-05.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "trophy-05.jpg"
     },
     {
       "id": "trophy-06.jpg",
       "caption": "",
       "x": 0.5,
       "y": 0.5,
-      "uploadedAt": ""
+      "uploadedAt": "",
+      "photoId": "trophy-06.jpg"
+    },
+    {
+      "id": "photo-1787622770934-ace850",
+      "photoId": "photo-1787622770934-ace850",
+      "filename": "IMG_6051.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656661492-4a7d84",
+      "photoId": "photo-1787656661492-4a7d84",
+      "filename": "IMG_1363.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656671706-dac96f",
+      "photoId": "photo-1787656671706-dac96f",
+      "filename": "IMG_1424.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656686647-d3e789",
+      "photoId": "photo-1787656686647-d3e789",
+      "filename": "IMG_1372.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656708662-6119f1",
+      "photoId": "photo-1787656708662-6119f1",
+      "filename": "IMG_1376.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656723311-ae06c9",
+      "photoId": "photo-1787656723311-ae06c9",
+      "filename": "IMG_1361.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656735922-1d5609",
+      "photoId": "photo-1787656735922-1d5609",
+      "filename": "IMG_0543.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656749345-2c54f9",
+      "photoId": "photo-1787656749345-2c54f9",
+      "filename": "IMG_0078.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656833802-79be98",
+      "photoId": "photo-1787656833802-79be98",
+      "filename": "IMG_0585.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656858171-8aa9c4",
+      "photoId": "photo-1787656858171-8aa9c4",
+      "filename": "IMG_0789.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656879473-e2ed76",
+      "photoId": "photo-1787656879473-e2ed76",
+      "filename": "IMG_0344.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656948898-21f465",
+      "photoId": "photo-1787656948898-21f465",
+      "filename": "IMG_0531.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787656962109-574945",
+      "photoId": "photo-1787656962109-574945",
+      "filename": "IMG_4737.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657035954-137340",
+      "photoId": "photo-1787657035954-137340",
+      "filename": "75D8BD9F-D736-4940-BB8E-4250AC37FA40.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657107978-f58ec8",
+      "photoId": "photo-1787657107978-f58ec8",
+      "filename": "55C3D423-959E-44F8-A62C-B38B4BC63BB4.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657159031-ab3d30",
+      "photoId": "photo-1787657159031-ab3d30",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657226768-cb7edf",
+      "photoId": "photo-1787657226768-cb7edf",
+      "filename": "IMG_2584.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657318057-a17281",
+      "photoId": "photo-1787657318057-a17281",
+      "filename": "IMG_2666.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657432693-6757bb",
+      "photoId": "photo-1787657432693-6757bb",
+      "filename": "IMG_2704.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657463158-7967aa",
+      "photoId": "photo-1787657463158-7967aa",
+      "filename": "IMG_3295.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657507497-3b2ee0",
+      "photoId": "photo-1787657507497-3b2ee0",
+      "filename": "IMG_2564.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657541015-a5b4ec",
+      "photoId": "photo-1787657541015-a5b4ec",
+      "filename": "A2489426-954D-4577-B5D3-4FECAC5C0969.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657600013-fac26f",
+      "photoId": "photo-1787657600013-fac26f",
+      "filename": "IMG_7739.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657675018-573fbb",
+      "photoId": "photo-1787657675018-573fbb",
+      "filename": "IMG_0988.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657706149-cf138f",
+      "photoId": "photo-1787657706149-cf138f",
+      "filename": "CD0FE7AA-C176-47B3-8330-AFEDD89B79CE.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657752433-947c48",
+      "photoId": "photo-1787657752433-947c48",
+      "filename": "6D7FDA23-842E-41A8-8499-A9D244B4FF14.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657798374-da2c89",
+      "photoId": "photo-1787657798374-da2c89",
+      "filename": "IMG_6399.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657842501-4e62c6",
+      "photoId": "photo-1787657842501-4e62c6",
+      "filename": "E8669BD2-4D2F-457F-A7F0-6BDC3CF7717C.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657896267-3f0f6c",
+      "photoId": "photo-1787657896267-3f0f6c",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787657957603-70ee03",
+      "photoId": "photo-1787657957603-70ee03",
+      "filename": "5F446F31-9648-4593-A328-C6B172A16417.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787658744305-3ca1f1",
+      "photoId": "photo-1787658744305-3ca1f1",
+      "filename": "IMG_5008.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787658790010-0eb51b",
+      "photoId": "photo-1787658790010-0eb51b",
+      "filename": "IMG_0850.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787658839159-2e5515",
+      "photoId": "photo-1787658839159-2e5515",
+      "filename": "IMG_0888.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787658883573-be317b",
+      "photoId": "photo-1787658883573-be317b",
+      "filename": "IMG_4049.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787658947511-cb282d",
+      "photoId": "photo-1787658947511-cb282d",
+      "filename": "IMG_0788.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659001483-a5a439",
+      "photoId": "photo-1787659001483-a5a439",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659053712-6530ac",
+      "photoId": "photo-1787659053712-6530ac",
+      "filename": "IMG_7987.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659118605-706a89",
+      "photoId": "photo-1787659118605-706a89",
+      "filename": "IMG_8041.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659121813-d322eb",
+      "photoId": "photo-1787659121813-d322eb",
+      "filename": "0A235DE0-ECC6-4D94-BEC2-B72FBA1C7428.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659206901-731917",
+      "photoId": "photo-1787659206901-731917",
+      "filename": "IMG_8831.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659211411-95b28e",
+      "photoId": "photo-1787659211411-95b28e",
+      "filename": "IMG-0154.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659265221-bf925a",
+      "photoId": "photo-1787659265221-bf925a",
+      "filename": "IMG_4923.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659301493-d6fea8",
+      "photoId": "photo-1787659301493-d6fea8",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659360713-a0ff3a",
+      "photoId": "photo-1787659360713-a0ff3a",
+      "filename": "IMG_2739.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659421403-60526f",
+      "photoId": "photo-1787659421403-60526f",
+      "filename": "IMG_2662.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659444084-4fee65",
+      "photoId": "photo-1787659444084-4fee65",
+      "filename": "4FAF5D91-F151-40B2-B65C-3DB92F163F5F.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659557798-ff99cc",
+      "photoId": "photo-1787659557798-ff99cc",
+      "filename": "IMG_2542.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659603322-296f4f",
+      "photoId": "photo-1787659603322-296f4f",
+      "filename": "IMG_2556.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659690705-6149ad",
+      "photoId": "photo-1787659690705-6149ad",
+      "filename": "IMG_2594.jpeg",
+      "metadata": {},
+      "caption": "Bison-Watusi"
+    },
+    {
+      "id": "photo-1787659695391-f1b949",
+      "photoId": "photo-1787659695391-f1b949",
+      "filename": "IMG_2640.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659722473-9996d9",
+      "photoId": "photo-1787659722473-9996d9",
+      "filename": "C7A241C0-C108-402D-B438-0491B2891F1A.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659817054-4c2489",
+      "photoId": "photo-1787659817054-4c2489",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787659884130-dd469b",
+      "photoId": "photo-1787659884130-dd469b",
+      "filename": "IMG_5787.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787661540309-b7f31c",
+      "photoId": "photo-1787661540309-b7f31c",
+      "filename": "IMG_5758.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787661606222-03b9e6",
+      "photoId": "photo-1787661606222-03b9e6",
+      "filename": "IMG_5194.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787661610514-4d1a13",
+      "photoId": "photo-1787661610514-4d1a13",
+      "filename": "BAC460D8-271D-4EA8-A1DC-550B3011598C.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787661676778-4d8009",
+      "photoId": "photo-1787661676778-4d8009",
+      "filename": "IMG_0968.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787661749300-40dd87",
+      "photoId": "photo-1787661749300-40dd87",
+      "filename": "IMG_4706.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787661859663-c45ff3",
+      "photoId": "photo-1787661859663-c45ff3",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787661921100-112449",
+      "photoId": "photo-1787661921100-112449",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787661947418-ed864e",
+      "photoId": "photo-1787661947418-ed864e",
+      "filename": "IMG_4711.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662042965-a0e19d",
+      "photoId": "photo-1787662042965-a0e19d",
+      "filename": "IMG_6723.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662092711-e7cb8e",
+      "photoId": "photo-1787662092711-e7cb8e",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662155010-a31086",
+      "photoId": "photo-1787662155010-a31086",
+      "filename": "C56472B0-B96D-498E-9426-310E0EE75233.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662212844-3aa069",
+      "photoId": "photo-1787662212844-3aa069",
+      "filename": "IMG_6732.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662513409-5f35d9",
+      "photoId": "photo-1787662513409-5f35d9",
+      "filename": "Screenshot 2026-08-25 at 7.54.58\u202fAM.png",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662646221-b9c885",
+      "photoId": "photo-1787662646221-b9c885",
+      "filename": "IMG_1363.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662656329-2bd0b5",
+      "photoId": "photo-1787662656329-2bd0b5",
+      "filename": "IMG_0789.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662755071-542f9c",
+      "photoId": "photo-1787662755071-542f9c",
+      "filename": "IMG_1363.jpg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787662819147-6c5587",
+      "photoId": "photo-1787662819147-6c5587",
+      "filename": "IMG_2631.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787664561065-fa7f80",
+      "photoId": "photo-1787664561065-fa7f80",
+      "filename": "IMG_1361.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787709337479-fccec1",
+      "photoId": "photo-1787709337479-fccec1",
+      "filename": "native.jpg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755168108-5264ca",
+      "photoId": "photo-1787755168108-5264ca",
+      "filename": "IMG_2662.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755623336-374dfd",
+      "photoId": "photo-1787755623336-374dfd",
+      "filename": "IMG_5599.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755626691-099cdc",
+      "photoId": "photo-1787755626691-099cdc",
+      "filename": "IMG_5595.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755628853-dc0db9",
+      "photoId": "photo-1787755628853-dc0db9",
+      "filename": "IMG_5591.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755631247-50d9aa",
+      "photoId": "photo-1787755631247-50d9aa",
+      "filename": "IMG_5590.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755633582-978385",
+      "photoId": "photo-1787755633582-978385",
+      "filename": "IMG_8760.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755638266-91f26d",
+      "photoId": "photo-1787755638266-91f26d",
+      "filename": "IMG_1330.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755640563-beb101",
+      "photoId": "photo-1787755640563-beb101",
+      "filename": "IMG_1241.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755642756-38df9a",
+      "photoId": "photo-1787755642756-38df9a",
+      "filename": "IMG_0764.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755645088-0fd79a",
+      "photoId": "photo-1787755645088-0fd79a",
+      "filename": "IMG_1784.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755669499-6681f3",
+      "photoId": "photo-1787755669499-6681f3",
+      "filename": "IMG_0668.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755673037-a1d4d2",
+      "photoId": "photo-1787755673037-a1d4d2",
+      "filename": "IMG_3809.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755676051-3706b6",
+      "photoId": "photo-1787755676051-3706b6",
+      "filename": "FullSizeRender.jpeg",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787755679023-c78801",
+      "photoId": "photo-1787755679023-c78801",
+      "filename": "image.png",
+      "metadata": {}
+    },
+    {
+      "id": "photo-1787853304469-596a9e",
+      "photoId": "photo-1787853304469-596a9e",
+      "filename": "IMG_1552.jpeg",
+      "metadata": {}
     }
   ],
   "slots": {
     "hero": {
-      "photoId": "hero.jpg"
+      "photoId": "photo-1787853304469-596a9e"
     },
     "trophyGallery": {
       "photoIds": [
         "IMG_2631.jpeg",
-        "IMG_4696.jpeg",
         "IMG_6733.jpeg",
         "IMG_8271.jpeg",
         "IMG_2735.jpeg",
-        "IMG_0682.jpeg"
+        "IMG_0682.jpeg",
+        "IMG_6285.jpeg"
       ]
     },
     "lodgeGallery": {
       "photoIds": [
-        "lodge-01.jpg",
-        "lodge-02.jpg",
-        "lodge-03.jpg",
         "lodge-04.jpg",
         "lodge-05.jpg",
         "lodge-06.jpg",
-        "lodge-07.jpg"
+        "lodge-07.jpg",
+        "photo-1787755638266-91f26d",
+        "photo-1787755679023-c78801"
       ]
     },
     "whitetailGallery": {
@@ -890,16 +1446,16 @@
       "photoIds": []
     },
     "ranchLeft": {
-      "photoId": "lodge-01.jpg"
+      "photoId": "photo-1787656686647-d3e789"
     },
     "ranchRight": {
-      "photoId": "lodge-02.jpg"
+      "photoId": "photo-1787659884130-dd469b"
     },
     "corporateLeft": {
-      "photoId": ""
+      "photoId": "photo-1787658883573-be317b"
     },
     "corporateRight": {
-      "photoId": ""
+      "photoId": "photo-1787755168108-5264ca"
     }
   },
   "sections": [
@@ -955,7 +1511,7 @@
     }
   ],
   "audio": {
-    "enabled": true,
+    "enabled": false,
     "file": "audio/ambient.mp3"
   },
   "trophyTabs": [
@@ -973,17 +1529,312 @@
   ],
   "customGalleries": [],
   "animalGallery": [
-    {"id":"ag-wt-1","type":"whitetail","name":{"value":"Whitetail Buck","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
-    {"id":"ag-wt-2","type":"whitetail","name":{"value":"Whitetail","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
-    {"id":"ag-ex-bison","type":"exotic","name":{"value":"Bison Bull","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
-    {"id":"ag-ex-gemsbok","type":"exotic","name":{"value":"Gemsbok","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
-    {"id":"ag-ex-fallow","type":"exotic","name":{"value":"Fallow Deer","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
-    {"id":"ag-ex-redstag","type":"exotic","name":{"value":"Red Stag","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
-    {"id":"ag-ex-scimitar","type":"exotic","name":{"value":"Scimitar Oryx","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
-    {"id":"ag-ex-zebra","type":"exotic","name":{"value":"Zebra","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]},
-    {"id":"ag-ex-reddeer","type":"exotic","name":{"value":"Red Deer","type":"text"},"score":{"value":"","type":"text"},"photoIds":[]}
+    {
+      "id": "ag-wt-1",
+      "type": "whitetail",
+      "name": {
+        "value": "Trophy Bucks",
+        "type": "text"
+      },
+      "score": {
+        "value": "250\" +",
+        "type": "text"
+      },
+      "photoIds": [
+        "IMG_2631.jpeg",
+        "photo-1787662212844-3aa069",
+        "IMG_8271.jpeg"
+      ]
+    },
+    {
+      "id": "ag-ex-bison",
+      "type": "exotic",
+      "name": {
+        "value": "American Bison",
+        "type": "text"
+      },
+      "score": {
+        "value": "",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787657957603-70ee03",
+        "photo-1787659444084-4fee65",
+        "photo-1787662656329-2bd0b5",
+        "photo-1787657706149-cf138f",
+        "photo-1787659690705-6149ad"
+      ]
+    },
+    {
+      "id": "ag-ex-gemsbok",
+      "type": "exotic",
+      "name": {
+        "value": "Red Stag",
+        "type": "text"
+      },
+      "score": {
+        "value": "",
+        "type": "text"
+      },
+      "photoIds": [
+        "IMG_4798.jpeg",
+        "IMG_0489.jpeg",
+        "IMG_8273.jpeg",
+        "IMG_0909.jpeg",
+        "IMG_3679.jpeg",
+        "photo-1787657675018-573fbb"
+      ]
+    },
+    {
+      "id": "ag-ex-fallow",
+      "type": "exotic",
+      "name": {
+        "value": "Gemsbok",
+        "type": "text"
+      },
+      "score": {
+        "value": "",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787657035954-137340",
+        "_K4A3973.jpeg",
+        "E8B327A9-5164-4633-B8FB-2356589AC2BF.jpeg",
+        "photo-1787657798374-da2c89",
+        "photo-1787657842501-4e62c6"
+      ]
+    },
+    {
+      "id": "ag-ex-redstag",
+      "type": "exotic",
+      "name": {
+        "value": "Fallow deer",
+        "type": "text"
+      },
+      "score": {
+        "value": "",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787659722473-9996d9",
+        "IMG_1749.jpeg",
+        "photo-1787657159031-ab3d30"
+      ]
+    },
+    {
+      "id": "ag-ex-scimitar",
+      "type": "exotic",
+      "name": {
+        "value": "Scimitar Oryx",
+        "type": "text"
+      },
+      "score": {
+        "value": "",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787656962109-574945",
+        "photo-1787657318057-a17281",
+        "photo-1787656671706-dac96f",
+        "photo-1787659817054-4c2489",
+        "photo-1787661610514-4d1a13"
+      ]
+    },
+    {
+      "id": "ag-ex-zebra",
+      "type": "exotic",
+      "name": {
+        "value": "Zebra",
+        "type": "text"
+      },
+      "score": {
+        "value": "",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787656948898-21f465"
+      ]
+    },
+    {
+      "id": "ag-wt-1787586611137",
+      "type": "whitetail",
+      "name": {
+        "value": "Trophy Bucks",
+        "type": "text"
+      },
+      "score": {
+        "value": "200\"-249\"",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787661676778-4d8009",
+        "photo-1787662092711-e7cb8e",
+        "photo-1787661749300-40dd87"
+      ]
+    },
+    {
+      "id": "ag-wt-1787586635077",
+      "type": "whitetail",
+      "name": {
+        "value": "Trophy Bucks",
+        "type": "text"
+      },
+      "score": {
+        "value": "190\"-199\"",
+        "type": "text"
+      },
+      "photoIds": [
+        "IMG_2735.jpeg",
+        "photo-1787658947511-cb282d",
+        "IMG_0868.jpeg",
+        "photo-1787657752433-947c48"
+      ]
+    },
+    {
+      "id": "ag-wt-1787586805776",
+      "type": "whitetail",
+      "name": {
+        "value": "Trophy Bucks",
+        "type": "text"
+      },
+      "score": {
+        "value": "180\"-189\"",
+        "type": "text"
+      },
+      "photoIds": [
+        "IMG_0682.jpeg",
+        "IMG_0889.jpeg",
+        "FullSizeRender.jpg",
+        "IMG_4928.jpeg",
+        "photo-1787656723311-ae06c9"
+      ]
+    },
+    {
+      "id": "ag-wt-1787586844193",
+      "type": "whitetail",
+      "name": {
+        "value": "Trophy Bucks",
+        "type": "text"
+      },
+      "score": {
+        "value": "170\"-179\"",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787661859663-c45ff3",
+        "photo-1787659265221-bf925a"
+      ]
+    },
+    {
+      "id": "ag-wt-1787586845513",
+      "type": "whitetail",
+      "name": {
+        "value": "Trophy Bucks",
+        "type": "text"
+      },
+      "score": {
+        "value": "160\"-169\"",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787657107978-f58ec8",
+        "photo-1787656833802-79be98",
+        "photo-1787656749345-2c54f9",
+        "photo-1787656661492-4a7d84"
+      ]
+    },
+    {
+      "id": "ag-wt-1787586942014",
+      "type": "whitetail",
+      "name": {
+        "value": "Trophy Bucks",
+        "type": "text"
+      },
+      "score": {
+        "value": "150\"-159\"",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787656708662-6119f1",
+        "photo-1787657600013-fac26f",
+        "photo-1787659001483-a5a439",
+        "photo-1787659053712-6530ac",
+        "photo-1787659557798-ff99cc",
+        "photo-1787707989823-d0f08b"
+      ]
+    },
+    {
+      "id": "ag-wt-1787587056012",
+      "type": "whitetail",
+      "name": {
+        "value": "Trophy Bucks",
+        "type": "text"
+      },
+      "score": {
+        "value": "130\"-149\"",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787659603322-296f4f",
+        "photo-1787657896267-3f0f6c",
+        "photo-1787657507497-3b2ee0",
+        "IMG_6285.jpeg",
+        "photo-1787656735922-1d5609",
+        "photo-1787657432693-6757bb",
+        "photo-1787657226768-cb7edf",
+        "photo-1787707981216-656d70"
+      ]
+    },
+    {
+      "id": "ag-ex-1787628508370",
+      "type": "exotic",
+      "name": {
+        "value": "Turkey",
+        "type": "text"
+      },
+      "score": {
+        "value": "Rio Grande & Eastern",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787657463158-7967aa",
+        "photo-1787659121813-d322eb",
+        "photo-1787659884130-dd469b",
+        "photo-1787659206901-731917",
+        "photo-1787661540309-b7f31c"
+      ]
+    },
+    {
+      "id": "ag-ex-1787628517687",
+      "type": "exotic",
+      "name": {
+        "value": "Upland Bird",
+        "type": "text"
+      },
+      "score": {
+        "value": "",
+        "type": "text"
+      },
+      "photoIds": [
+        "photo-1787755626691-099cdc",
+        "photo-1787755631247-50d9aa",
+        "photo-1787755623336-374dfd"
+      ]
+    }
   ],
   "theme": {
     "headingFont": "cormorant"
+  },
+  "pricingSection": {
+    "whitetailHeading": "Whitetail Trophy Fees"
+  },
+  "trophyTabs[0]": {
+    "label": "Buckhorn Ranch"
+  },
+  "lodgeSection": {
+    "label": "Buckhorn Ranch"
+  },
+  "corporateSection": {
+    "heading": "Corporate Hunts"
   }
 }
