@@ -1080,12 +1080,23 @@ async function handleRequest(request, env) {
         const ct = ghRes.headers.get('content-type') || 'image/jpeg';
         return new Response(ghRes.body, { headers: { 'Content-Type': ct, 'Cache-Control': 'public, max-age=3600' } });
       }
-      // Fallback: try alternative extensions (handles iOS JPEG uploads stored when WebP unavailable)
+      // Extension fallback: same width, different extension (handles iOS JPEG stored as WebP requests)
       const base = path.replace(/\.(webp|jpeg|jpg|png|heic)$/i, '');
       for (const altExt of ['jpeg', 'jpg', 'webp', 'png']) {
         const altRes = await fetch(`${GH_RAW}${base}.${altExt}`, { cf: { cacheEverything: false } });
         if (altRes.ok) {
           return new Response(altRes.body, { headers: { 'Content-Type': `image/${altExt === 'jpg' ? 'jpeg' : altExt}`, 'Cache-Control': 'public, max-age=3600' } });
+        }
+      }
+      // Width fallback: if photo-xxx-{width}.{ext} not found, try 480 (always uploaded)
+      const widthMatch = base.match(/^(.+)-(\d+)$/);
+      if (widthMatch && widthMatch[2] !== '480') {
+        const smallBase = `${widthMatch[1]}-480`;
+        for (const altExt of ['webp', 'jpeg', 'jpg', 'png']) {
+          const altRes = await fetch(`${GH_RAW}${smallBase}.${altExt}`, { cf: { cacheEverything: false } });
+          if (altRes.ok) {
+            return new Response(altRes.body, { headers: { 'Content-Type': `image/${altExt === 'jpg' ? 'jpeg' : altExt}`, 'Cache-Control': 'public, max-age=3600' } });
+          }
         }
       }
       return err('Image not found', 404);
