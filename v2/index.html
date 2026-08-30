@@ -1334,13 +1334,6 @@
 
     /* Feature strip from corporate details */
     var featureHtml = '';
-    if (details.length > 0) {
-      featureHtml = '<div class="feature-strip fade-up">' +
-        details.map(function (d) {
-          return '<span>' + escape(v(d)) + '</span>';
-        }).join('') +
-      '</div>';
-    }
 
     return '<section id="sec-lodge">' +
       '<span class="section-label fade-up" data-edit-path="lodgeSection.label" data-edit-default="Accommodations">Accommodations</span>' +
