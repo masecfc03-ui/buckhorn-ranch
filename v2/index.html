@@ -1299,11 +1299,10 @@
     '</section>';
   }
 
-  /* 4. LODGE GALLERY */
+  /* 4. LODGE GALLERY — FIRST DEFINITION (kept for section routing) */
   function buildLodge(data) {
     var photoIds  = (data.slots && data.slots.lodgeGallery && data.slots.lodgeGallery.photoIds) || [];
     var allPhotos = data.photos || [];
-    var details   = (data.corporate && data.corporate.details) || [];
 
     var gridItems = '';
     if (photoIds.length > 0) {
@@ -1340,46 +1339,6 @@
       '<h2 class="heading-reveal" data-edit-path="lodgeSection.heading" data-edit-default="The Lodge">The Lodge</h2>' +
       '<span class="brass-rule rule-reveal"></span>' +
       featureHtml +
-      '<div class="lodge-grid">' + gridItems + '</div>' +
-      '</section>';
-  }
-
-  /* 4. LODGE GALLERY */
-  function buildLodge(data) {
-    var photoIds  = (data.slots && data.slots.lodgeGallery && data.slots.lodgeGallery.photoIds) || [];
-    var allPhotos = data.photos || [];
-
-    var gridItems = '';
-    if (photoIds.length > 0) {
-      photoIds.forEach(function (pid, i) {
-        var photo   = findPhoto(allPhotos, pid);
-        var caption = (photo && photo.caption) ? escape(photo.caption) : 'Lodge';
-        var pos     = photoObjectPos(photo);
-        gridItems +=
-          '<div class="lodge-img-wrap stagger-item fade-in" data-lb-set="lodge" data-lb-index="' + i + '" data-photo-gallery-wrap data-photo-gallery="lodgeGallery" data-photo-idx="' + i + '" style="transition-delay:' + (i*80) + 'ms" role="button" tabindex="0" aria-label="View ' + caption + '">' +
-            '<img' +
-            ' src="' + escape(photoSrc(pid, 480, photo)) + '"' +
-            ' srcset="' + escape(photoSrcset(pid, photo)) + '"' +
-            ' sizes="(max-width:600px) 100vw, (max-width:769px) 50vw, 33vw"' +
-            ' alt="' + caption + '"' +
-            ' loading="lazy"' +
-            ' style="object-position:' + pos + '"' +
-            '>' +
-          '</div>';
-      });
-    } else {
-      for (var i = 0; i < 3; i++) {
-        gridItems +=
-          '<div class="lodge-img-wrap stagger-item">' +
-            PLACEHOLDER_SVG +
-          '</div>';
-      }
-    }
-
-    return '<section id="sec-lodge">' +
-      '<span class="section-label fade-up" data-edit-path="lodgeSection.label" data-edit-default="Accommodations">Accommodations</span>' +
-      '<h2 class="heading-reveal" data-edit-path="lodgeSection.heading" data-edit-default="The Lodge">The Lodge</h2>' +
-      '<span class="brass-rule rule-reveal"></span>' +
       '<div class="lodge-grid">' + gridItems + '</div>' +
       '</section>';
   }
