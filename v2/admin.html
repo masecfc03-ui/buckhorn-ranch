@@ -1242,6 +1242,16 @@ function buildSlotsFields() {
         <button class="pick-photo-btn" data-pickslot="corporateRight">Pick Corporate Right Photo</button>
       </div>
       <div class="field-group">
+        <label>Contact Left Photo</label>
+        ${(function() { if (!draft.slots.contactLeft) draft.slots.contactLeft = { photoId: '' }; const pid = draft.slots.contactLeft.photoId || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480, ph)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="contactLeft">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        <button class="pick-photo-btn" data-pickslot="contactLeft">Pick Contact Left Photo</button>
+      </div>
+      <div class="field-group">
+        <label>Contact Right Photo</label>
+        ${(function() { if (!draft.slots.contactRight) draft.slots.contactRight = { photoId: '' }; const pid = draft.slots.contactRight.photoId || ''; const ph = draft.photos.find(p => (p.id||p.photoId) === pid); return pid ? `<div class="slot-preview"><img src="${photoSrcAdmin(pid, 480, ph)}" onerror="this.style.display='none'"><button class="clear-slot" data-clearslot="contactRight">✕ Remove</button></div>` : '<p class="tip">No photo selected</p>'; })()}
+        <button class="pick-photo-btn" data-pickslot="contactRight">Pick Contact Right Photo</button>
+      </div>
+      <div class="field-group">
         <label>Whitetail Score Gallery</label>
         ${wtMulti}
         <button class="pick-photo-btn" data-pickslot="whitetailGallery">Add Whitetail Photo</button>
@@ -1797,6 +1807,8 @@ function selectPhotoFromLibrary(photoId) {
       if (!draft.slots.ranchRight) draft.slots.ranchRight = { photoId: '' };
       if (!draft.slots.corporateLeft) draft.slots.corporateLeft = { photoId: '' };
       if (!draft.slots.corporateRight) draft.slots.corporateRight = { photoId: '' };
+      if (!draft.slots.contactLeft) draft.slots.contactLeft = { photoId: '' };
+      if (!draft.slots.contactRight) draft.slots.contactRight = { photoId: '' };
       const slotObj = draft.slots[currentPhotoSlot];
   if ('photoId' in slotObj) {
     slotObj.photoId = photoId;
