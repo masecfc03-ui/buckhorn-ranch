@@ -2935,6 +2935,12 @@
     },
     "corporateRight": {
       "photoId": "photo-1787755168108-5264ca"
+    },
+    "contactLeft": {
+      "photoId": ""
+    },
+    "contactRight": {
+      "photoId": ""
     }
   },
   "sections": [
