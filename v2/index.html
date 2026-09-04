@@ -748,6 +748,60 @@
     }
 
     /* ── 8. CONTACT ──────────────────────────────────────────── */
+    #sec-contact .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 2.2fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    @media (max-width: 768px) {
+      #sec-contact .contact-layout {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      #sec-contact .contact-photo-left,
+      #sec-contact .contact-photo-right {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+    }
+    #sec-contact .contact-photo-left {
+      position: relative;
+      overflow: hidden;
+      background: var(--parchment);
+      aspect-ratio: 3/4;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    #sec-contact .contact-photo-right {
+      position: relative;
+      overflow: hidden;
+      background: var(--parchment);
+      aspect-ratio: 3/4;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    #sec-contact .contact-photo-left img,
+    #sec-contact .contact-photo-right img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 500ms var(--ease);
+    }
+    @media (hover: hover) {
+      #sec-contact .contact-photo-left:hover img,
+      #sec-contact .contact-photo-right:hover img {
+        transform: scale(1.04);
+      }
+    }
+    #sec-contact .contact-text {
+      text-align: center;
+    }
     #sec-contact h2 {
       font-size: clamp(36px, 5vw, 48px);
       margin-bottom: 8px;
@@ -1576,6 +1630,21 @@
     var phone    = v(contact.phone);
     var email    = v(contact.email);
     var location = v(data.ranch && data.ranch.location);
+    var allPhotos = data.photos || [];
+    var slots = data.slots || {};
+
+    var leftPhotoId  = (slots.contactLeft  && slots.contactLeft.photoId)  || '';
+    var rightPhotoId = (slots.contactRight && slots.contactRight.photoId) || '';
+    var leftPhoto  = leftPhotoId  ? findPhoto(allPhotos, leftPhotoId)  : null;
+    var rightPhoto = rightPhotoId ? findPhoto(allPhotos, rightPhotoId) : null;
+
+    function contactPhotoBox(pid, photo, slot, cls) {
+      if (!pid) return '<div class="' + cls + ' fade-up" data-photo-slot="contact' + (slot === 'left' ? 'Left' : 'Right') + '">' + PLACEHOLDER_SVG + '</div>';
+      var pos = photoObjectPos(photo);
+      return '<div class="' + cls + ' fade-up" data-photo-slot="contact' + (slot === 'left' ? 'Left' : 'Right') + '" role="button" tabindex="0">' +
+        '<img src="' + escape(photoSrc(pid, 960, photo)) + '" srcset="' + escape(photoSrcset(pid, photo)) + '" sizes="(max-width:768px) 90vw, 25vw" alt="Contact" loading="lazy" style="object-position:' + pos + '">' +
+      '</div>';
+    }
 
     var linksHtml = '';
     if (phone) {
@@ -1587,13 +1656,17 @@
     }
 
     return '<section id="sec-contact">' +
-      '<div class="inner">' +
-        '<span class="section-label fade-up" data-edit-path="contactSection.label" data-edit-default="Reach Out">Reach Out</span>' +
-        '<h2 class="heading-reveal" data-edit-path="contactSection.heading" data-edit-default="Book Your Hunt">Book Your Hunt</h2>' +
-        '<span class="brass-rule rule-reveal"></span>' +
-        (name ? '<p class="fade-up" style="font-size:18px;color:var(--ink)" data-edit-path="contact.name.value">' + escape(name) + '</p>' : '') +
-        (linksHtml ? '<div class="contact-links fade-up">' + linksHtml + '</div>' : '') +
-        (location ? '<p class="contact-location fade-up" data-edit-path="ranch.location.value">' + escape(location) + '</p>' : '') +
+      '<div class="contact-layout">' +
+        contactPhotoBox(leftPhotoId, leftPhoto, 'left', 'contact-photo-left') +
+        '<div class="contact-text">' +
+          '<span class="section-label fade-up" data-edit-path="contactSection.label" data-edit-default="Reach Out">Reach Out</span>' +
+          '<h2 class="heading-reveal" data-edit-path="contactSection.heading" data-edit-default="Book Your Hunt">Book Your Hunt</h2>' +
+          '<span class="brass-rule rule-reveal"></span>' +
+          (name ? '<p class="fade-up" style="font-size:18px;color:var(--ink)" data-edit-path="contact.name.value">' + escape(name) + '</p>' : '') +
+          (linksHtml ? '<div class="contact-links fade-up">' + linksHtml + '</div>' : '') +
+          (location ? '<p class="contact-location fade-up" data-edit-path="ranch.location.value">' + escape(location) + '</p>' : '') +
+        '</div>' +
+        contactPhotoBox(rightPhotoId, rightPhoto, 'right', 'contact-photo-right') +
       '</div>' +
     '</section>';
   }
